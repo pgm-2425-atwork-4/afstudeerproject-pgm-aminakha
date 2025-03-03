@@ -1,10 +1,13 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
 
 const app = express();
 app.use(cors());
-app.use(express.json()); // Allow JSON body parsing
+app.use(express.json());
+app.use(express.static("uploads")); // ✅ Serve uploaded images
 
 // ✅ Connect to MySQL
 const db = mysql.createConnection({
@@ -22,6 +25,15 @@ db.connect((err) => {
   console.log("✅ Connected to MySQL!");
 });
 
+// ✅ Configure `multer` to store images in "uploads" folder
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  },
+});
+const upload = multer({ storage });
+
 // ✅ API: Get all categories
 app.get("/categories", (req, res) => {
   const sql = "SELECT * FROM categories";
@@ -34,23 +46,24 @@ app.get("/categories", (req, res) => {
   });
 });
 
-// ✅ API: Add a new category
-app.post("/categories", (req, res) => {
-  const { name, image_url } = req.body;
+// ✅ API: Upload Image & Save Category
+app.post("/categories", upload.single("image"), (req, res) => {
+  const { name } = req.body;
+  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-  if (!name || !image_url) {
-    return res.status(400).json({ error: "Name and image URL are required" });
+  if (!name || !imageUrl) {
+    return res.status(400).json({ error: "Name and image are required" });
   }
 
   const sql = "INSERT INTO categories (name, image_url) VALUES (?, ?)";
-  const values = [name, image_url];
+  const values = [name, imageUrl];
 
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error("🔥 Error inserting data:", err);
       return res.status(500).json({ error: err });
     }
-    res.status(201).json({ id: result.insertId, name, image_url });
+    res.status(201).json({ id: result.insertId, name, image_url: imageUrl });
   });
 });
 

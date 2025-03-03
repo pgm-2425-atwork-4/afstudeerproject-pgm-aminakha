@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { UploadService } from '../../services/upload.service';
 
 @Component({
@@ -11,23 +11,33 @@ import { UploadService } from '../../services/upload.service';
   styleUrls: ['./admin-category.component.css'],
 })
 export class AdminCategoryComponent {
-  category = { name: '', image_url: '' };
+  categoryName: string = '';
+  selectedFile: File | null = null;
 
   constructor(private uploadService: UploadService) {}
 
-  onSubmit() {
-    console.log("🚀 Sending Data:", this.category); // ✅ Debug Log
+  onFileSelected(event: any) {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+    }
+  }
 
-    if (!this.category.name || !this.category.image_url) {
-      alert('Please provide both a category name and an image URL.');
+  onSubmit() {
+    if (!this.categoryName || !this.selectedFile) {
+      alert('Please provide a category name and select an image.');
       return;
     }
 
-    this.uploadService.addCategory(this.category).subscribe(
+    const formData = new FormData();
+    formData.append('name', this.categoryName);
+    formData.append('image', this.selectedFile);
+
+    this.uploadService.uploadCategory(formData).subscribe(
       (response) => {
         console.log('✅ Category added successfully:', response);
         alert('Category added successfully!');
-        this.category = { name: '', image_url: '' }; // ✅ Reset form
+        this.categoryName = ''; // ✅ Reset form
+        this.selectedFile = null;
       },
       (error) => {
         console.error('🔥 Error adding category:', error);
@@ -36,3 +46,4 @@ export class AdminCategoryComponent {
     );
   }
 }
+
