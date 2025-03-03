@@ -1,0 +1,66 @@
+/* 🔹 Modern Reset CSS - Resets Default Browser Styles */
+
+/* 1️⃣ Remove Default Margins, Paddings & Set Box Model */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 2️⃣ Remove Default List Styles */
+ul, ol {
+  list-style: none;
+}
+
+/* 3️⃣ Reset Anchor Links */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 4️⃣ Set Default Font & Smooth Scrolling */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+/* 5️⃣ Ensure Body Uses Full View Height */
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  background-color: #fff;
+  color: #333;
+}
+
+/* 6️⃣ Reset Images & Videos */
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 7️⃣ Reset Form Elements */
+input, button, textarea, select {
+  font: inherit;
+  border: none;
+  outline: none;
+}
+
+/* 8️⃣ Normalize Buttons */
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* 9️⃣ Remove Default Table Spacing */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* 🔹 Reset Applied */

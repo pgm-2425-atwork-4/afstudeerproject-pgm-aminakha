@@ -1,0 +1,8 @@
+.hero-home-container {
+    & h1 {
+       font-family: 'Archivo', sans-serif;
+         font-size: 3rem;
+         text-align: center;
+         letter-spacing: -7%;   
+    }
+}
