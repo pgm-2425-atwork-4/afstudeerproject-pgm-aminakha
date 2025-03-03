@@ -1,0 +1,19 @@
+.category-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .category-card {
+    display: inline-block;
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 5px;
+  }

@@ -1,0 +1,13 @@
+<div class="category-container">
+  <h2>Categories</h2>
+  <div *ngIf="categories.length > 0; else noCategories">
+    <div *ngFor="let category of categories" class="category-card">
+      <img *ngIf="category.imageUrl" [src]="category.imageUrl" alt="{{ category.name }}" />
+      <h3>{{ category.name }}</h3>
+    </div>
+  </div>
+
+  <ng-template #noCategories>
+    <p>No categories found.</p>
+  </ng-template>
+</div>

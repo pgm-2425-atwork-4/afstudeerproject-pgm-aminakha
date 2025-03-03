@@ -1,0 +1,6 @@
+2025-03-02T22:21:01.956Z - 🟢 Incoming GET Request at /categories
+2025-03-02T22:21:01.957Z - ✅ Categories Fetched: [{"id":1,"name":"Indoors","image_url":"http://localhost:5000/uploads/indoors.jpg"},{"id":2,"name":"Outdoor","image_url":"http://localhost:5000/uploads/outdoor.jpg"},{"id":3,"name":"CrossFit","image_url":"http://localhost:5000/uploads/crossfit.jpg"}]
+2025-03-02T22:21:48.697Z - 🟢 Incoming GET Request at /categories
+2025-03-02T22:21:48.698Z - ✅ Categories Fetched: [{"id":1,"name":"Indoors","image_url":"http://localhost:5000/uploads/indoors.jpg"},{"id":2,"name":"Outdoor","image_url":"http://localhost:5000/uploads/outdoor.jpg"},{"id":3,"name":"CrossFit","image_url":"http://localhost:5000/uploads/crossfit.jpg"}]
+2025-03-02T22:22:47.744Z - 🟢 Incoming GET Request at /categories
+2025-03-02T22:22:47.745Z - ✅ Categories Fetched: [{"id":1,"name":"Indoors","image_url":"http://localhost:5000/uploads/indoors.jpg"},{"id":2,"name":"Outdoor","image_url":"http://localhost:5000/uploads/outdoor.jpg"},{"id":3,"name":"CrossFit","image_url":"http://localhost:5000/uploads/crossfit.jpg"}]

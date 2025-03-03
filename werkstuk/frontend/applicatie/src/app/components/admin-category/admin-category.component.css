@@ -1,0 +1,60 @@
+.admin-container {
+    text-align: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .upload-form {
+    margin-bottom: 20px;
+  }
+  
+  .upload-form input {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .upload-form button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .upload-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .message {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .category-table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+  }
+  
+  .category-table th, .category-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .category-table th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .category-image {
+    width: 80px;
+    height: auto;
+    border-radius: 5px;
+  }
+  

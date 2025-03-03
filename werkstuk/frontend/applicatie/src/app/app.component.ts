@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { GymCategoryComponent } from './components/gym-category/gym-category.component';
+import {HeaderComponent} from './header/header.component';
+import { RouterModule } from '@angular/router'; // ✅ Import RouterModule
+import { AdminCategoryComponent } from './components/admin-category/admin-category.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [GymCategoryComponent, HeaderComponent,RouterModule,AdminCategoryComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'applicatie';
-}
+export class AppComponent {}
