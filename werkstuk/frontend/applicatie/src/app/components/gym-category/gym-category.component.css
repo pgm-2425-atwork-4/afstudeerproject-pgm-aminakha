@@ -5,7 +5,6 @@
   
   .category-card {
     display: inline-block;
-    margin: 10px;
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -16,4 +15,17 @@
     max-width: 100px;
     height: auto;
     border-radius: 5px;
+  }
+
+  .category-container {
+    & h2 {
+      font-family: 'Archivo', sans-serif;
+      font-size: 4rem;
+      letter-spacing: -3px;
+    }
+    & .category-card {
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+      border-radius: var(--large-border-radius);
+    }
   }

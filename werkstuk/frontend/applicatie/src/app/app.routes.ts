@@ -1,8 +1,13 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { GymsComponent } from './components/gyms/gyms.component';
-import { OefeningenComponent } from './components/oefeningen/oefeningen.component';
-import { AboutComponent } from './components/about/about.component';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './pages/login/login.component';
+import { AppComponent } from './app.component';
+import { HomeComponent } from './pages/home/home.component';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+    {path: '', component: HomeComponent},
+    
+{
+    path: 'login',
+    component: LoginComponent    
+}
+];
