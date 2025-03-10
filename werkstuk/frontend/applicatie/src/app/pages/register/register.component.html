@@ -1,0 +1,30 @@
+<div class="login_register-container">
+    <div class="backgroundimg">
+      <img [src]="backgroundImg" alt="Running img">
+    </div>
+  
+    <div class="form-container">
+      <div class="form-title">
+        <h1>Gymly</h1>
+      </div>
+  
+      <form (submit)="registerUser()">
+        <input type="text" [(ngModel)]="username" name="username" required placeholder="User name">
+        <input type="text" [(ngModel)]="firstname" name="firstname" required placeholder="First name">
+        <input type="text" [(ngModel)]="lastname" name="lastname" required placeholder="Last name">
+        <input type="email" [(ngModel)]="email" name="email" required placeholder="Email">
+        <input type="password" [(ngModel)]="password" name="password" required placeholder="Password">
+        <input type="date" [(ngModel)]="birthday" name="birthday" required placeholder="Birthdate">
+        
+        <input type="file" (change)="onFileSelected($event)" accept="image/*"> <!-- ✅ Profile Image Upload -->
+        
+        <button type="submit"><p>Register</p></button>
+      </form>
+  
+      <p>{{ message }}</p> <!-- ✅ Show success/fail message -->
+  
+      <p><span></span>or <span></span></p>
+      <p><a routerLink="/login">Login</a></p>
+    </div>
+  </div>
+  

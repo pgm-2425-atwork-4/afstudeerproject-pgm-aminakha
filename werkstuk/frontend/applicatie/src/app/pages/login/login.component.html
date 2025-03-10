@@ -1,12 +1,23 @@
-<div class="login-container">
-    <h2>Login h</h2>
-    <form (ngSubmit)="login()">
-      <label for="username">Username:</label>
-      <input type="text" id="username" [(ngModel)]="username" name="username" required>
-  
-      <label for="password">Password:</label>
-      <input type="password" id="password" [(ngModel)]="password" name="password" required>
-  
-      <button type="submit">Login</button>
-    </form>
+<div class="login_register-container">
+  <div class="backgroundimg">
+    <img [src]="backgroundImg" alt="Running img">
   </div>
+
+  <div class="form-container">
+    <div class="form-title">
+      <h1>Gymly</h1>
+    </div>
+
+    <form (ngSubmit)="login()">
+      <!-- ✅ Fixed: Use "email" instead of "username" -->
+      <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="Email">
+      <input type="password" id="password" [(ngModel)]="password" name="password" required placeholder="Wachtwoord">
+      <button type="submit"><p>Login</p></button>
+    </form>
+
+    <p>{{ message }}</p> <!-- ✅ Show success/fail message -->
+
+    <p><span></span>of <span></span></p>
+    <p><a routerLink="/register" routerLinkActive="active">Registreer</a></p>
+  </div>
+</div>

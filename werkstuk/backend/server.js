@@ -3,13 +3,14 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
+const bcrypt = require("bcrypt"); // ✅ Import bcrypt for password hashing
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static("uploads")); // ✅ Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ✅ Connect to MySQL
+// ✅ Connect to MySQL Database
 const db = mysql.createConnection({
   host: "127.0.0.1",
   user: "root",
@@ -25,7 +26,7 @@ db.connect((err) => {
   console.log("✅ Connected to MySQL!");
 });
 
-// ✅ Configure `multer` to store images in "uploads" folder
+// ✅ Configure `multer` for Image Uploads
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => {
@@ -34,25 +35,122 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ✅ API: Get all categories
+/* ===========================================
+ ✅ API: Register User with Profile Image Upload
+============================================== */
+app.post("/register", upload.single("profileImage"), async (req, res) => {
+  try {
+    const { username, firstname, lastname, email, password, birthday } = req.body;
+    const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
+
+    if (!username || !email || !password || !birthday) {
+      return res.status(400).json({ error: "❌ Missing required fields" });
+    }
+
+    // 🔐 Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const sql =
+      "INSERT INTO users (username, firstname, lastname, email, password, birthday, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const values = [username, firstname, lastname, email, hashedPassword, birthday, profileImage];
+
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.error("🔥 Error inserting user:", err);
+        return res.status(500).json({ error: err });
+      }
+      res.status(201).json({ message: "✅ User Registered!", userId: result.insertId, profileImage });
+    });
+  } catch (error) {
+    console.error("🔥 Error in registration:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* ===========================================
+ ✅ API: User Login (Check Hashed Password)
+============================================== */
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  const sql = "SELECT * FROM users WHERE email = ?";
+  db.query(sql, [email], async (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching user:", err);
+      return res.status(500).json({ error: err });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: "❌ User not found" });
+    }
+
+    const user = results[0];
+
+    // 🔐 Compare entered password with hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "❌ Incorrect password" });
+    }
+
+    res.json({
+      message: "✅ Login successful!",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role:user.role,
+        profile_image: `http://localhost:5000${user.profile_image}`,
+      },
+    });
+  });
+});
+
+/* ===========================================
+ ✅ API: Fetch User Details (Including Avatar)
+============================================== */
+app.get("/users/:id", (req, res) => {
+  const userId = req.params.id;
+  const sql = "SELECT * FROM users WHERE id = ?";
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error fetching user:", err);
+      return res.status(500).json({ error: err });
+    }
+
+    if (result.length === 0) {
+      console.log("❌ User not found:", userId);
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    console.log("✅ User data fetched:", result[0]); // 🔍 Debugging: Log user data
+    res.json(result[0]); // ✅ Send only the user object
+  });
+});
+
+/* ===========================================
+ ✅ API: Fetch All Categories
+============================================== */
 app.get("/categories", (req, res) => {
   const sql = "SELECT * FROM categories";
   db.query(sql, (err, results) => {
     if (err) {
-      console.error("🔥 Error fetching data:", err);
+      console.error("🔥 Error fetching categories:", err);
       return res.status(500).json({ error: err });
     }
     res.json(results);
   });
 });
 
-// ✅ API: Upload Image & Save Category
+/* ===========================================
+ ✅ API: Upload Image & Save Category
+============================================== */
 app.post("/categories", upload.single("image"), (req, res) => {
   const { name } = req.body;
   const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
   if (!name || !imageUrl) {
-    return res.status(400).json({ error: "Name and image are required" });
+    return res.status(400).json({ error: "❌ Name and image are required" });
   }
 
   const sql = "INSERT INTO categories (name, image_url) VALUES (?, ?)";
@@ -60,14 +158,30 @@ app.post("/categories", upload.single("image"), (req, res) => {
 
   db.query(sql, values, (err, result) => {
     if (err) {
-      console.error("🔥 Error inserting data:", err);
+      console.error("🔥 Error inserting category:", err);
       return res.status(500).json({ error: err });
     }
     res.status(201).json({ id: result.insertId, name, image_url: imageUrl });
   });
 });
 
-// ✅ Start the server
+/* ===========================================
+ ✅ API: Delete All Users (TRUNCATE)
+============================================== */
+app.delete("/users/truncate", (req, res) => {
+  const sql = "TRUNCATE TABLE users";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("🔥 Error truncating users table:", err);
+      return res.status(500).json({ error: err });
+    }
+    res.json({ message: "✅ All users deleted!" });
+  });
+});
+
+/* ===========================================
+ ✅ Start Server
+============================================== */
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
