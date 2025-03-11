@@ -1,14 +1,32 @@
-<div *ngIf="user; else loading" class="user-profile">
-    <h1>{{ user.username }}</h1>
+<div *ngIf="user; else loading" class="user-profile-container">
+  <div class="title">
+    <h1>Profiel</h1>
+  </div>
+  <div class="user-profile">
+    <!-- ✅ Show profile image -->
+    <div *ngIf="user.profile_image">
+      <img [src]="'http://localhost:5000' + user.profile_image" alt="Profile Picture" class="profile-image">
+    </div>
+
+    
+    
+  </div>
+  <div class="personal-info-container">
+  
+    <div class="user-description">  
+      <div class="title">
+      <h2>Persoonlijke informatie</h2>
+    </div>
+      <p>{{ user.username }}</p>
     <p>Email: {{ user.email }}</p>
     <p>First Name: {{ user.firstname }}</p>
     <p>Last Name: {{ user.lastname }}</p>
     <p>Birthday: {{ user.birthday }}</p>
-  
-    <div *ngIf="user.profile_image">
-      <img [src]="'http://localhost:5000' + user.profile_image" alt="Profile Picture" class="profile-image">
     </div>
-  </div>
+  
+</div>
+</div>
+
   
   <!-- ✅ Show loading message -->
   <ng-template #loading>

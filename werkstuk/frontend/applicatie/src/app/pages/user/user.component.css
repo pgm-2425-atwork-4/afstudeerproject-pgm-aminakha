@@ -1,0 +1,51 @@
+.user-profile-container {
+    
+    & h1, h2 {
+        font-family: 'Archivo', sans-serif;  
+        text-align: center;
+        text-transform: uppercase;
+        font-size:5rem;
+        letter-spacing: -0.25rem;
+        padding-bottom: 15rem;
+        
+        
+    }
+    & img {
+        max-width: 20rem;
+        height: 20rem;
+        object-fit: cover;  
+        border-radius: 50%;
+        margin: var(--standard-padding_margin) auto;
+        display: block;
+        z-index: 1;
+        position: relative;
+        position:absolute;
+        transform: translate(-50%, -50%);
+        top: 44%;
+        left: 50%;
+    }
+  
+    & .personal-info-container  {
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        transform: translateY(-18%);
+         & h2 {
+             padding-bottom: 1rem;
+             margin-bottom: 2rem;
+         }
+        & .user-description {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            width: 100%;
+max-width:var(--max-width);
+            margin: var(--standard-padding_margin) auto;
+            padding: var(--standard-padding_margin);
+            border-radius: var(--standard-border-radius);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1.5rem;
+            line-height: 2rem;
+            text-align: center;
+            padding-top: 12rem;
+        }
+       }
+} 
