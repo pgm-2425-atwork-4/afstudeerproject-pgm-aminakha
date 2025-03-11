@@ -4,6 +4,8 @@ const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcrypt"); // ✅ Import bcrypt for password hashing
+require('dotenv').config(); // Load .env file
+
 
 const app = express();
 app.use(cors());
@@ -12,10 +14,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ✅ Connect to MySQL Database
 const db = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "root", // Change if needed
-  database: "gym_app",
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 });
 
 db.connect((err) => {
