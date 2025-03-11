@@ -4,6 +4,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { UserProfileComponent } from './pages/user/user.component';
+import { RenderMode } from '@angular/ssr';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -17,6 +18,7 @@ export const routes: Routes = [
     component: RegisterComponent
 }, {
     path:"user/:id",
-    component: UserProfileComponent
+    component: UserProfileComponent,
+    data: { RenderMode: 'no-prerender' }
 }
 ];
