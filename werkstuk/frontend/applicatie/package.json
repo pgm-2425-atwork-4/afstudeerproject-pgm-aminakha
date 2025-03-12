@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "node --max-old-space-size=512 dist/server/main.js",
+    "build": "NODE_OPTIONS=--max-old-space-size=512 ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:applicatie": "node dist/applicatie/server/server.mjs"
