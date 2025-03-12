@@ -45,10 +45,6 @@ app.use('*', async (req, res, next) => {
 /**
  * Ensure server listens to the correct port for Render
  */
-const port = 4400; // 🔥 Use Render-assigned PORT
-app.listen(port, () => {
-  console.log(`🚀 Server running on http://0.0.0.0:${port}`);
-});
 
 /**
  * Request handler for Angular CLI and Firebase Cloud Functions
