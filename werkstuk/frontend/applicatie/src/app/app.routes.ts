@@ -16,9 +16,10 @@ export const routes: Routes = [
 {
     path:'register',
     component: RegisterComponent
-}, {
-    path:"user/:id",
-    component: UserProfileComponent,
-    data: { RenderMode: 'dynamic' }
-}
+}, 
+// {
+//     path:"user/:id",
+//     component: UserProfileComponent,
+//     data: { RenderMode: 'dynamic' }
+// }
 ];
