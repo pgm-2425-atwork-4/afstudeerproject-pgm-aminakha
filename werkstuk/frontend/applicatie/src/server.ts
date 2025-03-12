@@ -8,16 +8,16 @@ import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Load environment variables
-import dotenv from 'dotenv';
-dotenv.config();
-
+// Resolve directories
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
-// ✅ Fix TypeScript Index Signature Issue
-const PORT = Number(process.env['PORT']) || 4000; 
-const HOST = '0.0.0.0'; // ✅ REQUIRED FOR RENDER
+// Ensure we read environment variables
+require('dotenv').config();
+
+// Convert PORT to a number and set HOST for Render
+const PORT = Number(process.env['PORT']) || 7000;
+const HOST = '0.0.0.0'; // ✅ Required for Render
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
@@ -30,7 +30,7 @@ app.use(
     maxAge: '1y',
     index: false,
     redirect: false,
-  })
+  }),
 );
 
 /**
@@ -51,13 +51,11 @@ app.use('*', async (req, res, next) => {
 });
 
 /**
- * ✅ Start the server (No More Type Errors!)
+ * Ensure the server listens to the correct port
  */
-if (isMainModule(import.meta.url)) {
-  app.listen(PORT, HOST, () => {
-    console.log(`🚀 Server running on http://${HOST}:${PORT}`);
-  });
-}
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server running on http://${HOST}:${PORT}`);
+});
 
 /**
  * Request handler for Angular CLI and Firebase Cloud Functions
