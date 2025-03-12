@@ -19,6 +19,6 @@ export const routes: Routes = [
 }, {
     path:"user/:id",
     component: UserProfileComponent,
-    data: { renderMode: 'dynamic' }
+    data: { RenderMode: 'dynamic' }
 }
 ];

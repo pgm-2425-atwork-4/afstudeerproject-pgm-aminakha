@@ -15,14 +15,6 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Disable prerendering for user/:id
- */
-app.get('/user/:id', (req, res, next) => {
-  res.setHeader('x-prerender', 'false');
-  next();
-});
-
-/**
  * Serve static files from /browser
  */
 app.use(
@@ -32,6 +24,14 @@ app.use(
     redirect: false,
   }),
 );
+
+/**
+ * Disable prerendering for user/:id
+ */
+app.use('/user/:id', (req, res, next) => {
+  res.setHeader('x-prerender', 'false'); // 👈 Forces dynamic rendering
+  next();
+});
 
 /**
  * Handle all other requests by rendering the Angular application.
@@ -59,6 +59,10 @@ if (isMainModule(import.meta.url)) {
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
  */
 export const reqHandler = createNodeRequestHandler(app);
+
+/**
+ * Ensure getPrerenderParams is defined but returns nothing
+ */
 export function getPrerenderParams() {
-  return []; // No parameters for prerendering
+  return []; // 👈 Empty array to prevent prerendering
 }
