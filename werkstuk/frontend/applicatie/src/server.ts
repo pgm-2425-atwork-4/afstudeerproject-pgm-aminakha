@@ -12,10 +12,10 @@ const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp = new AngularNodeAppEngine(); // ✅ No more `getPrerenderParams`
 
 /**
- * Serve static files from /browser
+ * Serve static files from the browser folder
  */
 app.use(
   express.static(browserDistFolder, {
@@ -26,43 +26,33 @@ app.use(
 );
 
 /**
- * Disable prerendering for user/:id
+ * Handle SSR Requests (Fix Render issue)
  */
-app.use('/user/:id', (req, res, next) => {
-  res.setHeader('x-prerender', 'false'); // Ensures dynamic rendering
-  next();
+app.use('*', async (req, res, next) => {
+  try {
+    const response = await angularApp.handle(req);
+    if (response) {
+      writeResponseToNodeResponse(response, res);
+    } else {
+      next();
+    }
+  } catch (error) {
+    console.error('🔥 Angular SSR Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 /**
- * Handle all other requests by rendering the Angular application.
- */
-app.use('/**', (req, res, next) => {
-  angularApp
-    .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
-    .catch(next);
-});
-
-/**
- * Start the server if this module is the main entry point.
+ * Start the server
  */
 if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, () => {
-    console.log(`\uD83D\uDE80 Node Express server listening on http://localhost:${port}`);
+    console.log(`🚀 Node Express server running at http://localhost:${port}`);
   });
 }
 
 /**
- * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
+ * Request handler for Angular CLI and Firebase Cloud Functions
  */
 export const reqHandler = createNodeRequestHandler(app);
-
-/**
- * Ensure getPrerenderParams is defined but returns nothing
- */
-export function getPrerenderParams() {
-  return []; // Ensures no prerendering for routes with parameters
-}

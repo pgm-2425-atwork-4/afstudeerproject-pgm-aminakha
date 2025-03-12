@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/applicatie",
+            "outputPath": "dist/browser",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -30,7 +30,11 @@
               "src/assets/css/reset.css"
             ],
             "scripts": [],
-            "outputMode": "static" 
+            "outputMode": "server",
+            "server": "src/main.server.ts",
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {
