@@ -30,7 +30,7 @@
               "src/assets/css/reset.css"
             ],
             "scripts": [],
-            "outputMode": "browser"
+            "outputMode": "static" 
           },
           "configurations": {
             "production": {
