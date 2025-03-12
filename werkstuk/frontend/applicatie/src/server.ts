@@ -8,11 +8,18 @@ import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+// Load environment variables
+import dotenv from 'dotenv';
+dotenv.config();
+
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
+// ✅ Get port from env (Render assigns this automatically)
+const PORT = process.env.PORT || 4000;
+
 const app = express();
-const angularApp = new AngularNodeAppEngine(); // ✅ No more `getPrerenderParams`
+const angularApp = new AngularNodeAppEngine();
 
 /**
  * Serve static files from the browser folder
@@ -22,7 +29,7 @@ app.use(
     maxAge: '1y',
     index: false,
     redirect: false,
-  }),
+  })
 );
 
 /**
@@ -43,8 +50,13 @@ app.use('*', async (req, res, next) => {
 });
 
 /**
- * Ensure server listens to the correct port for Render
+ * ✅ Start the server and bind to the correct port
  */
+if (isMainModule(import.meta.url)) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Node Express server running on port ${PORT}`);
+  });
+}
 
 /**
  * Request handler for Angular CLI and Firebase Cloud Functions
