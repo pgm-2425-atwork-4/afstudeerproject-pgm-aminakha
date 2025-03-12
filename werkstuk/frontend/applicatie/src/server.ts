@@ -15,8 +15,8 @@ dotenv.config();
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
-// ✅ Explicitly set PORT & HOST
-const PORT = process.env['PORT'] || 4000;
+// ✅ Fix TypeScript Index Signature Issue
+const PORT = Number(process.env['PORT']) || 4000; 
 const HOST = '0.0.0.0'; // ✅ REQUIRED FOR RENDER
 
 const app = express();
@@ -51,7 +51,7 @@ app.use('*', async (req, res, next) => {
 });
 
 /**
- * ✅ Start the server and bind to the correct port & host
+ * ✅ Start the server (No More Type Errors!)
  */
 if (isMainModule(import.meta.url)) {
   app.listen(PORT, HOST, () => {
