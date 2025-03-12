@@ -43,14 +43,12 @@ app.use('*', async (req, res, next) => {
 });
 
 /**
- * Start the server
+ * Ensure server listens to the correct port for Render
  */
-if (isMainModule(import.meta.url)) {
-  const port = process.env['PORT'] || 4000;
-  app.listen(port, () => {
-    console.log(`🚀 Node Express server running at http://localhost:${port}`);
-  });
-}
+const port = 4200; // 🔥 Use Render-assigned PORT
+app.listen(port, '0.0.0.0', () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${port}`);
+});
 
 /**
  * Request handler for Angular CLI and Firebase Cloud Functions
