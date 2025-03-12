@@ -15,8 +15,8 @@ dotenv.config();
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
-// ✅ Get port from env (Render assigns this automatically)
-const PORT = process.env.PORT || 4000;
+// ✅ Fix TS4111: Use ['PORT'] to correctly read from process.env
+const PORT = process.env['PORT'] || 4000;
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
