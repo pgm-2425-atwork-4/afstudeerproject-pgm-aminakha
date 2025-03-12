@@ -6,7 +6,7 @@ import { UploadService } from '../../services/upload.service';
 @Component({
   selector: 'app-admin-category',
   standalone: true,
-  imports: [CommonModule, FormsModule], // ✅ Ensure FormsModule is imported
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-category.component.html',
   styleUrls: ['./admin-category.component.css'],
 })
@@ -36,7 +36,7 @@ export class AdminCategoryComponent {
       (response) => {
         console.log('✅ Category added successfully:', response);
         alert('Category added successfully!');
-        this.categoryName = ''; // ✅ Reset form
+        this.categoryName = ''; 
         this.selectedFile = null;
       },
       (error) => {

@@ -5,8 +5,8 @@ import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-gym-category',
-  standalone: true, // ✅ Ensure it's a standalone component
-  imports: [CommonModule, HttpClientModule], // ✅ Import necessary modules
+  standalone: true, 
+  imports: [CommonModule, HttpClientModule], 
   templateUrl: './gym-category.component.html',
   styleUrls: ['./gym-category.component.css']
 })

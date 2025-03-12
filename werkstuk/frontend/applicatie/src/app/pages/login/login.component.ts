@@ -7,15 +7,15 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RouterModule], // ✅ Ensure RouterModule is included
+  imports: [CommonModule, FormsModule, RouterLink, RouterModule], 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  backgroundImg: string = '/images/running.png'; // ✅ Ensure correct path
-  email: string = ''; // ✅ Use "email" instead of "username"
+  backgroundImg: string = '/images/running.png'; 
+  email: string = ''; 
   password: string = '';
-  message: string = ''; // ✅ Show success/error messages
+  message: string = ''; 
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -23,11 +23,9 @@ export class LoginComponent {
   this.http.post('http://localhost:5000/login', { email: this.email, password: this.password }).subscribe(
     (res: any) => {
       localStorage.setItem('user', JSON.stringify(res.user));
-
-      // ✅ Trigger storage event so navbar updates
+      // trigger om de navbar te updaten
       window.dispatchEvent(new Event('storage'));
 
-      // ✅ Redirect after login
       if (res.user.role === 'admin') {
         this.router.navigate(['/admin-dashboard']);
       } else {

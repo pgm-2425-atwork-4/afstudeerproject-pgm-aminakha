@@ -11,17 +11,17 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   user: any = null;
-  isBrowser: boolean = false; // ✅ Detects if running in browser
+  isBrowser: boolean = false; //detect if the browser is running
 
   constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: object) {}
 
   ngOnInit() {
-    this.isBrowser = isPlatformBrowser(this.platformId); // ✅ Check if running in browser
+    this.isBrowser = isPlatformBrowser(this.platformId); 
 
     if (this.isBrowser) {
-      this.loadUser(); // ✅ Load user only if in browser
+      this.loadUser();
 
-      // ✅ Listen for localStorage changes only in browser
+    
       window.addEventListener('storage', () => {
         this.loadUser();
       });
@@ -37,9 +37,9 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     if (this.isBrowser) {
-      localStorage.removeItem('user'); // ✅ Clear user data
-      this.loadUser(); // ✅ Ensure navbar updates immediately
+      localStorage.removeItem('user');
+      this.loadUser(); 
     }
-    this.router.navigate(['/login']); // ✅ Redirect to login
+    this.router.navigate(['/login']); 
   }
 }

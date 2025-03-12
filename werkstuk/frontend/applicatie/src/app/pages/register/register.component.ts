@@ -7,12 +7,12 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RouterModule], // ✅ Ensure RouterModule is included
+  imports: [CommonModule, FormsModule, RouterLink, RouterModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  backgroundImg: string = '/images/running.png'; // ✅ Ensure assets path is correct
+  backgroundImg: string = '/images/running.png'; 
   username: string = '';
   password: string = '';
   firstname: string = '';
@@ -20,12 +20,12 @@ export class RegisterComponent {
   email: string = '';
   birthday: string = '';
   profileImage: File | null = null; 
-  message: string = ''; // ✅ Added message for success/failure
+  message: string = ''; 
 
   constructor(private http: HttpClient) {}
 
   onFileSelected(event: any) {
-    this.profileImage = event.target.files[0]; // Save selected file
+    this.profileImage = event.target.files[0]; 
   }
 
   registerUser() {

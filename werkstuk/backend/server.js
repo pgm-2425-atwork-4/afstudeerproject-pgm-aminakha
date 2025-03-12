@@ -1,34 +1,41 @@
+require('dotenv').config(); // Load environment variables
+
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
-const bcrypt = require("bcrypt"); // ✅ Import bcrypt for password hashing
-require('dotenv').config(); // Load .env file
-
+const bcrypt = require("bcrypt");
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ✅ Connect to MySQL Database
-const db = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
+const db = mysql.createPool({
+  host: process.env.MYSQL_HOST || "gondola.proxy.rlwy.net",
+  user: process.env.MYSQL_USER || "root",
+  password: process.env.MYSQL_PASSWORD || "BgAkpzMDCdPrDklpPpPoYQHyIVGCdNKe",
+  database: process.env.MYSQL_DATABASE || "railway",
+  port: process.env.MYSQL_PORT || 50720,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-db.connect((err) => {
+db.getConnection((err, connection) => {
   if (err) {
     console.error("🔥 MySQL Connection Error:", err);
-    return;
+  } else {
+    console.log("✅ Connected to MySQL!");
+    connection.release();
   }
-  console.log("✅ Connected to MySQL!");
 });
 
-// ✅ Configure `multer` for Image Uploads
+// ✅ Multer Setup for Image Uploads
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => {
@@ -37,9 +44,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-/* ===========================================
+/* ============================================
  ✅ API: Register User with Profile Image Upload
-============================================== */
+=============================================== */
 app.post("/register", upload.single("profileImage"), async (req, res) => {
   try {
     const { username, firstname, lastname, email, password, birthday } = req.body;
@@ -69,9 +76,9 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
   }
 });
 
-/* ===========================================
+/* ============================================
  ✅ API: User Login (Check Hashed Password)
-============================================== */
+=============================================== */
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -100,16 +107,16 @@ app.post("/login", (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        role:user.role,
+        role: user.role,
         profile_image: `http://localhost:5000${user.profile_image}`,
       },
     });
   });
 });
 
-/* ===========================================
+/* ============================================
  ✅ API: Fetch User Details (Including Avatar)
-============================================== */
+=============================================== */
 app.get("/users/:id", (req, res) => {
   const userId = req.params.id;
   const sql = "SELECT * FROM users WHERE id = ?";
@@ -130,9 +137,9 @@ app.get("/users/:id", (req, res) => {
   });
 });
 
-/* ===========================================
+/* ============================================
  ✅ API: Fetch All Categories
-============================================== */
+=============================================== */
 app.get("/categories", (req, res) => {
   const sql = "SELECT * FROM categories";
   db.query(sql, (err, results) => {
@@ -144,9 +151,9 @@ app.get("/categories", (req, res) => {
   });
 });
 
-/* ===========================================
+/* ============================================
  ✅ API: Upload Image & Save Category
-============================================== */
+=============================================== */
 app.post("/categories", upload.single("image"), (req, res) => {
   const { name } = req.body;
   const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
@@ -167,9 +174,9 @@ app.post("/categories", upload.single("image"), (req, res) => {
   });
 });
 
-/* ===========================================
+/* ============================================
  ✅ API: Delete All Users (TRUNCATE)
-============================================== */
+=============================================== */
 app.delete("/users/truncate", (req, res) => {
   const sql = "TRUNCATE TABLE users";
   db.query(sql, (err, result) => {
@@ -181,10 +188,10 @@ app.delete("/users/truncate", (req, res) => {
   });
 });
 
-/* ===========================================
+/* ============================================
  ✅ Start Server
-============================================== */
-const PORT = 5000;
+=============================================== */
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
