@@ -15,8 +15,9 @@ dotenv.config();
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
-// ✅ Fix TS4111: Use ['PORT'] to correctly read from process.env
+// ✅ Explicitly set PORT & HOST
 const PORT = process.env['PORT'] || 4000;
+const HOST = '0.0.0.0'; // ✅ REQUIRED FOR RENDER
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
@@ -50,11 +51,11 @@ app.use('*', async (req, res, next) => {
 });
 
 /**
- * ✅ Start the server and bind to the correct port
+ * ✅ Start the server and bind to the correct port & host
  */
 if (isMainModule(import.meta.url)) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Node Express server running on port ${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`🚀 Server running on http://${HOST}:${PORT}`);
   });
 }
 
