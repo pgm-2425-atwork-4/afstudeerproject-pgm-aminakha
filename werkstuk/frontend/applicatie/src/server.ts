@@ -8,19 +8,15 @@ import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Resolve directories
+require('dotenv').config(); // Load environment variables
+
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
-// Ensure we read environment variables
-require('dotenv').config();
-
-// Convert PORT to a number and set HOST for Render
-const PORT = Number(process.env['PORT']) || 7000;
-const HOST = '0.0.0.0'; // ✅ Required for Render
+const PORT = Number(process.env['PORT']) || 4000; // Ensure PORT is a number
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp = new AngularNodeAppEngine(); 
 
 /**
  * Serve static files from the browser folder
@@ -51,11 +47,13 @@ app.use('*', async (req, res, next) => {
 });
 
 /**
- * Ensure the server listens to the correct port
+ * Start the server
  */
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 Server running on http://${HOST}:${PORT}`);
-});
+if (isMainModule(import.meta.url)) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Node Express server running on port ${PORT}`);
+  });
+}
 
 /**
  * Request handler for Angular CLI and Firebase Cloud Functions
