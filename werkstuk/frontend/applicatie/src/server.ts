@@ -29,7 +29,7 @@ app.use(
  * Disable prerendering for user/:id
  */
 app.use('/user/:id', (req, res, next) => {
-  res.setHeader('x-prerender', 'false'); // 👈 Forces dynamic rendering
+  res.setHeader('x-prerender', 'false'); // Ensures dynamic rendering
   next();
 });
 
@@ -51,7 +51,7 @@ app.use('/**', (req, res, next) => {
 if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    console.log(`\uD83D\uDE80 Node Express server listening on http://localhost:${port}`);
   });
 }
 
@@ -64,5 +64,5 @@ export const reqHandler = createNodeRequestHandler(app);
  * Ensure getPrerenderParams is defined but returns nothing
  */
 export function getPrerenderParams() {
-  return []; // 👈 Empty array to prevent prerendering
+  return []; // Ensures no prerendering for routes with parameters
 }
