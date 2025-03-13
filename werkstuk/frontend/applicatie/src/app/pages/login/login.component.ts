@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../services/api.service'; // ✅ Import API service
+
 
 @Component({
   selector: 'app-login',
@@ -17,24 +19,23 @@ export class LoginComponent {
   password: string = '';
   message: string = ''; 
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private apiService : ApiService , private http: HttpClient, private router: Router) {}
 
   login() {
-  this.http.post('http://localhost:5000/login', { email: this.email, password: this.password }).subscribe(
-    (res: any) => {
-      localStorage.setItem('user', JSON.stringify(res.user));
-      // trigger om de navbar te updaten
-      window.dispatchEvent(new Event('storage'));
+    this.apiService.loginUser(this.email, this.password).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('user', JSON.stringify(res.user));
+        window.dispatchEvent(new Event('storage')); // ✅ Update navbar
 
-      if (res.user.role === 'admin') {
-        this.router.navigate(['/admin-dashboard']);
-      } else {
-        this.router.navigate(['/user-profile']);
+        if (res.user.role === 'admin') {
+          this.router.navigate(['/admin-dashboard']);
+        } else {
+          this.router.navigate(['/user-profile']);
+        }
+      },
+      error: () => {
+        this.message = '❌ Login Failed! Invalid email or password.';
       }
-    },
-    (error) => {
-      this.message = '❌ Login Failed! Invalid email or password.';
-    }
-  );
-}
+    });
+  }
 }

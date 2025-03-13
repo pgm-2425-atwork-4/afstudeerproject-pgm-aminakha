@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../../services/api.service'; // ✅ Import API service
 
 @Component({
   selector: 'app-register',
@@ -22,7 +23,7 @@ export class RegisterComponent {
   profileImage: File | null = null; 
   message: string = ''; 
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiService: ApiService) {}
 
   onFileSelected(event: any) {
     this.profileImage = event.target.files[0]; 
@@ -41,15 +42,15 @@ export class RegisterComponent {
       formData.append('profileImage', this.profileImage);
     }
 
-    this.http.post('http://localhost:5000/register', formData).subscribe(
-      (res: any) => {
+    this.apiService.registerUser(formData).subscribe({
+      next: (res) => {
         this.message = '✅ User Registered Successfully!';
         console.log('🚀 Response:', res);
       },
-      (error) => {
+      error: (error) => {
         this.message = '❌ Registration Failed!';
         console.error('🔥 Error:', error);
       }
-    );
+    });
   }
 }
