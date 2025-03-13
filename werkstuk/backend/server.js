@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
   res.status(200).send("🚀 Backend is running!");
 });
 app.get('/ping', (req, res) => {
-  res.status(200).send("✅ Backend is alive!");
+  res.json({ message: "✅ Backend is alive!" }); // ✅ Now returns valid JSON
 });
 
 // ✅ Connect to MySQL Database

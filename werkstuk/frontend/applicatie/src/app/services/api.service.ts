@@ -13,9 +13,10 @@ export class ApiService {
    * Wake up the backend (Prevent cold start issues)
    */
   wakeUpBackend() {
-    return this.http.get(`${this.apiUrl}/ping`).subscribe({
-      next: () => console.log("✅ Backend is awake!"),
-      error: (err) => console.error("❌ Failed to wake up backend:", err)
-    });
+    this.http.get(`${this.apiUrl}/ping`, { responseType: 'text' }) // ✅ Expect text response
+      .subscribe({
+        next: (response) => console.log("✅ Backend response:", response),
+        error: (err) => console.error("❌ Failed to wake up backend:", err)
+      });
   }
 }
