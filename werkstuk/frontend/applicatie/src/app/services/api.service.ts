@@ -6,12 +6,16 @@ import { environment } from '../environments/environment'; // ✅ Import environ
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = environment.apiUrl; // ✅ Use dynamic environment variable
+  private apiUrl = environment.apiUrl; // ✅ Uses Render URL
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log("🚀 API Base URL:", this.apiUrl); // ✅ Debug: Check if Render URL is used
+  }
 
   wakeUpBackend() {
-    this.http.get<{ message: string }>(`${this.apiUrl}/ping`) // ✅ Automatically switches URL based on environment
+    console.log("🔥 Trying to wake up backend at:", `${this.apiUrl}/ping`);
+    
+    this.http.get<{ message: string }>(`${this.apiUrl}/ping`)
       .subscribe({
         next: (response) => console.log("✅ Backend response:", response.message),
         error: (err) => console.error("❌ Failed to wake up backend:", err)
