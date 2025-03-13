@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment'; // ✅ Import environment
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'https://afstudeerproject-pgm-aminakha.onrender.com'; // ✅ Replace with your actual Render backend URL
+  private apiUrl = environment.apiUrl; // ✅ Use dynamic environment variable
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Wake up the backend (Prevent cold start issues)
-   */
   wakeUpBackend() {
-    this.http.get(`${this.apiUrl}/ping`, { responseType: 'text' }) // ✅ Expect text response
+    this.http.get<{ message: string }>(`${this.apiUrl}/ping`) // ✅ Automatically switches URL based on environment
       .subscribe({
-        next: (response) => console.log("✅ Backend response:", response),
+        next: (response) => console.log("✅ Backend response:", response.message),
         error: (err) => console.error("❌ Failed to wake up backend:", err)
       });
   }
