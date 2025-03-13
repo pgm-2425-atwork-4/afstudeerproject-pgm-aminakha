@@ -22,20 +22,23 @@ export class LoginComponent {
   constructor(private apiService : ApiService , private http: HttpClient, private router: Router) {}
 
   login() {
-    this.apiService.loginUser(this.email, this.password).subscribe({
-      next: (res: any) => {
+    this.http.post('https://afstudeerproject-pgm-aminakha.onrender.com/login', {
+      email: this.email,
+      password: this.password
+    }).subscribe(
+      (res: any) => {
         localStorage.setItem('user', JSON.stringify(res.user));
-        window.dispatchEvent(new Event('storage')); // ✅ Update navbar
-
+        window.dispatchEvent(new Event('storage')); // ✅ Update navbar dynamically
+  
         if (res.user.role === 'admin') {
           this.router.navigate(['/admin-dashboard']);
         } else {
           this.router.navigate(['/user-profile']);
         }
       },
-      error: () => {
+      (error) => {
         this.message = '❌ Login Failed! Invalid email or password.';
       }
-    });
+    );
   }
 }

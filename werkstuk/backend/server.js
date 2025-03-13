@@ -114,7 +114,7 @@ app.post("/login", (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        profile_image: `http://localhost:5000${user.profile_image}`,
+        profile_image: `https://afstudeerproject-pgm-aminakha.onrender.com${user.profile_image}`,
       },
     });
   });
