@@ -13,14 +13,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.get('/', (req, res) => {
+  res.status(200).send("🚀 Backend is running!");
+});
+app.get('/ping', (req, res) => {
+  res.status(200).send("✅ Backend is alive!");
+});
 
 // ✅ Connect to MySQL Database
 const db = mysql.createPool({
-  host: process.env.MYSQL_HOST || "gondola.proxy.rlwy.net",
-  user: process.env.MYSQL_USER || "root",
-  password: process.env.MYSQL_PASSWORD || "BgAkpzMDCdPrDklpPpPoYQHyIVGCdNKe",
-  database: process.env.MYSQL_DATABASE || "railway",
-  port: process.env.MYSQL_PORT || 50720,
+  host: process.env.MYSQL_HOST ,
+  user: process.env.MYSQL_USER ,
+  password: process.env.MYSQL_PASSWORD ,
+  database: process.env.MYSQL_DATABASE ,
+  port: process.env.MYSQL_PORT ,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
