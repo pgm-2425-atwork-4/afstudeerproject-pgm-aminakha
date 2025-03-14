@@ -59,23 +59,22 @@ app.get("/users", (req: Request, res: Response) => {
  ✅ API: Fetch Single User (By ID)
 =============================================== */
 app.get("/users/:id", (req: Request, res: Response) => {
-  const userId = req.params["id"]; // ✅ Fix parameter access
+  const userId = req.params['id']; // ✅ Correct way to access route parameters
+  console.log(`🔍 Fetching user with ID: ${userId}`);
 
-  const sql = "SELECT * FROM users WHERE id = ?";
+  const sql = "SELECT * FROM users WHERE id = ?"; // ✅ Ensure query is defined
 
-  db.query(sql, [userId], (err, results) => {
-    if (err) {
-      console.error("🔥 Error fetching user:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
+  db.query(sql, [userId], (err, results: mysql.RowDataPacket[]) => {
+      if (err) {
+          console.error("🔥 Error fetching user:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
 
-    const data = results as RowDataPacket[]; // ✅ Explicitly cast to RowDataPacket[]
+      if (!results || results.length === 0) {
+          return res.status(404).json({ error: "User not found" });
+      }
 
-    if (data.length === 0) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    res.json(data[0]); // ✅ Return the first user
+      return res.json(results[0]); // ✅ Ensures a return statement in all paths
   });
 });
 /* ============================================
