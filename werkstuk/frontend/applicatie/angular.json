@@ -22,11 +22,11 @@
             "assets": [
               {
                 "glob": "**/*",
+
                 "input": "public"
               }
             ],
             "styles": [
-              "src/styles.css",
               "src/assets/css/general.css",
               "src/assets/css/reset.css"
             ],
