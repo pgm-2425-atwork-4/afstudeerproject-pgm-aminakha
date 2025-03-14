@@ -4,20 +4,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { UserProfileComponent } from './pages/user/user.component';
 import { RenderMode, ServerRoute } from '@angular/ssr';
+import { fetchUserIds } from '../server';
 
 
-// Function to fetch user IDs from backend API
-async function fetchUserIds() {
-  try {
-    const response = await fetch('https://afstudeerproject-pgm-aminakha.onrender.com/users'); // ✅ API call to fetch users
-    const users = await response.json();
-    
-    return users.map((user: { id: number }) => ({ id: user.id.toString() })); // ✅ Convert IDs to strings
-  } catch (error) {
-    console.error("🔥 Error fetching user IDs:", error);
-    return []; // ✅ Prevents build errors
-  }
-}
 
 // ✅ Client-side routes (CSR)
 export const routes: Routes = [
