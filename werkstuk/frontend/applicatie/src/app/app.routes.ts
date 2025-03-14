@@ -15,7 +15,7 @@ async function fetchUserIds() {
     return users.map((user: { id: number }) => ({ id: user.id.toString() })); // ✅ Convert IDs to strings
   } catch (error) {
     console.error("🔥 Error fetching user IDs:", error);
-    return []; // ✅ Return an empty array to prevent build errors
+    return []; // ✅ Prevents build errors
   }
 }
 
@@ -31,8 +31,8 @@ export const routes: Routes = [
 // ✅ Server-side routes (SSR) with Prerendering
 export const serverRoutes: ServerRoute[] = [
   {
-    path: 'user-profile/:id',
-    renderMode: RenderMode.Prerender, // ✅ Use Prerendering
+    path: 'user-profile/:id', // ✅ Must match main.ts
+    renderMode: RenderMode.Prerender,
     getPrerenderParams: fetchUserIds  // ✅ Fetch user IDs dynamically
   }
 ];

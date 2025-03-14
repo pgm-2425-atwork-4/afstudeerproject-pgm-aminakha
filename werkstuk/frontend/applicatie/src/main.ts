@@ -16,7 +16,7 @@ bootstrapApplication(AppComponent, {
       { path: '', component: HomeComponent },
       { path: 'login', component: LoginComponent },
       {path: 'register', component: RegisterComponent},
-      {path: 'user/:id', component: UserProfileComponent},
+{ path: 'user-profile/:id', component: UserProfileComponent },
       {path: 'admin-dashboard', component: AdminCategoryComponent}
     ])
   ],
