@@ -119,7 +119,16 @@ app.post("/login", (req, res) => {
     });
   });
 });
-
+app.get("/users", (req, res) => {
+  const sql = "SELECT id FROM users"; // ✅ Fetch only user IDs
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching user IDs:", err);
+      return res.status(500).json({ error: err });
+    }
+    res.json(results); // ✅ Return all user IDs as JSON
+  });
+});
 /* ============================================
  ✅ API: Fetch User Details (Including Avatar)
 =============================================== */
