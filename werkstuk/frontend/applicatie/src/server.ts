@@ -66,8 +66,7 @@ app.get("/users", (req: Request, res: Response) => {
     }
 
     return res.json(results); // ✅ Ensures function always returns
-});
-
+  });
 });
 
 /* ============================================
@@ -116,7 +115,9 @@ export function fetchUserIds(): Promise<{ id: string }[]> {
 /* ============================================
  ✅ Start Server
 =============================================== */
-// const PORT = Number(process.env["PORT"]) || 5000;
-// app.listen(PORT, () => {
-//   console.log(`🚀 Server running on http://localhost:${PORT}`);
-// });
+const PORT = process.env["PORT"] || 5000;
+console.log("📌 ENV PORT:", PORT);
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
