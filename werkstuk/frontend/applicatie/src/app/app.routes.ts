@@ -17,5 +17,5 @@ export const routes: Routes = [
 
 // ✅ Server-side rendering (SSR) routes (NEW WAY in Angular 18)
 export const serverRoutes: ServerRoute[] = [
-  { path: 'user/:id', renderMode: RenderMode.Server }, // ✅ Forces SSR, prevents prerendering
+  { path: 'user/:id', renderMode: RenderMode.Client }, // ✅ Forces SSR, prevents prerendering
 ];
