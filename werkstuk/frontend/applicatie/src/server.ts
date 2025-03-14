@@ -6,12 +6,14 @@ import multer from "multer";
 import path from "path";
 import bcrypt from "bcrypt";
 import mysql, { RowDataPacket } from "mysql2"; // ✅ Ensure mysql2 is installed
-
+import { fileURLToPath } from "url";
 const app = express();
 
 // ✅ Middleware
 app.use(cors({ origin: "*" }));
 app.use(express.json());
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ✅ MySQL Database Connection (💡 FIXED `db`)
