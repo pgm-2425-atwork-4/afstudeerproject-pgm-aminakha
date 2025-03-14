@@ -1,61 +1,87 @@
-import {
-  AngularNodeAppEngine,
-  createNodeRequestHandler,
-  isMainModule,
-  writeResponseToNodeResponse,
-} from '@angular/ssr/node';
-import express from 'express';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 require('dotenv').config(); // Load environment variables
 
-const serverDistFolder = dirname(fileURLToPath(import.meta.url));
-const browserDistFolder = resolve(serverDistFolder, '../browser');
-
-const PORT = Number(process.env['PORT']) || 4000; // Ensure PORT is a number
+import express, { Request, Response } from "express";
+import cors from "cors";
+import multer from "multer";
+import path from "path";
+import bcrypt from "bcrypt";
+import mysql, { RowDataPacket } from "mysql2"; // ✅ Ensure mysql2 is installed
 
 const app = express();
-const angularApp = new AngularNodeAppEngine(); 
 
-/**
- * Serve static files from the browser folder
- */
-app.use(
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
+// ✅ Middleware
+app.use(cors({ origin: "*" }));
+app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-/**
- * Handle SSR Requests (Fix Render issue)
- */
-app.use('*', async (req, res, next) => {
-  try {
-    const response = await angularApp.handle(req);
-    if (response) {
-      writeResponseToNodeResponse(response, res);
-    } else {
-      next();
-    }
-  } catch (error) {
-    console.error('🔥 Angular SSR Error:', error);
-    res.status(500).send('Internal Server Error');
+// ✅ MySQL Database Connection (💡 FIXED `db`)
+const db = mysql.createPool({
+  host: process.env["MYSQL_HOST"],
+  user: process.env["MYSQL_USER"],
+  password: process.env["MYSQL_PASSWORD"],
+  database: process.env["MYSQL_DATABASE"],
+  port: Number(process.env["MYSQL_PORT"]), // ✅ Corrected
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+
+db.getConnection((err, connection) => {
+  if (err) {
+    console.error("🔥 MySQL Connection Error:", err);
+  } else {
+    console.log("✅ Connected to MySQL!");
+    connection?.release(); // ✅ Safe release using optional chaining
   }
 });
 
-/**
- * Start the server
- */
-if (isMainModule(import.meta.url)) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Node Express server running on port ${PORT}`);
-  });
-}
 
-/**
- * Request handler for Angular CLI and Firebase Cloud Functions
- */
-export const reqHandler = createNodeRequestHandler(app);
+// ✅ Health Check Endpoints
+app.get('/', (req: Request, res: Response) => res.status(200).send("🚀 Backend is running!"));
+app.get('/ping', (req: Request, res: Response) => res.json({ message: "✅ Backend is alive!" }));
+
+/* ============================================
+ ✅ API: Fetch All Users (💡 FIXED `db`)
+=============================================== */
+app.get("/users", (req: Request, res: Response) => {
+  const sql = "SELECT id, username, firstname, lastname, email, birthday, profile_image FROM users";
+
+  db.query(sql, (err: mysql.QueryError | null, results: any) => {
+    if (err) {
+      console.error("🔥 Error fetching users:", err);
+      return res.status(500).json({ error: "Database error" }); // ✅ Added return statement
+    }
+    return res.json(results); // ✅ Ensure all paths return a value
+  });
+});
+
+/* ============================================
+ ✅ API: Fetch Single User (By ID)
+=============================================== */
+app.get("/users/:id", (req: Request, res: Response) => {
+  const userId = req.params["id"]; // ✅ Fix parameter access
+
+  const sql = "SELECT * FROM users WHERE id = ?";
+
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching user:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    const data = results as RowDataPacket[]; // ✅ Explicitly cast to RowDataPacket[]
+
+    if (data.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(data[0]); // ✅ Return the first user
+  });
+});
+/* ============================================
+ ✅ Start Server
+=============================================== */
+const PORT = Number(process.env["PORT"]) || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
