@@ -27,6 +27,7 @@ export class UserProfileComponent implements OnInit {
     this.isBrowser = isPlatformBrowser(this.platformId); 
 
     if (this.isBrowser) {
+      console.log("🚀 UserProfileComponent Loaded");
       this.loadUserProfile();
     }
   }
@@ -34,7 +35,10 @@ export class UserProfileComponent implements OnInit {
   loadUserProfile() {
     const userId = this.route.snapshot.paramMap.get('id'); 
     console.log("🔍 Fetching user with ID:", userId); 
-
+    if (!userId) {
+      console.error("❌ No user ID found in route");
+      return;
+    }
     if (userId) {
       this.apiService.getUserById(userId).subscribe({
         next: (res) => {
