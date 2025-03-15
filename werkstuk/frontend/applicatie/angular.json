@@ -17,7 +17,7 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
-            "baseHref": "/afstudeerproject-pgm-aminakha/", 
+            "baseHref": "/afstudeerproject-pgm-aminakha/",
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -46,9 +46,6 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "proxyConfig": "proxy.conf.json"
-          },
           "configurations": {
             "production": {
               "browserTarget": "applicatie:build:production"
