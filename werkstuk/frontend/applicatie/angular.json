@@ -13,11 +13,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "docs/browser",
+            "outputPath": "docs",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
-            "baseHref": "/https://pgm-2425-atwork-4.github.io/afstudeerproject-pgm-aminakha/", 
+            "baseHref": "/afstudeerproject-pgm-aminakha/", 
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -46,12 +46,15 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
-              "buildTarget": "applicatie:build:production"
+              "browserTarget": "applicatie:build:production"
             },
             "development": {
-              "buildTarget": "applicatie:build:development"
+              "browserTarget": "applicatie:build:development"
             }
           },
           "defaultConfiguration": "development"
