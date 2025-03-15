@@ -17,7 +17,7 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
-            "baseHref": "/afstudeerproject-pgm-aminakha/", 
+            "baseHref": "/https://pgm-2425-atwork-4.github.io/afstudeerproject-pgm-aminakha/", 
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
