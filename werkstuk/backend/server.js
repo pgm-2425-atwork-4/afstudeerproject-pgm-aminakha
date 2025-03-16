@@ -136,6 +136,16 @@ app.post("/login", (req, res) => {
     });
   });
 });
+app.get("/categories", (req, res) => {
+  const sql = "SELECT * FROM categories";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching categories:", err);
+      return res.status(500).json({ error: err });
+    }
+    res.json(results);
+  });
+});
 
 /* ============================================
  ✅ API: Fetch All Gyms
