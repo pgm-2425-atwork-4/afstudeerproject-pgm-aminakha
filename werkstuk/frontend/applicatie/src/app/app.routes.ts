@@ -14,7 +14,7 @@ export const routes: Routes = [
   { path: '/afstudeerproject-pgm-aminakha', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'user-profile/:id', component: UserProfileComponent }, // ✅ Ensure this route exists
+  { path: 'user-profile/:id', component: UserProfileComponent },
   {path:"gyms", component: GymsComponent},
   { path: '**', redirectTo: '' },
 ];

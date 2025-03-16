@@ -57,6 +57,9 @@ export class UserProfileComponent implements OnInit {
    * ✅ Format profile image URL correctly for Render deployment
    */
   getProfileImageUrl(profileImage: string): string {
+    if (!profileImage) {
+      return 'images/default-user.jpg'; // ✅ Show default image if no profile picture
+    }
     return `https://afstudeerproject-pgm-aminakha.onrender.com${profileImage}`;
   }
 }
