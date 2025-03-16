@@ -171,7 +171,12 @@ app.get("/users/:id", (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.json(result[0]);
+    res.json(result[{
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      profile_image: user.profile_image, // Ensure this is stored in DB
+    }]);
   });
 });
 

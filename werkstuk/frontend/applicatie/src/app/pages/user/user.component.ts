@@ -24,12 +24,20 @@ export class UserProfileComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.isBrowser = isPlatformBrowser(this.platformId); 
-
-    if (this.isBrowser) {
-      console.log("🚀 UserProfileComponent Loaded");
-      this.loadUserProfile();
-    }
+    this.route.paramMap.subscribe((params) => {
+      const userId = params.get('id');
+      if (userId) {
+        this.apiService.getUserById(userId).subscribe({
+          next: (user) => {
+            console.log("✅ User Data:", user);
+            this.user = user;
+          },
+          error: (error) => {
+            console.error("🔥 Error fetching user:", error);
+          }
+        });
+      }
+    });
   }
 
   loadUserProfile() {
