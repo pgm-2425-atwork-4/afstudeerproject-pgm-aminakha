@@ -8,7 +8,7 @@
         letter-spacing: -0.25rem;
         padding-bottom: 15rem;
         
-        
+        /* <img *ngIf="user?.profile_image" [src]="getProfileImageUrl(user.profile_image)" alt="User Profile"> */
     }
     & img {
         max-width: 20rem;

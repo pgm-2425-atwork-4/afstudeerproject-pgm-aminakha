@@ -79,13 +79,15 @@ const upload = multer({ storage });
 app.post("/register", upload.single("profileImage"), async (req, res) => {
   try {
     const { username, firstname, lastname, email, password, birthday } = req.body;
-    const profileImage = req.file ? req.file.path : null; // ✅ Cloudinary stores file path
+    
+    // ✅ Ensure Cloudinary returns a valid URL
+    const profileImage = req.file ? req.file.path : null;
 
     if (!username || !email || !password || !birthday) {
       return res.status(400).json({ error: "❌ Missing required fields" });
     }
 
-    // 🔐 Hash password
+    // 🔐 Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const sql =
@@ -97,18 +99,13 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
         console.error("🔥 Error inserting user:", err);
         return res.status(500).json({ error: err });
       }
-      res.status(201).json({ 
-        message: "✅ User Registered!", 
-        userId: result.insertId, 
-        profileImage 
-      });
+      res.status(201).json({ message: "✅ User Registered!", userId: result.insertId, profileImage });
     });
   } catch (error) {
     console.error("🔥 Error in registration:", error);
     res.status(500).json({ error: "Server error" });
   }
 });
-
 /* ============================================
  ✅ API: User Login (Check Hashed Password)
 =============================================== */
@@ -159,26 +156,29 @@ app.get("/categories", (req, res) => {
 
 app.get("/users/:id", (req, res) => {
   const userId = req.params.id;
-  const sql = "SELECT * FROM users WHERE id = ?";
+  const sql = "SELECT id, username, email, profile_image FROM users WHERE id = ?";
 
   db.query(sql, [userId], (err, result) => {
     if (err) {
       console.error("🔥 Error fetching user:", err);
-      return res.status(500).json({ error: "Database error" });
+      return res.status(500).json({ error: err });
     }
 
     if (result.length === 0) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.json(result[{
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      profile_image: user.profile_image, // Ensure this is stored in DB
-    }]);
+    console.log("✅ Cloudinary Image URL:", result[0].profile_image); // 🔍 Debugging
+
+    res.json({
+      id: result[0].id,
+      username: result[0].username,
+      email: result[0].email,
+      profile_image: result[0].profile_image, // ✅ Should be full URL
+    });
   });
 });
+
 
 
 /* ============================================

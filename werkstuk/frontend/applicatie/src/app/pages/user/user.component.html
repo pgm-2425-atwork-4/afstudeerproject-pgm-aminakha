@@ -5,7 +5,7 @@
   <div class="user-profile">
     <!-- ✅ Show profile image -->
     <div *ngIf="user.profile_image">
-      <img *ngIf="user?.profile_image" [src]="getProfileImageUrl(user.profile_image)" alt="User Profile">
+      
       <img [src]="user.profile_image" alt="{{ user.username }}" width="150">
 
     </div>
