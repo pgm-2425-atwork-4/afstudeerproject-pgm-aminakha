@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables
+require('dotenv').config(); // Load environment variables
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -9,24 +9,28 @@ const bcrypt = require("bcrypt");
 
 const app = express();
 
-// ✅ Middleware
-app.use(cors({ origin: "*" }));
-app.use(express.json());
-
-// ✅ Ensure 'uploads' folder exists
-const uploadDir = "uploads/";
+// ✅ Ensure "uploads" directory exists
+const uploadDir = path.join(__dirname, "uploads/");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// ✅ Serve static images correctly
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// ✅ Middleware
+app.use(cors({
+  origin: "https://pgm-2425-atwork-4.github.io", // ✅ Allow only GitHub Pages
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
+}));
+app.use(express.json());
+app.use('/uploads', express.static(uploadDir)); // ✅ Serve images correctly
 
-app.get("/", (req, res) => {
+// ✅ Check if server is running
+app.get('/', (req, res) => {
   res.status(200).send("🚀 Backend is running!");
 });
 
-app.get("/ping", (req, res) => {
+// ✅ Test Backend
+app.get('/ping', (req, res) => {
   res.json({ message: "✅ Backend is alive!" });
 });
 
@@ -39,7 +43,7 @@ const db = mysql.createPool({
   port: process.env.MYSQL_PORT,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
+  queueLimit: 0
 });
 
 db.getConnection((err, connection) => {
@@ -53,24 +57,15 @@ db.getConnection((err, connection) => {
 
 // ✅ Multer Setup for Image Uploads
 const storage = multer.diskStorage({
-  destination: "uploads/", // ✅ Store in 'uploads/' folder
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
   },
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + "-" + file.originalname.replace(/\s/g, "_");
+    cb(null, uniqueName);
+  }
 });
 const upload = multer({ storage });
-
-/* ============================================
- ✅ API: Upload Image & Store in Database (Users)
-=============================================== */
-app.post("/upload/profile", upload.single("profileImage"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "❌ No file uploaded" });
-  }
-  
-  const filePath = `/uploads/${req.file.filename}`;
-  res.json({ filePath });
-});
 
 /* ============================================
  ✅ API: Register User with Profile Image Upload
@@ -84,6 +79,7 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
       return res.status(400).json({ error: "❌ Missing required fields" });
     }
 
+    // 🔐 Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const sql =
@@ -104,28 +100,45 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
 });
 
 /* ============================================
- ✅ API: Fetch All Users
+ ✅ API: User Login (Check Hashed Password)
 =============================================== */
-app.get("/users", (req, res) => {
-  const sql = "SELECT id, username, profile_image FROM users"; // Fetch profile image too
-  db.query(sql, (err, results) => {
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  const sql = "SELECT * FROM users WHERE email = ?";
+  db.query(sql, [email], async (err, results) => {
     if (err) {
-      console.error("🔥 Error fetching users:", err);
+      console.error("🔥 Error fetching user:", err);
       return res.status(500).json({ error: err });
     }
 
-    results.forEach((user) => {
-      if (user.profile_image) {
-        user.profile_image = `https://afstudeerproject-pgm-aminakha.onrender.com${user.profile_image}`;
-      }
-    });
+    if (results.length === 0) {
+      return res.status(401).json({ error: "❌ User not found" });
+    }
 
-    res.json(results);
+    const user = results[0];
+
+    // 🔐 Compare entered password with hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "❌ Incorrect password" });
+    }
+
+    res.json({
+      message: "✅ Login successful!",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        profile_image: `https://afstudeerproject-pgm-aminakha.onrender.com${user.profile_image}`,
+      },
+    });
   });
 });
 
 /* ============================================
- ✅ API: Fetch Gyms with Images
+ ✅ API: Fetch All Gyms
 =============================================== */
 app.get("/gyms", (req, res) => {
   const sql = `
@@ -138,8 +151,8 @@ app.get("/gyms", (req, res) => {
     FROM gyms g
     JOIN provinces p ON g.province_id = p.id
     JOIN categories c ON g.category_id = c.id
-    JOIN images i ON g.image_id = i.id
-    JOIN prices pr ON g.pricing_id = pr.id
+    LEFT JOIN images i ON g.image_id = i.id
+    LEFT JOIN prices pr ON g.pricing_id = pr.id;
   `;
 
   db.query(sql, (err, results) => {
@@ -147,65 +160,35 @@ app.get("/gyms", (req, res) => {
       console.error("🔥 Error fetching gyms:", err);
       return res.status(500).json({ error: err });
     }
-
-    results.forEach((gym) => {
-      if (gym.image) {
-        gym.image = `https://afstudeerproject-pgm-aminakha.onrender.com${gym.image}`;
-      }
-    });
-
     res.json(results);
   });
 });
 
 /* ============================================
- ✅ API: Upload Gym Image
+ ✅ API: Upload Image (Profile & Categories)
 =============================================== */
-app.post("/upload/gym", upload.single("gymImage"), (req, res) => {
+app.post("/upload/profile", upload.single("profileImage"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "❌ No file uploaded" });
   }
-  
+
+  console.log("✅ File uploaded:", req.file); // 🐛 Debugging
+
   const filePath = `/uploads/${req.file.filename}`;
   res.json({ filePath });
 });
 
 /* ============================================
- ✅ API: Fetch Gym by ID
+ ✅ API: Delete All Users (TRUNCATE)
 =============================================== */
-app.get("/gyms/:id", (req, res) => {
-  const gymId = req.params.id;
-  const sql = `
-    SELECT 
-      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
-      p.name AS province, 
-      c.name AS category,
-      i.image_url AS image,
-      pr.bundle_name AS pricing_bundle, pr.price
-    FROM gyms g
-    JOIN provinces p ON g.province_id = p.id
-    JOIN categories c ON g.category_id = c.id
-    JOIN images i ON g.image_id = i.id
-    JOIN prices pr ON g.pricing_id = pr.id
-    WHERE g.id = ?
-  `;
-
-  db.query(sql, [gymId], (err, results) => {
+app.delete("/users/truncate", (req, res) => {
+  const sql = "TRUNCATE TABLE users";
+  db.query(sql, (err, result) => {
     if (err) {
-      console.error("🔥 Error fetching gym:", err);
-      return res.status(500).json({ error: "Database error" });
+      console.error("🔥 Error truncating users table:", err);
+      return res.status(500).json({ error: err });
     }
-
-    if (results.length === 0) {
-      return res.status(404).json({ error: "Gym not found" });
-    }
-
-    const gym = results[0];
-    if (gym.image) {
-      gym.image = `https://afstudeerproject-pgm-aminakha.onrender.com${gym.image}`;
-    }
-
-    res.json(gym);
+    res.json({ message: "✅ All users deleted!" });
   });
 });
 
