@@ -6,9 +6,24 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const bcrypt = require("bcrypt");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const app = express();
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+      folder: "user_uploads", // Name of the folder in Cloudinary
+      format: async (req, file) => "png", // Convert all images to PNG
+      public_id: (req, file) => Date.now() // Unique filename
+  },
+});
 // ✅ Ensure "uploads" directory exists
 const uploadDir = path.join(__dirname, "uploads/");
 if (!fs.existsSync(uploadDir)) {
@@ -55,16 +70,6 @@ db.getConnection((err, connection) => {
   }
 });
 
-// ✅ Multer Setup for Image Uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + "-" + file.originalname.replace(/\s/g, "_");
-    cb(null, uniqueName);
-  }
-});
 const upload = multer({ storage });
 
 /* ============================================
@@ -72,30 +77,29 @@ const upload = multer({ storage });
 =============================================== */
 app.post("/register", upload.single("profileImage"), async (req, res) => {
   try {
-    const { username, firstname, lastname, email, password, birthday } = req.body;
-    const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
+      const { username, firstname, lastname, email, password, birthday } = req.body;
+      const profileImage = req.file ? req.file.path : null; // ✅ Get Cloudinary URL
 
-    if (!username || !email || !password || !birthday) {
-      return res.status(400).json({ error: "❌ Missing required fields" });
-    }
-
-    // 🔐 Hash the password before storing it
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const sql =
-      "INSERT INTO users (username, firstname, lastname, email, password, birthday, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    const values = [username, firstname, lastname, email, hashedPassword, birthday, profileImage];
-
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error("🔥 Error inserting user:", err);
-        return res.status(500).json({ error: err });
+      if (!username || !email || !password || !birthday) {
+          return res.status(400).json({ error: "❌ Missing required fields" });
       }
-      res.status(201).json({ message: "✅ User Registered!", userId: result.insertId, profileImage });
-    });
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const sql =
+          "INSERT INTO users (username, firstname, lastname, email, password, birthday, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      const values = [username, firstname, lastname, email, hashedPassword, birthday, profileImage];
+
+      db.query(sql, values, (err, result) => {
+          if (err) {
+              console.error("🔥 Error inserting user:", err);
+              return res.status(500).json({ error: err });
+          }
+          res.status(201).json({ message: "✅ User Registered!", userId: result.insertId, profileImage });
+      });
   } catch (error) {
-    console.error("🔥 Error in registration:", error);
-    res.status(500).json({ error: "Server error" });
+      console.error("🔥 Error in registration:", error);
+      res.status(500).json({ error: "Server error" });
   }
 });
 
@@ -163,7 +167,12 @@ app.get("/users/:id", (req, res) => {
     }
 
     console.log("✅ User data fetched:", result[0]);
-    res.json(result[0]); // ✅ Return only user object
+    res.json(result[{
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      profile_image: user.profile_image // ✅ Cloudinary image URL
+    }]); // ✅ Return only user object
   });
 });
 
