@@ -8,7 +8,7 @@ const fs = require("fs");
 const bcrypt = require("bcrypt");
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-
+ 
 const app = express();
 
 cloudinary.config({
@@ -16,12 +16,13 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
+// ✅ Set up Cloudinary Storage for Uploads
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-      folder: "user_uploads", // Name of the folder in Cloudinary
-      format: async (req, file) => "png", // Convert all images to PNG
-      public_id: (req, file) => Date.now() // Unique filename
+    folder: "user_uploads", // This should create the folder
+    format: async (req, file) => "png", // Convert images to PNG
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), // Unique filename
   },
 });
 // ✅ Ensure "uploads" directory exists
@@ -77,29 +78,34 @@ const upload = multer({ storage });
 =============================================== */
 app.post("/register", upload.single("profileImage"), async (req, res) => {
   try {
-      const { username, firstname, lastname, email, password, birthday } = req.body;
-      const profileImage = req.file ? req.file.path : null; // ✅ Get Cloudinary URL
+    const { username, firstname, lastname, email, password, birthday } = req.body;
+    const profileImage = req.file ? req.file.path : null; // ✅ Cloudinary stores file path
 
-      if (!username || !email || !password || !birthday) {
-          return res.status(400).json({ error: "❌ Missing required fields" });
+    if (!username || !email || !password || !birthday) {
+      return res.status(400).json({ error: "❌ Missing required fields" });
+    }
+
+    // 🔐 Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const sql =
+      "INSERT INTO users (username, firstname, lastname, email, password, birthday, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const values = [username, firstname, lastname, email, hashedPassword, birthday, profileImage];
+
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.error("🔥 Error inserting user:", err);
+        return res.status(500).json({ error: err });
       }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const sql =
-          "INSERT INTO users (username, firstname, lastname, email, password, birthday, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?)";
-      const values = [username, firstname, lastname, email, hashedPassword, birthday, profileImage];
-
-      db.query(sql, values, (err, result) => {
-          if (err) {
-              console.error("🔥 Error inserting user:", err);
-              return res.status(500).json({ error: err });
-          }
-          res.status(201).json({ message: "✅ User Registered!", userId: result.insertId, profileImage });
+      res.status(201).json({ 
+        message: "✅ User Registered!", 
+        userId: result.insertId, 
+        profileImage 
       });
+    });
   } catch (error) {
-      console.error("🔥 Error in registration:", error);
-      res.status(500).json({ error: "Server error" });
+    console.error("🔥 Error in registration:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
