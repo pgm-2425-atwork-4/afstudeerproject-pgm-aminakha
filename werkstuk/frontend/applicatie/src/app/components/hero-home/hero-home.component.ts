@@ -9,5 +9,5 @@ import { GymCategoryComponent } from '../gym-category/gym-category.component';
   styleUrl: './hero-home.component.css'
 })
 export class HeroHomeComponent {
-  searchSvg: string = '/afstudeerproject-pgm-aminakha/images/search.svg';
+  searchSvg: string = '/images/search.svg';
 }

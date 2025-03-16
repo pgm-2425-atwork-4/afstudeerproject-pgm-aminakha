@@ -14,7 +14,7 @@ import { ApiService } from '../../services/api.service'; // ✅ Import API servi
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  backgroundImg: string = '/afstudeerproject-pgm-aminakha/images/running.png'; 
+  backgroundImg: string = '/images/running.png'; 
   email: string = ''; 
   password: string = '';
   message: string = ''; 

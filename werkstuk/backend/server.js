@@ -173,6 +173,17 @@ app.get("/categories", (req, res) => {
   });
 });
 
+app.get("/gyms", (req, res) => {
+  const sql = "SELECT * FROM gyms";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching gyms:", err);
+      return res.status(500).json({ error: err });
+    }
+    res.json(results);
+  });
+});
+
 /* ============================================
  ✅ API: Upload Image & Save Category
 =============================================== */

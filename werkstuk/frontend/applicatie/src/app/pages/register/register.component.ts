@@ -13,7 +13,7 @@ import { ApiService } from '../../services/api.service'; // ✅ Import API servi
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  backgroundImg: string = '/afstudeerproject-pgm-aminakha/images/running.png'; 
+  backgroundImg: string = '/images/running.png'; 
   username: string = '';
   password: string = '';
   firstname: string = '';
