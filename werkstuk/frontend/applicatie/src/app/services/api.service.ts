@@ -46,4 +46,12 @@ export class ApiService {
   loginUser(email: string, password: string) {
     return this.http.post(`${this.apiUrl}/login`, { email, password });
   }
+
+  getGyms(): Observable<any> {
+    console.log("📡 Fetching gyms from:", `${this.apiUrl}/gyms`);
+    return this.http.get(`${this.apiUrl}/gyms`);
+  }
+  getGymById(gymId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/gyms/${gymId}`);
+  }
 }

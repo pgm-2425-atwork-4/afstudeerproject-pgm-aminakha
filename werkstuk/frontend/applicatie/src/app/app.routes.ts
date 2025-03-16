@@ -5,6 +5,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { UserProfileComponent } from './pages/user/user.component';
 import { RenderMode, ServerRoute } from '@angular/ssr';
 import { fetchUserIds } from '../server';
+import { GymsComponent } from './pages/gyms/gyms.component';
 
 
 
@@ -14,6 +15,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'user-profile/:id', component: UserProfileComponent }, // ✅ Ensure this route exists
+  {path:"gyms", component: GymsComponent},
   { path: '**', redirectTo: '' },
 ];
 

@@ -1,0 +1,17 @@
+<div *ngIf="gyms.length === 0">
+    <p>Loading gyms...</p>
+  </div>
+  
+  <div *ngFor="let gym of gyms" class="gym-card">
+    <img [src]="gym.image" alt="{{ gym.name }}" />
+    <h2>{{ gym.name }}</h2>
+    <p><strong>City:</strong> {{ gym.city }}</p>
+    <p><strong>Rating:</strong> ⭐{{ gym.rating }}</p>
+    <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
+    <p><strong>Address:</strong> {{ gym.address }}</p>
+    <p><strong>Province:</strong> {{ gym.province }}</p>
+    <p><strong>Category:</strong> {{ gym.category }}</p>
+    <p><strong>Personal Trainer Available:</strong> {{ gym.personal_trainer ? '✅ Yes' : '❌ No' }}</p>
+    <p><strong>Price:</strong> {{ gym.pricing_bundle }} - €{{ gym.price }}/month</p>
+  </div>
+  

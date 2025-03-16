@@ -184,6 +184,37 @@ app.get("/gyms", (req, res) => {
   });
 });
 
+// ✅ Fetch a single gym by ID
+app.get("/gyms/:id", (req, res) => {
+  const gymId = req.params["id"];
+  const sql = `
+    SELECT 
+      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
+      p.name AS province, 
+      c.name AS category,
+      i.image_url AS image,
+      pr.bundle_name AS pricing_bundle, pr.price
+    FROM gyms g
+    JOIN provinces p ON g.province_id = p.id
+    JOIN categories c ON g.category_id = c.id
+    JOIN images i ON g.image_id = i.id
+    JOIN prices pr ON g.pricing_id = pr.id
+    WHERE g.id = ?
+  `;
+
+  db.query(sql, [gymId], (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching gym:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Gym not found" });
+    }
+
+    return res.json(results[0]);
+  });
+});
 /* ============================================
  ✅ API: Upload Image & Save Category
 =============================================== */

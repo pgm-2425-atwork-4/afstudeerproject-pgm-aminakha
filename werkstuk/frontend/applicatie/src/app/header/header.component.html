@@ -3,7 +3,7 @@
         <p class="logo"><a routerLink="/" routerActive="active">gymly</a></p>
         <ul>
             <li><a routerLink="/" routerActive="active">Home</a></li>
-            <li><a href="/gyms">Gyms</a></li>
+            <li><a routerLink="/gyms" routerActive="active">Gyms</a></li>
             <li><a href="/oefeningen">Oefeningen</a></li>
             <li><a href="/about">Over ons</a></li>
             <li *ngIf="user?.role === 'admin'">
