@@ -17,8 +17,8 @@ if (!fs.existsSync(uploadDir)) {
 
 // ✅ Middleware
 app.use(cors({
-  origin: "https://pgm-2425-atwork-4.github.io", // ✅ Allow only GitHub Pages
-  methods: ["GET", "POST"],
+  origin: ["https://pgm-2425-atwork-4.github.io", "http://localhost:4200"], // ✅ Allow both GitHub Pages & Localhost
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"]
 }));
 app.use(express.json());
