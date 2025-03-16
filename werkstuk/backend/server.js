@@ -158,21 +158,14 @@ app.get("/users/:id", (req, res) => {
   db.query(sql, [userId], (err, result) => {
     if (err) {
       console.error("🔥 Error fetching user:", err);
-      return res.status(500).json({ error: err });
+      return res.status(500).json({ error: "Database error" });
     }
 
     if (result.length === 0) {
-      console.log("❌ User not found:", userId);
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log("✅ User data fetched:", result[0]);
-    res.json(result[{
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      profile_image: user.profile_image // ✅ Cloudinary image URL
-    }]); // ✅ Return only user object
+    res.json(result[0]);
   });
 });
 

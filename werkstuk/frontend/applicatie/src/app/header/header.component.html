@@ -11,7 +11,7 @@
               </li>
               <li *ngIf="user">
                 <div class="user-info-container">
-                  <p><a [routerLink]="['user-profile', user.id]">Welkom, {{ user.username }}</a></p>
+                  <p><a [routerLink]="['/user-profile', user.id]">Welkom, {{ user.username }}</a></p>
                   <img *ngIf="user.profile_image" [src]="user.profile_image" alt="Avatar" class="avatar">
                 <button (click)="logout()">Logout</button>
                 </div>
