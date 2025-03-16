@@ -147,6 +147,27 @@ app.get("/categories", (req, res) => {
   });
 });
 
+app.get("/users/:id", (req, res) => {
+  const userId = req.params.id;
+  const sql = "SELECT * FROM users WHERE id = ?";
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error fetching user:", err);
+      return res.status(500).json({ error: err });
+    }
+
+    if (result.length === 0) {
+      console.log("❌ User not found:", userId);
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    console.log("✅ User data fetched:", result[0]);
+    res.json(result[0]); // ✅ Return only user object
+  });
+});
+
+
 /* ============================================
  ✅ API: Fetch All Gyms
 =============================================== */
