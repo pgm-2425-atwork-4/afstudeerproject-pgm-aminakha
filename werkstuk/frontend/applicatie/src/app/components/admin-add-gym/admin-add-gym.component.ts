@@ -6,30 +6,64 @@ import { ApiService } from '../../services/api.service';
 @Component({
   selector: 'app-admin-add-gym',
   standalone: true,
-  imports: [CommonModule, FormsModule], // ✅ Ensure FormsModule is included
+  imports: [CommonModule, FormsModule], // ✅ Add FormsModule to resolve `ngModel` issue
   templateUrl: './admin-add-gym.component.html',
-  styleUrls: ['./admin-add-gym.component.css'],
-  providers: [ApiService]
+  styleUrls: ['./admin-add-gym.component.css']
 })
 export class AdminAddGymComponent {
-  gymData = {
+  gymData: any = {
     name: '',
     city: '',
-    rating: null,
+    rating: '',
     opening_hours: '',
     address: '',
-    personal_trainer: false
+    personal_trainer: false, // ✅ Boolean for checkbox binding
   };
+
+  selectedLogo: File | null = null;
+  selectedImages: File[] = [];
 
   constructor(private apiService: ApiService) {}
 
+  // ✅ Handle Logo Selection
+  onLogoSelected(event: any) {
+    this.selectedLogo = event.target.files[0];
+  }
+
+  // ✅ Handle Multiple Image Selection
+  onImagesSelected(event: any) {
+    this.selectedImages = Array.from(event.target.files);
+  }
+
   addGym() {
-    this.apiService.addGym(this.gymData).subscribe({
+    const formData = new FormData();
+    
+    formData.append('name', this.gymData.name);
+    formData.append('city', this.gymData.city);
+    formData.append('rating', this.gymData.rating);
+    formData.append('opening_hours', this.gymData.opening_hours);
+    formData.append('address', this.gymData.address);
+    formData.append('personal_trainer', this.gymData.personal_trainer ? '1' : '0');
+
+    // ✅ Append logo file
+    if (this.selectedLogo) {
+      formData.append('logo', this.selectedLogo);
+    }
+
+    // ✅ Append multiple images
+    this.selectedImages.forEach((file, index) => {
+      formData.append(`images`, file);
+    });
+
+    // ✅ Send data to API
+    this.apiService.addGym(formData).subscribe({
       next: (res) => {
-        console.log("✅ Gym Added:", res);
+        console.log('✅ Gym Added:', res);
+        alert('Gym added successfully!');
       },
       error: (err) => {
-        console.error("🔥 Error adding gym:", err);
+        console.error('🔥 Error adding gym:', err);
+        alert('Failed to add gym.');
       }
     });
   }

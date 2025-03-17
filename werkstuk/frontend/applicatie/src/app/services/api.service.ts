@@ -70,8 +70,8 @@ export class ApiService {
   
     return this.http.post(`${this.apiUrl}/admin/upload-gym-image`, formData);
   }
-  addGym(gymData: any) {
-    return this.http.post(`${this.apiUrl}/gyms`, gymData);
+  addGym(formData: FormData) {
+    return this.http.post(`${this.apiUrl}/add-gym`, formData);
   }
   // ✅ Fetch Admin Gyms
 getAdminGyms(adminId: string): Observable<any> {

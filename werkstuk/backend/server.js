@@ -200,29 +200,38 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
   const imageUrl = req.file.path; // ✅ Get Cloudinary URL
   res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl });
 });
-app.post("/add-gym", gymUpload.single("image"), (req, res) => {
-  const { name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id } = req.body;
+app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 10 }]), async (req, res) => {
+  try {
+    const { name, city, rating, opening_hours, address, personal_trainer } = req.body;
 
-  if (!req.file) {
-    return res.status(400).json({ error: "❌ No image uploaded!" });
+    // ✅ Get uploaded logo URL
+    const logoUrl = req.files["logo"] ? req.files["logo"][0].path : null;
+
+    // ✅ Insert Gym into Database
+    const gymSql = `INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, logo) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    db.query(gymSql, [name, city, rating, opening_hours, address, personal_trainer, logoUrl], async (err, result) => {
+      if (err) {
+        console.error("🔥 Error inserting gym:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      const gymId = result.insertId;
+      
+      // ✅ Upload Multiple Images to `images` Table
+      if (req.files["images"]) {
+        for (const image of req.files["images"]) {
+          const imageUrl = image.path;
+          const imageSql = `INSERT INTO images (gym_id, image_url) VALUES (?, ?)`;
+          db.query(imageSql, [gymId, imageUrl]);
+        }
+      }
+
+      res.status(201).json({ message: "✅ Gym Added!", gymId });
+    });
+  } catch (error) {
+    console.error("🔥 Error adding gym:", error);
+    res.status(500).json({ error: "Server error" });
   }
-
-  const imageUrl = req.file.path; // ✅ Cloudinary Image URL
-
-  const sql = `
-    INSERT INTO gyms (name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, image_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-  
-  const values = [name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, imageUrl];
-
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("🔥 Error adding gym:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
-    res.status(201).json({ message: "✅ Gym Added!", gymId: result.insertId, imageUrl });
-  });
 });
 /* ============================================
  ✅ API: Fetch All Gyms
@@ -244,10 +253,9 @@ app.get("/gyms", (req, res) => {
 
   db.query(sql, (err, results) => {
     if (err) {
-      console.error("🔥 ERROR: Could not fetch gyms", err); // ✅ LOG FULL ERROR
-      return res.status(500).json({ error: "Internal Server Error", details: err });
+      console.error("🔥 Database Query Error:", err); // ✅ Logs full error
+      return res.status(500).json({ error: "Database error", details: err.message });
     }
-    console.log("✅ Fetched gyms:", results.length);
     res.json(results);
   });
 });
