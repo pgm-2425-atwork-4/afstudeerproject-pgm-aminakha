@@ -233,19 +233,21 @@ app.get("/gyms", (req, res) => {
       g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
       p.name AS province, 
       c.name AS category,
-      g.image_url AS image,
+      i.image_url AS image,
       pr.bundle_name AS pricing_bundle, pr.price
     FROM gyms g
     JOIN provinces p ON g.province_id = p.id
     JOIN categories c ON g.category_id = c.id
+    LEFT JOIN images i ON g.image_id = i.id
     LEFT JOIN prices pr ON g.pricing_id = pr.id;
   `;
 
   db.query(sql, (err, results) => {
     if (err) {
-      console.error("🔥 Error fetching gyms:", err);
-      return res.status(500).json({ error: "Database error" });
+      console.error("🔥 ERROR: Could not fetch gyms", err); // ✅ LOG FULL ERROR
+      return res.status(500).json({ error: "Internal Server Error", details: err });
     }
+    console.log("✅ Fetched gyms:", results.length);
     res.json(results);
   });
 });

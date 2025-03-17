@@ -19,8 +19,16 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user-profile/:id', component: UserProfileComponent },
   {path:"gyms", component: GymsComponent},
-        {path: 'admin-dashboard', component: AdminDashboardComponent, children: [{path: 'categories', component: AdminCategoryComponent},{path: 'gyms', component: GymsComponent},{path: 'add-gym', component: AdminAddGymComponent}]},
-  
+  { 
+    path: 'admin', 
+    component: AdminDashboardComponent, 
+    children: [
+      { path: '', redirectTo: 'categories', pathMatch: 'full' }, // Default admin route
+      { path: 'categories', component: AdminCategoryComponent },
+      { path: 'gyms', component: GymsComponent },
+      { path: 'add-gym', component: AdminAddGymComponent } // ✅ Ensure this matches
+    ]
+  },  
   { path: '**', redirectTo: '' },
 ];
 

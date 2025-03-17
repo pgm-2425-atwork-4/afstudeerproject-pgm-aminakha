@@ -7,7 +7,7 @@
             <li><a href="/oefeningen">Oefeningen</a></li>
             <li><a href="/about">Over ons</a></li>
             <li *ngIf="user?.role === 'admin'">
-                <p><a routerLink="/admin-dashboard">Admin Dashboard</a></p>
+                <p><a routerLink="/admin">Admin Dashboard</a></p>
               </li>
               <li *ngIf="user">
                 <div class="user-info-container">
