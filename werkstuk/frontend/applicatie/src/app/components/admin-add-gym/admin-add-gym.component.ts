@@ -47,7 +47,7 @@ export class AdminAddGymComponent {
       formData.append('logo', this.selectedLogo); // ✅ Upload Logo
     }
   
-    this.selectedImages.forEach((file, index) => {
+    this.selectedImages.forEach((file) => {
       formData.append('images', file); // ✅ Upload Multiple Images
     });
   
@@ -62,5 +62,6 @@ export class AdminAddGymComponent {
       }
     });
   }
+  
   
 }
