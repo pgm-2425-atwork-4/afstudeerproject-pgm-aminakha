@@ -113,7 +113,7 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  const sql = "SELECT * FROM users WHERE email = ?";
+  const sql = "SELECT id, username, firstname, lastname, email, birthday, profile_image, role FROM users WHERE email = ?";
   db.query(sql, [email], async (err, results) => {
     if (err) {
       console.error("🔥 Error fetching user:", err);
@@ -126,24 +126,22 @@ app.post("/login", (req, res) => {
 
     const user = results[0];
 
-    // 🔐 Compare entered password with hashed password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "❌ Incorrect password" });
-    }
-
     res.json({
       message: "✅ Login successful!",
       user: {
         id: user.id,
         username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
+        birthday: user.birthday,
         role: user.role,
-        profile_image: `https://afstudeerproject-pgm-aminakha.onrender.com${user.profile_image}`,
+        profile_image: user.profile_image || null,
       },
     });
   });
 });
+
 app.get("/categories", (req, res) => {
   const sql = "SELECT * FROM categories";
   db.query(sql, (err, results) => {

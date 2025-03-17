@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterModule, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { ApiService } from '../../services/api.service'; // ✅ Import API service
-
+import { ApiService } from '../../services/api.service'; 
 
 @Component({
   selector: 'app-login',
@@ -19,26 +17,22 @@ export class LoginComponent {
   password: string = '';
   message: string = ''; 
 
-  constructor(private apiService : ApiService , private http: HttpClient, private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router) {}
 
   login() {
-    this.http.post('https://afstudeerproject-pgm-aminakha.onrender.com/login', {
-      email: this.email,
-      password: this.password
-    }).subscribe(
-      (res: any) => {
-        localStorage.setItem('user', JSON.stringify(res.user));
-        window.dispatchEvent(new Event('storage')); // ✅ Update navbar dynamically
-  
-        if (res.user.role === 'admin') {
+    this.apiService.loginUser(this.email, this.password).subscribe({
+      next: (response) => {
+        console.log("✅ Login successful:", response);
+
+        if (response.user.role === 'admin') {
           this.router.navigate(['/admin-dashboard']);
         } else {
-          this.router.navigate(['/user-profile']);
+          this.router.navigate(['/user-profile', response.user.id]); // ✅ Pass user ID
         }
       },
-      (error) => {
+      error: () => {
         this.message = '❌ Login Failed! Invalid email or password.';
       }
-    );
+    });
   }
 }

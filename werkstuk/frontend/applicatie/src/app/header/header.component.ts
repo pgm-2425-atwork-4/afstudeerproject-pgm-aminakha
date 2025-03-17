@@ -8,58 +8,31 @@ import { ApiService } from '../services/api.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
-  providers: [ApiService] // ✅ Provide ApiService here
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
   user: any = null;
-  isBrowser: boolean = false; // ✅ Detect if running in browser
+  isBrowser: boolean = false;
 
   constructor(
-    private router: Router, 
-    private apiService: ApiService, // ✅ Inject ApiService correctly
+    private router: Router,
+    private apiService: ApiService, 
     @Inject(PLATFORM_ID) private platformId: object
   ) {}
 
   ngOnInit() {
-    this.isBrowser = isPlatformBrowser(this.platformId); 
+    this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
-      this.loadUser();
-
-      // ✅ Listen for storage changes (sync login state)
-      window.addEventListener('storage', () => {
-        this.loadUser();
+      this.apiService.currentUser$.subscribe(user => {
+        console.log("✅ User Data for Header:", user);
+        this.user = user;
       });
     }
   }
 
-  loadUser() {
-    const userId = localStorage.getItem("userId"); // ✅ Get stored user ID
-    if (!userId) {
-      console.log("❌ No user logged in.");
-      this.user = null; // ✅ Ensure UI updates when user logs out
-      return;
-    }
-
-    this.apiService.getUserById(userId).subscribe({
-      next: (res) => {
-        console.log("✅ User Data for Header:", res);
-        this.user = res;
-      },
-      error: (err) => {
-        console.error("🔥 Error loading user:", err);
-        this.user = null; // ✅ Reset user if error occurs
-      }
-    });
-  }
-
   logout() {
-    if (this.isBrowser) {
-      localStorage.removeItem('user');
-      localStorage.removeItem('userId'); // ✅ Also remove userId
-      this.user = null; // ✅ Reset user object to update UI
-    }
-    this.router.navigate(['/login']); 
+    this.apiService.logout(); 
+    this.router.navigate(['/login']);
   }
 }
