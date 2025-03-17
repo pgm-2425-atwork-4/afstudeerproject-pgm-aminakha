@@ -169,11 +169,11 @@ app.get("/users/:id", (req, res) => {
     }
 
     console.log("✅ Cloudinary Image URL:", result[0].profile_image); // 🔍 Debugging
-
+ 
     res.json({
-      id: result[0].id,
-      username: result[0].username,
-      email: result[0].email,
+      id: user.id,
+      username: user.username,
+      email: user.email,
       profile_image: result[0].profile_image, // ✅ Should be full URL
     });
   });
