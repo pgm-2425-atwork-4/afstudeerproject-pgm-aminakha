@@ -35,7 +35,8 @@ if (!fs.existsSync(uploadDir)) {
 app.use(cors({
   origin: ["https://pgm-2425-atwork-4.github.io", "http://localhost:4200"], // ✅ Allow both GitHub Pages & Localhost
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type"]
+  allowedHeaders: ["Content-Type"],
+  credentials: true,
 }));
 app.use(express.json());
 app.use('/uploads', express.static(uploadDir)); // ✅ Serve images correctly
@@ -165,17 +166,19 @@ app.get("/users/:id", (req, res) => {
     }
 
     if (result.length === 0) {
+      console.log("❌ User not found:", userId);
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log("✅ Cloudinary Image URL:", result[0].profile_image); // 🔍 Debugging
- 
-    res.json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      profile_image: result[0].profile_image, // ✅ Should be full URL
-    });
+    // ✅ Correct way to return Cloudinary image URL
+    const user = result[0];
+    user.profile_image = user.profile_image 
+      ? user.profile_image 
+      : "https://res.cloudinary.com/dwkf8avz2/image/upload/vXXXXXXXX/default-user.png"; // Default avatar
+
+    console.log("✅ Cloudinary Image URL:", user.profile_image); 
+
+    res.json(user); // ✅ Correct response
   });
 });
 

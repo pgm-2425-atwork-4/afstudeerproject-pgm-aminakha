@@ -41,18 +41,14 @@ export class UserProfileComponent implements OnInit {
   }
 
   loadUserProfile() {
-    const userId = this.route.snapshot.paramMap.get('id'); 
-    console.log("🔍 Fetching user with ID:", userId); 
-    if (!userId) {
-      console.error("❌ No user ID found in route");
-      return;
-    }
+    const userId = this.route.snapshot.paramMap.get('id');
+    console.log("🔍 Fetching user with ID:", userId);
+  
     if (userId) {
       this.apiService.getUserById(userId).subscribe({
         next: (res) => {
           console.log("✅ User data received:", res);
           this.user = res;
-          this.cdr.detectChanges(); // Force UI update
         },
         error: (error) => {
           console.error("🔥 Error fetching user:", error);
