@@ -157,7 +157,7 @@ app.get("/categories", (req, res) => {
 
 app.get("/users/:id", (req, res) => {
   const userId = req.params.id;
-  const sql = "SELECT id, username, email, profile_image FROM users WHERE id = ?";
+  const sql = "SELECT id, username, email, profile_image, firstname, lastname, birthday FROM users WHERE id = ?";
 
   db.query(sql, [userId], (err, results) => {
     if (err) {
@@ -178,9 +178,10 @@ app.get("/users/:id", (req, res) => {
       : "https://res.cloudinary.com/dwkf8avz2/image/upload/vXXXXXXXX/default-user.png"; // Default image
 
     console.log("✅ Returning user data:", user);
-    res.json(user); // ✅ Send JSON response
+    res.json(user); // ✅ Send full user object
   });
 });
+
 
 
 
