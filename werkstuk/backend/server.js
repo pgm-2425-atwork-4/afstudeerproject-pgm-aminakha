@@ -159,28 +159,29 @@ app.get("/users/:id", (req, res) => {
   const userId = req.params.id;
   const sql = "SELECT id, username, email, profile_image FROM users WHERE id = ?";
 
-  db.query(sql, [userId], (err, result) => {
+  db.query(sql, [userId], (err, results) => {
     if (err) {
       console.error("🔥 Error fetching user:", err);
-      return res.status(500).json({ error: err });
+      return res.status(500).json({ error: "Database error" });
     }
 
-    if (result.length === 0) {
+    if (results.length === 0) {
       console.log("❌ User not found:", userId);
       return res.status(404).json({ error: "User not found" });
     }
 
-    // ✅ Correct way to return Cloudinary image URL
-    const user = result[0];
-    user.profile_image = user.profile_image 
-      ? user.profile_image 
-      : "https://res.cloudinary.com/dwkf8avz2/image/upload/vXXXXXXXX/default-user.png"; // Default avatar
+    const user = results[0];
 
-    console.log("✅ Cloudinary Image URL:", user.profile_image); 
+    // ✅ Ensure profile_image URL is correct (Cloudinary or Default)
+    user.profile_image = user.profile_image
+      ? user.profile_image
+      : "https://res.cloudinary.com/dwkf8avz2/image/upload/vXXXXXXXX/default-user.png"; // Default image
 
-    res.json(user); // ✅ Correct response
+    console.log("✅ Returning user data:", user);
+    res.json(user); // ✅ Send JSON response
   });
 });
+
 
 
 

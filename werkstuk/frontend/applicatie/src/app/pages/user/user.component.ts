@@ -56,6 +56,7 @@ export class UserProfileComponent implements OnInit {
       });
     }
   }
+  
 
   /**
    * ✅ Format profile image URL correctly for Render deployment
