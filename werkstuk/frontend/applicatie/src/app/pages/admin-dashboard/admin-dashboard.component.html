@@ -1,11 +1,14 @@
 <h2>Admin Dashboard</h2>
-<nav>
+<div class="admin-container">
+    <nav>
   <ul>
     <li><a [routerLink]="['/admin/categories']">Manage Categories</a></li>
     <li><a [routerLink]="['/admin/gyms']">Manage Gyms</a></li>
     <li><a [routerLink]="['/admin/add-gym']">Add Gym</a></li>
   </ul>
 </nav>
+</div>
+
 
 <!-- ✅ This is needed to load child routes -->
 <router-outlet></router-outlet>

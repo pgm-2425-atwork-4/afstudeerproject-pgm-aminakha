@@ -17,11 +17,10 @@ export class AdminAddGymComponent {
     rating: '',
     opening_hours: '',
     address: '',
-    personal_trainer: false, // ✅ Boolean for checkbox binding
+    personal_trainer: false,
   };
 
   selectedLogo: File | null = null;
-  selectedImages: File[] = [];
 
   constructor(private apiService: ApiService) {}
 
@@ -30,14 +29,8 @@ export class AdminAddGymComponent {
     this.selectedLogo = event.target.files[0];
   }
 
-  // ✅ Handle Multiple Image Selection
-  onImagesSelected(event: any) {
-    this.selectedImages = Array.from(event.target.files);
-  }
-
   addGym() {
     const formData = new FormData();
-    
     formData.append('name', this.gymData.name);
     formData.append('city', this.gymData.city);
     formData.append('rating', this.gymData.rating);
@@ -50,12 +43,6 @@ export class AdminAddGymComponent {
       formData.append('logo', this.selectedLogo);
     }
 
-    // ✅ Append multiple images
-    this.selectedImages.forEach((file, index) => {
-      formData.append(`images`, file);
-    });
-
-    // ✅ Send data to API
     this.apiService.addGym(formData).subscribe({
       next: (res) => {
         console.log('✅ Gym Added:', res);
