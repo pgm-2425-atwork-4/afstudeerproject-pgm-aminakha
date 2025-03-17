@@ -1,1 +1,11 @@
-<p>admin-dashboard works!</p>
+<h2>Admin Dashboard</h2>
+<nav>
+  <ul>
+    <li><a [routerLink]="['/admin/categories']">Manage Categories</a></li>
+    <li><a [routerLink]="['/admin/gyms']">Manage Gyms</a></li>
+    <li><a [routerLink]="['/admin/add-gym']">Add Gym</a></li>
+  </ul>
+</nav>
+
+<!-- ✅ This is needed to load child routes -->
+<router-outlet></router-outlet>

@@ -9,6 +9,8 @@ import { RegisterComponent } from './app/pages/register/register.component';
 import { UserProfileComponent } from './app/pages/user/user.component';
 import { AdminCategoryComponent } from './app/components/admin-category/admin-category.component';
 import { GymsComponent } from './app/pages/gyms/gyms.component';
+import { AdminDashboardComponent } from './app/pages/admin-dashboard/admin-dashboard.component';
+import { AdminAddGymComponent } from './app/components/admin-add-gym/admin-add-gym.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -18,7 +20,12 @@ bootstrapApplication(AppComponent, {
       { path: 'login', component: LoginComponent },
       {path: 'register', component: RegisterComponent},
 { path: 'user-profile/:id', component: UserProfileComponent },
-      {path: 'admin-dashboard', component: AdminCategoryComponent},
+      {path: 'admin-dashboard', component: AdminDashboardComponent, children: [
+        { path: '', redirectTo: 'categories', pathMatch: 'full' }, // Default admin route
+        { path: 'categories', component: AdminCategoryComponent },
+        { path: 'gyms', component: GymsComponent },
+        { path: 'add-gym', component: AdminAddGymComponent }
+      ] },
       {path: 'gyms', component: GymsComponent},
     ])
   ],

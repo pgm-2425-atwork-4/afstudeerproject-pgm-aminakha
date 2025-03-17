@@ -1,11 +1,17 @@
 import { Component } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterOutlet],
   templateUrl: './admin-dashboard.component.html',
-  styleUrl: './admin-dashboard.component.css'
+  styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent {
-
+  sections = [
+    { title: "Manage Gyms", route: "/admin/gyms" },
+    { title: "Add Gym", route: "/admin/add-gym" }
+  ];
 }

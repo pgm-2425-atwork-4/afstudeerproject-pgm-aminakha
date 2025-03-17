@@ -6,6 +6,9 @@ import { UserProfileComponent } from './pages/user/user.component';
 import { RenderMode, ServerRoute } from '@angular/ssr';
 import { fetchUserIds } from '../server';
 import { GymsComponent } from './pages/gyms/gyms.component';
+import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
+import { AdminCategoryComponent } from './components/admin-category/admin-category.component';
+import { AdminAddGymComponent } from './components/admin-add-gym/admin-add-gym.component';
 
 
 
@@ -16,6 +19,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user-profile/:id', component: UserProfileComponent },
   {path:"gyms", component: GymsComponent},
+        {path: 'admin-dashboard', component: AdminDashboardComponent, children: [{path: 'categories', component: AdminCategoryComponent},{path: 'gyms', component: GymsComponent},{path: 'add-gym', component: AdminAddGymComponent}]},
+  
   { path: '**', redirectTo: '' },
 ];
 

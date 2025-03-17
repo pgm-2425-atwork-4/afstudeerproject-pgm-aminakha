@@ -1,0 +1,16 @@
+<h2>Add Gym</h2>
+
+<form (ngSubmit)="addGym()">
+  <input type="text" [(ngModel)]="gymData.name" name="name" placeholder="Gym Name" required>
+  <input type="text" [(ngModel)]="gymData.city" name="city" placeholder="City" required>
+  <input type="number" [(ngModel)]="gymData.rating" name="rating" placeholder="Rating (1-5)" required>
+  <input type="text" [(ngModel)]="gymData.opening_hours" name="opening_hours" placeholder="Opening Hours" required>
+  <input type="text" [(ngModel)]="gymData.address" name="address" placeholder="Address" required>
+  
+  <label>
+    <input type="checkbox" [(ngModel)]="gymData.personal_trainer" name="personal_trainer">
+    Personal Trainer Available
+  </label>
+
+  <button type="submit">Add Gym</button>
+</form>

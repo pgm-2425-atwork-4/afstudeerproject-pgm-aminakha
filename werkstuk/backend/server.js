@@ -25,6 +25,15 @@ const storage = new CloudinaryStorage({
     public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), // Unique filename
   },
 });
+// ✅ Cloudinary Storage for Gym Images
+const gymStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "gym_images", // Store in "gym_images" folder
+    format: async (req, file) => "png", // Convert images to PNG
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), // Unique filename
+  },
+});
 // ✅ Ensure "uploads" directory exists
 const uploadDir = path.join(__dirname, "uploads/");
 if (!fs.existsSync(uploadDir)) {
@@ -182,8 +191,39 @@ app.get("/users/:id", (req, res) => {
 
 
 
+const gymUpload = multer({ storage: gymStorage });
+app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "❌ No file uploaded!" });
+  }
 
+  const imageUrl = req.file.path; // ✅ Get Cloudinary URL
+  res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl });
+});
+app.post("/add-gym", gymUpload.single("image"), (req, res) => {
+  const { name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id } = req.body;
 
+  if (!req.file) {
+    return res.status(400).json({ error: "❌ No image uploaded!" });
+  }
+
+  const imageUrl = req.file.path; // ✅ Cloudinary Image URL
+
+  const sql = `
+    INSERT INTO gyms (name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, image_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  
+  const values = [name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, imageUrl];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("🔥 Error adding gym:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.status(201).json({ message: "✅ Gym Added!", gymId: result.insertId, imageUrl });
+  });
+});
 /* ============================================
  ✅ API: Fetch All Gyms
 =============================================== */
@@ -193,19 +233,77 @@ app.get("/gyms", (req, res) => {
       g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
       p.name AS province, 
       c.name AS category,
-      i.image_url AS image,
+      g.image_url AS image,
       pr.bundle_name AS pricing_bundle, pr.price
     FROM gyms g
     JOIN provinces p ON g.province_id = p.id
     JOIN categories c ON g.category_id = c.id
-    LEFT JOIN images i ON g.image_id = i.id
     LEFT JOIN prices pr ON g.pricing_id = pr.id;
   `;
 
   db.query(sql, (err, results) => {
     if (err) {
       console.error("🔥 Error fetching gyms:", err);
-      return res.status(500).json({ error: err });
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json(results);
+  });
+});
+const adminUpload = multer({ storage: gymStorage });
+
+app.post("/admin/upload-gym-image", adminUpload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "❌ No file uploaded!" });
+  }
+
+  const imageUrl = req.file.path; // ✅ Get Cloudinary URL
+  res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl });
+});
+app.post("/admin/add-gym", adminUpload.single("image"), (req, res) => {
+  const { name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, admin_id, description } = req.body;
+
+  if (!req.file) {
+    return res.status(400).json({ error: "❌ No image uploaded!" });
+  }
+
+  const imageUrl = req.file.path; // ✅ Cloudinary Image URL
+
+  const sql = `
+    INSERT INTO gyms (name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, image_url, admin_id, description)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  
+  const values = [name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, imageUrl, admin_id, description];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("🔥 Error adding gym:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.status(201).json({ message: "✅ Gym Added!", gymId: result.insertId, imageUrl });
+  });
+});
+app.get("/admin/gyms/:adminId", (req, res) => {
+  const adminId = req.params.adminId;
+
+  const sql = `
+    SELECT 
+      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
+      p.name AS province, 
+      c.name AS category,
+      g.image_url AS image,
+      pr.bundle_name AS pricing_bundle, pr.price
+    FROM gyms g
+    JOIN provinces p ON g.province_id = p.id
+    JOIN categories c ON g.category_id = c.id
+    LEFT JOIN prices pr ON g.pricing_id = pr.id
+    WHERE g.admin_id = ?
+  `;
+
+  db.query(sql, [adminId], (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching admin gyms:", err);
+      return res.status(500).json({ error: "Database error" });
     }
     res.json(results);
   });

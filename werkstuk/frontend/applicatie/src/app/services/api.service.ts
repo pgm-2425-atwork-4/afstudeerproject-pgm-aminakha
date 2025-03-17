@@ -63,4 +63,18 @@ export class ApiService {
   getGymById(gymId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/gyms/${gymId}`);
   }
+
+  uploadGymImage(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', file);
+  
+    return this.http.post(`${this.apiUrl}/admin/upload-gym-image`, formData);
+  }
+  addGym(gymData: any) {
+    return this.http.post(`${this.apiUrl}/gyms`, gymData);
+  }
+  // ✅ Fetch Admin Gyms
+getAdminGyms(adminId: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}/admin/gyms/${adminId}`);
+}
 }

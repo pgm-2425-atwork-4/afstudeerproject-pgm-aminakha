@@ -13,5 +13,11 @@
     <p><strong>Category:</strong> {{ gym.category }}</p>
     <p><strong>Personal Trainer Available:</strong> {{ gym.personal_trainer ? '✅ Yes' : '❌ No' }}</p>
     <p><strong>Price:</strong> {{ gym.pricing_bundle }} - €{{ gym.price }}/month</p>
+    <div *ngFor="let gym of gyms" class="gym-card">
+      <img [src]="gym.image_url" alt="{{ gym.name }}" class="gym-image">
+      <h2>{{ gym.name }}</h2>
+      <p><strong>City:</strong> {{ gym.city }}</p>
+      <p><strong>Rating:</strong> ⭐ {{ gym.rating }}</p>
+    </div>
   </div>
   
