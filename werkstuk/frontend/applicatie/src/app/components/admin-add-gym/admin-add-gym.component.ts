@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // ✅ Import FormsModule for ngModel
 import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-admin-add-gym',
+  standalone: true, // ✅ Ensure standalone component
+  imports: [CommonModule, FormsModule], // ✅ Include FormsModule here
   templateUrl: './admin-add-gym.component.html',
   styleUrls: ['./admin-add-gym.component.css']
 })
