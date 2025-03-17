@@ -36,32 +36,33 @@ export class AdminAddGymComponent {
   addGym() {
     const formData = new FormData();
     
-    formData.append('name', this.gymData.name);
-    formData.append('city', this.gymData.city);
-    formData.append('rating', this.gymData.rating);
-    formData.append('opening_hours', this.gymData.opening_hours);
-    formData.append('address', this.gymData.address);
-    formData.append('personal_trainer', this.gymData.personal_trainer ? '1' : '0');
+    formData.append("name", this.gymData.name);
+    formData.append("city", this.gymData.city);
+    formData.append("rating", this.gymData.rating);
+    formData.append("opening_hours", this.gymData.opening_hours);
+    formData.append("address", this.gymData.address);
+    formData.append("personal_trainer", this.gymData.personal_trainer ? "1" : "0");
   
     if (this.selectedLogo) {
-      formData.append('logo', this.selectedLogo); // ✅ Upload Logo
+      formData.append("logo", this.selectedLogo); // ✅ Upload Logo
     }
   
     this.selectedImages.forEach((file) => {
-      formData.append('images', file); // ✅ Upload Multiple Images
+      formData.append("images", file); // ✅ Upload Multiple Images
     });
   
     this.apiService.addGym(formData).subscribe({
       next: (res) => {
-        console.log('✅ Gym Added:', res);
-        alert('Gym added successfully!');
+        console.log("✅ Gym Added:", res);
+        alert("Gym added successfully!");
       },
       error: (err) => {
-        console.error('🔥 Error adding gym:', err);
-        alert('Failed to add gym.');
+        console.error("🔥 Error adding gym:", err);
+        alert("Failed to add gym.");
       }
     });
   }
+  
   
   
 }
