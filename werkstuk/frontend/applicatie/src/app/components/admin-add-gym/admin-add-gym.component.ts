@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ✅ Import FormsModule
 import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-admin-add-gym',
-  standalone: true,
-  imports: [CommonModule, FormsModule], // ✅ Add FormsModule to resolve `ngModel` issue
   templateUrl: './admin-add-gym.component.html',
   styleUrls: ['./admin-add-gym.component.css']
 })
@@ -21,36 +17,40 @@ export class AdminAddGymComponent {
   };
 
   selectedLogo: File | null = null;
+  selectedImages: File[] = [];
 
   constructor(private apiService: ApiService) {}
 
-  // ✅ Handle Logo Selection
   onLogoSelected(event: any) {
     this.selectedLogo = event.target.files[0];
   }
 
+  onImagesSelected(event: any) {
+    this.selectedImages = Array.from(event.target.files);
+  }
+
   addGym() {
     const formData = new FormData();
-    formData.append('name', this.gymData.name);
-    formData.append('city', this.gymData.city);
-    formData.append('rating', this.gymData.rating);
-    formData.append('opening_hours', this.gymData.opening_hours);
-    formData.append('address', this.gymData.address);
-    formData.append('personal_trainer', this.gymData.personal_trainer ? '1' : '0');
+    Object.keys(this.gymData).forEach(key => {
+      formData.append(key, this.gymData[key]);
+    });
 
-    // ✅ Append logo file
     if (this.selectedLogo) {
       formData.append('logo', this.selectedLogo);
     }
 
+    this.selectedImages.forEach(file => {
+      formData.append('images', file);
+    });
+
     this.apiService.addGym(formData).subscribe({
-      next: (res) => {
-        console.log('✅ Gym Added:', res);
-        alert('Gym added successfully!');
+      next: res => {
+        console.log("✅ Gym Added:", res);
+        alert("Gym added successfully!");
       },
-      error: (err) => {
-        console.error('🔥 Error adding gym:', err);
-        alert('Failed to add gym.');
+      error: err => {
+        console.error("🔥 Error adding gym:", err);
+        alert("Failed to add gym.");
       }
     });
   }

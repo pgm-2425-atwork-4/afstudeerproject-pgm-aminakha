@@ -188,7 +188,26 @@ app.get("/users/:id", (req, res) => {
     res.json(user); // ✅ Send full user object
   });
 });
+const logoStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "gym_logos", // Gym logos stored here
+    format: async () => "png",
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"),
+  },
+});
 
+const imageStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "gym_images", // Gym additional images stored here
+    format: async () => "jpg",
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"),
+  },
+});
+
+const uploadLogo = multer({ storage: logoStorage });
+const uploadImages = multer({ storage: imageStorage });
 
 
 const gymUpload = multer({ storage: gymStorage });
@@ -200,38 +219,42 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
   const imageUrl = req.file.path; // ✅ Get Cloudinary URL
   res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl });
 });
-app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 10 }]), async (req, res) => {
-  try {
-    const { name, city, rating, opening_hours, address, personal_trainer } = req.body;
+app.post("/add-gym", uploadLogo.single("logo"), uploadImages.array("images", 5), (req, res) => {
+  const { name, city, rating, opening_hours, address, personal_trainer } = req.body;
 
-    // ✅ Get uploaded logo URL
-    const logoUrl = req.files["logo"] ? req.files["logo"][0].path : null;
+  const logoUrl = req.file ? req.file.path : null; // ✅ Get the uploaded logo URL from Cloudinary
+  const imageUrls = req.files ? req.files.map(file => file.path) : []; // ✅ Get multiple uploaded image URLs
 
-    // ✅ Insert Gym into Database
-    const gymSql = `INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, logo) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    db.query(gymSql, [name, city, rating, opening_hours, address, personal_trainer, logoUrl], async (err, result) => {
-      if (err) {
-        console.error("🔥 Error inserting gym:", err);
-        return res.status(500).json({ error: "Database error" });
-      }
+  const sql = `
+    INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, logo)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  const values = [name, city, rating, opening_hours, address, personal_trainer, logoUrl];
 
-      const gymId = result.insertId;
-      
-      // ✅ Upload Multiple Images to `images` Table
-      if (req.files["images"]) {
-        for (const image of req.files["images"]) {
-          const imageUrl = image.path;
-          const imageSql = `INSERT INTO images (gym_id, image_url) VALUES (?, ?)`;
-          db.query(imageSql, [gymId, imageUrl]);
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("🔥 Error inserting gym:", err);
+      return res.status(500).json({ error: err });
+    }
+    
+    const gymId = result.insertId;
+
+    // ✅ Insert multiple images into `images` table
+    if (imageUrls.length > 0) {
+      const imageInsertSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
+      const imageValues = imageUrls.map(url => [gymId, url]);
+
+      db.query(imageInsertSql, [imageValues], (imageErr, imageResult) => {
+        if (imageErr) {
+          console.error("🔥 Error inserting images:", imageErr);
+          return res.status(500).json({ error: imageErr });
         }
-      }
-
-      res.status(201).json({ message: "✅ Gym Added!", gymId });
-    });
-  } catch (error) {
-    console.error("🔥 Error adding gym:", error);
-    res.status(500).json({ error: "Server error" });
-  }
+        res.status(201).json({ message: "✅ Gym Added!", gymId, logo: logoUrl, images: imageUrls });
+      });
+    } else {
+      res.status(201).json({ message: "✅ Gym Added!", gymId, logo: logoUrl });
+    }
+  });
 });
 /* ============================================
  ✅ API: Fetch All Gyms
@@ -239,26 +262,52 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
 app.get("/gyms", (req, res) => {
   const sql = `
     SELECT 
-      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
+      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, g.logo, 
       p.name AS province, 
       c.name AS category,
-      i.image_url AS image,
       pr.bundle_name AS pricing_bundle, pr.price
     FROM gyms g
-    JOIN provinces p ON g.province_id = p.id
-    JOIN categories c ON g.category_id = c.id
-    LEFT JOIN images i ON g.image_id = i.id
+    LEFT JOIN provinces p ON g.province_id = p.id
+    LEFT JOIN categories c ON g.category_id = c.id
     LEFT JOIN prices pr ON g.pricing_id = pr.id;
   `;
 
-  db.query(sql, (err, results) => {
+  db.query(sql, (err, gyms) => {
     if (err) {
-      console.error("🔥 Database Query Error:", err); // ✅ Logs full error
+      console.error("🔥 Database Query Error:", err);
       return res.status(500).json({ error: "Database error", details: err.message });
     }
-    res.json(results);
+
+    // ✅ Fetch all images separately
+    const gymIds = gyms.map(g => g.id);
+    if (gymIds.length === 0) {
+      return res.json(gyms); // ✅ No gyms found, return empty array
+    }
+
+    const imageQuery = "SELECT gym_id, image_url FROM images WHERE gym_id IN (?)";
+    db.query(imageQuery, [gymIds], (imgErr, images) => {
+      if (imgErr) {
+        console.error("🔥 Error fetching gym images:", imgErr);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      // ✅ Attach images to gyms
+      const gymMap = {};
+      gyms.forEach(gym => {
+        gymMap[gym.id] = { ...gym, images: [] };
+      });
+
+      images.forEach(img => {
+        if (gymMap[img.gym_id]) {
+          gymMap[img.gym_id].images.push(img.image_url);
+        }
+      });
+
+      res.json(Object.values(gymMap));
+    });
   });
 });
+
 const adminUpload = multer({ storage: gymStorage });
 
 app.post("/admin/upload-gym-image", adminUpload.single("image"), (req, res) => {
