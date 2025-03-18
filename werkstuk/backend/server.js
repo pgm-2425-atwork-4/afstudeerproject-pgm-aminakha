@@ -59,7 +59,7 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 const corsOptions = {
-  origin: "http://localhost:4200", // ✅ Allow local frontend
+  origin: "http://localhost:4200", // ✅ Adjust as needed
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // ✅ Allow cookies & authentication headers
@@ -68,10 +68,13 @@ app.use(cors(corsOptions));
 
 // ✅ Manually Set CORS Headers for Every Response
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // ✅ Adjust if needed
+  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200); // ✅ Handle preflight
+  }
   next();
 });
 app.use(express.json());

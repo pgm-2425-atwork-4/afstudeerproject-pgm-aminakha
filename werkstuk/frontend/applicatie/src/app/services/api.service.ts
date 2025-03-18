@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -13,6 +13,18 @@ export class ApiService {
   private currentUserSubject = new BehaviorSubject<any>(null); // ✅ Store user in memory
   currentUser$ = this.currentUserSubject.asObservable();
 
+  fetchUser() {
+    this.http.get(`${this.apiUrl}/auth/user`, { withCredentials: true }).subscribe({
+      next: (user) => {
+        console.log("✅ Authenticated User:", user);
+        this.currentUserSubject.next(user); // ✅ Update the observable
+      },
+      error: () => {
+        console.log("❌ No authenticated user.");
+        this.currentUserSubject.next(null);
+      }
+    });
+  }
   constructor(private http: HttpClient) {
     console.log("🚀 API Base URL:", this.apiUrl);
   }
@@ -43,17 +55,19 @@ export class ApiService {
   }
 
   loginUser(email: string, password: string): Observable<any> {
-    return this.http.post<{ user: any }>(`${this.apiUrl}/login`, { email, password }).pipe(
-      tap(response => {
-        if (response.user) {
-          this.currentUserSubject.next(response.user); // ✅ Store user in memory
-        }
-      })
-    );
+    return this.http.post(`${this.apiUrl}/login`, { email, password }, { withCredentials: true });
+  }
+  getAuthUser(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/auth/user`, {
+      withCredentials: true, // ✅ Important: Ensure JWT token is sent
+    });
   }
 
   logout() {
-    this.currentUserSubject.next(null); // ✅ Clear user from memory
+    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe(() => {
+      console.log("✅ User logged out.");
+      this.currentUserSubject.next(null);
+    });
   }
 
   getGyms(): Observable<any> {

@@ -24,6 +24,10 @@ export class HeaderComponent implements OnInit {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
+      // ✅ Fetch user on initialization
+      this.apiService.fetchUser();
+
+      // ✅ Subscribe to user changes
       this.apiService.currentUser$.subscribe(user => {
         console.log("✅ User Data for Header:", user);
         this.user = user;
