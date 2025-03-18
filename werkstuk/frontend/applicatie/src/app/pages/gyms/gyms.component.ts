@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-gyms',
-  imports: [CommonModule],
+  imports: [CommonModule,RouterLink],
   templateUrl: './gyms.component.html',
   styleUrl: './gyms.component.css'
 })

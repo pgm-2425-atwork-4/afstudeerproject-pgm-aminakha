@@ -23,4 +23,6 @@
   <p><strong>Category:</strong> {{ gym.category }}</p>
   <p><strong>Personal Trainer Available:</strong> {{ gym.personal_trainer ? '✅ Yes' : '❌ No' }}</p>
   <p><strong>Price:</strong> {{ gym.pricing_bundle }} - €{{ gym.price }}/month</p>
+  <a [routerLink]="['/gym-detail', gym.id]" class="gym-link">Link</a>
+
 </div>

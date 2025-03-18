@@ -1,0 +1,13 @@
+<div *ngIf="gym" class="gym-detail-container">
+    <h2>{{ gym.name }}</h2>
+    <img [src]="gym.logo" alt="{{ gym.name }}" class="gym-logo">
+    <p><strong>Location:</strong> {{ gym.city }}, {{ gym.address }}</p>
+    <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
+    <p><strong>Rating:</strong> ⭐ {{ gym.rating }}/5</p>
+    <p><strong>Trainer Available:</strong> {{ gym.personal_trainer ? 'Yes' : 'No' }}</p>
+    <p><strong>Category:</strong> {{ gym.category }}</p>
+    <p><strong>Pricing:</strong> 💰 {{ gym.pricing_bundle }} - €{{ gym.price }}</p>
+  
+    <!-- Save Gym Button -->
+    <button (click)="saveGym()">💾 Save Gym</button>
+  </div>

@@ -232,7 +232,22 @@ app.post("/login", (req, res) => {
   });
 });
 
+app.post("/save-gym", verifyToken, (req, res) => {
+  const { userId, gymId } = req.body;
 
+  if (!userId || !gymId) {
+    return res.status(400).json({ error: "Missing user ID or gym ID" });
+  }
+
+  const sql = "INSERT INTO saved_gyms (user_id, gym_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE gym_id = gym_id";
+  db.query(sql, [userId, gymId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error saving gym:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ message: "✅ Gym saved successfully!" });
+  });
+});
 app.post("/logout", (req, res) => {
   res.clearCookie("auth_token", {
     httpOnly: true,

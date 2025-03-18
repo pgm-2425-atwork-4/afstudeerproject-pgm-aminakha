@@ -9,6 +9,7 @@ import { GymsComponent } from './pages/gyms/gyms.component';
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
 import { AdminCategoryComponent } from './components/admin-category/admin-category.component';
 import { AdminAddGymComponent } from './components/admin-add-gym/admin-add-gym.component';
+import { GymDetailComponent } from './pages/gym-detail/gym-detail.component';
 
 
 
@@ -19,6 +20,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user-profile/:id', component: UserProfileComponent },
   {path:"gyms", component: GymsComponent},
+  { path: 'gym-detail/:id', component: GymDetailComponent },
+
   { 
     path: 'admin', 
     component: AdminDashboardComponent, 

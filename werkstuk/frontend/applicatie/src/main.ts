@@ -11,6 +11,7 @@ import { AdminCategoryComponent } from './app/components/admin-category/admin-ca
 import { GymsComponent } from './app/pages/gyms/gyms.component';
 import { AdminDashboardComponent } from './app/pages/admin-dashboard/admin-dashboard.component';
 import { AdminAddGymComponent } from './app/components/admin-add-gym/admin-add-gym.component';
+import { GymDetailComponent } from './app/pages/gym-detail/gym-detail.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -31,6 +32,8 @@ bootstrapApplication(AppComponent, {
   ]
 },
       {path: 'gyms', component: GymsComponent},
+        { path: 'gym-detail/:id', component: GymDetailComponent },
+      
     ])
   ],
 }).catch((err) => console.error(err));
