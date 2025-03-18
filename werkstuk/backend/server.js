@@ -151,18 +151,20 @@ const verifyToken = (req, res, next) => {
   });
 };
 app.use(cors({
-  origin: ["https://pgm-2425-atwork-4.github.io", "http://localhost:4200"],
+  origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io"],
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow Authorization header
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // ✅ Allow sending cookies
 }));
+
+// ✅ Manually set CORS Headers for Every Response
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
+    return res.sendStatus(200); // ✅ Handle preflight requests
   }
   next();
 });
@@ -257,7 +259,34 @@ app.get("/auth/user", verifyToken, (req, res) => {
     res.json(results[0]);
   });
 });
+app.get("/saved-gyms/:userId", verifyToken, (req, res) => {
+  const userId = req.params.userId;
 
+  const sql = `
+    SELECT g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.logo,
+      p.name AS province, c.name AS category,
+      pr.bundle_name AS pricing_bundle, pr.price,
+      GROUP_CONCAT(i.image_url) AS images
+    FROM saved_gyms sg
+    JOIN gyms g ON sg.gym_id = g.id
+    LEFT JOIN provinces p ON g.province_id = p.id
+    LEFT JOIN categories c ON g.category_id = c.id
+    LEFT JOIN prices pr ON g.pricing_id = pr.id
+    LEFT JOIN images i ON g.id = i.gym_id
+    WHERE sg.user_id = ?
+    GROUP BY g.id;
+  `;
+
+  db.query(sql, [userId], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+
+    results.forEach(gym => {
+      gym.images = gym.images ? gym.images.split(",") : [];
+    });
+
+    res.json(results);
+  });
+});
 app.get("/categories", (req, res) => {
   const sql = "SELECT * FROM categories";
   db.query(sql, (err, results) => {

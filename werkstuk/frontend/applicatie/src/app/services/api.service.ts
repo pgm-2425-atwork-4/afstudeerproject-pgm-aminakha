@@ -38,7 +38,7 @@ export class ApiService {
   fetchUser() {
     const headers = new HttpHeaders().set(
       'Authorization',
-      `Bearer ${localStorage.getItem('auth_token')}`
+      `Bearer ${this.getAuthToken()}`
     );
   
     this.http.get(`${this.apiUrl}/auth/user`, { headers, withCredentials: true }).subscribe({
@@ -48,9 +48,9 @@ export class ApiService {
       },
       error: (err) => {
         console.error("❌ Token error:", err);
-        
+  
         if (err.status === 401) {
-          console.warn("⏳ Token expired or invalid, clearing session...");
+          console.warn("⏳ Token expired or invalid, logging out...");
           this.logout().subscribe();
         }
       }
@@ -61,10 +61,8 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/login`, { email, password }, { withCredentials: true }).pipe(
       tap((res: any) => {
         if (res.token) {
-          localStorage.setItem('auth_token', res.token);
-          localStorage.setItem('user', JSON.stringify(res.user));
-          this.currentUserSubject.next(res.user);
-          console.log("🔑 JWT Token stored:", res.token);
+          this.currentUserSubject.next(res.user); // ✅ Store only in memory
+          console.log("🔑 JWT Token stored in memory only:", res.token);
         } else {
           console.warn("❌ No token received!");
         }
@@ -78,9 +76,7 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
         console.log("🚪 Logging out...");
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user');
-        this.currentUserSubject.next(null);
+        this.currentUserSubject.next(null); // ✅ Clears memory state
         window.location.reload(); // ✅ Refresh page after logout
       })
     );
