@@ -45,6 +45,9 @@ export class ApiService {
   getUsers(): Observable<any> {
     return this.http.get(`${this.apiUrl}/users`);
   }
+  getUser() {
+    return this.http.get(`${this.apiUrl}/auth/user`, { withCredentials: true });
+  }
 
   getUserById(userId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/${userId}`);
@@ -64,10 +67,7 @@ export class ApiService {
   }
 
   logout() {
-    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe(() => {
-      console.log("✅ User logged out.");
-      this.currentUserSubject.next(null);
-    });
+    return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true });
   }
 
   getGyms(): Observable<any> {

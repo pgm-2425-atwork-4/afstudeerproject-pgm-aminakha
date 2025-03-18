@@ -58,13 +58,12 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-const corsOptions = {
-  origin: "http://localhost:4200", // ✅ Adjust as needed
+app.use(cors({
+  origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io"], // ✅ Allow frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // ✅ Allow cookies & authentication headers
-};
-app.use(cors(corsOptions));
+}));
 
 // ✅ Manually Set CORS Headers for Every Response
 app.use((req, res, next) => {
@@ -152,11 +151,16 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  const sql = "SELECT id, username, firstname, lastname, email, birthday, profile_image, role FROM users WHERE email = ?";
+  if (!email || !password) {
+    return res.status(400).json({ error: "❌ Email and password are required" });
+  }
+
+  const sql = "SELECT id, username, firstname, lastname, email, birthday, profile_image, role, password FROM users WHERE email = ?";
+
   db.query(sql, [email], async (err, results) => {
     if (err) {
       console.error("🔥 Error fetching user:", err);
-      return res.status(500).json({ error: err });
+      return res.status(500).json({ error: "Database error" });
     }
 
     if (results.length === 0) {
@@ -164,33 +168,51 @@ app.post("/login", (req, res) => {
     }
 
     const user = results[0];
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "❌ Incorrect password" });
+
+    // ✅ Ensure password & hash exist before comparing
+    if (!password || !user.password) {
+      return res.status(400).json({ error: "❌ Password is missing" });
     }
-    const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role },
-      SECRET_KEY,
-      { expiresIn: "2h" } // Token expires in 2 hours
-    );
-    res.cookie("auth_token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Secure in production
-      maxAge: 2 * 60 * 60 * 1000, // 2 hours
-    });
-    res.json({
-      message: "✅ Login successful!",
-      user: {
-        id: user.id,
-        username: user.username,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        birthday: user.birthday,
-        role: user.role,
-        profile_image: user.profile_image || null,
-      },token
-    });
+
+    try {
+      const match = await bcrypt.compare(password, user.password);
+
+      if (!match) {
+        return res.status(401).json({ error: "❌ Incorrect password" });
+      }
+
+      // ✅ Generate JWT Token
+      const token = jwt.sign(
+        { id: user.id, username: user.username, role: user.role },
+        SECRET_KEY,
+        { expiresIn: "2h" }
+      );
+
+      res.cookie("auth_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 2 * 60 * 60 * 1000,
+      });
+
+      res.json({
+        message: "✅ Login successful!",
+        user: {
+          id: user.id,
+          username: user.username,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          birthday: user.birthday,
+          role: user.role,
+          profile_image: user.profile_image || null,
+        },
+        token,
+      });
+
+    } catch (error) {
+      console.error("🔥 Error comparing passwords:", error);
+      res.status(500).json({ error: "Server error" });
+    }
   });
 });
 
