@@ -221,7 +221,7 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
 });
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), (req, res) => {
   try {
-      const { name, city, rating, opening_hours, address, personal_trainer } = req.body;
+      const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id } = req.body;
 
       // ✅ Get logo URL
       const logoUrl = req.files["logo"] ? req.files["logo"][0].path : null;
@@ -229,18 +229,22 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
       // ✅ Get uploaded image URLs
       const imageUrls = req.files["images"] ? req.files["images"].map(file => file.path) : [];
 
-      if (!name || !city || !rating || !opening_hours || !address) {
+      if (!name || !city || !rating || !opening_hours || !address || !category_id || !pricing_id || !province_id) {
           return res.status(400).json({ error: "❌ Missing required fields" });
       }
 
       console.log("📸 Logo URL:", logoUrl);
       console.log("📷 Image URLs:", imageUrls);
+      console.log("🛠️ Pressure ID:", pressure_id);
+      console.log("📂 Category ID:", category_id);
+      console.log("💰 Pricing ID:", pricing_id);
+      console.log("📍 Province ID:", province_id);
 
       const sql = `
-          INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, logo)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logo)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const values = [name, city, rating, opening_hours, address, personal_trainer, logoUrl];
+      const values = [name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logoUrl];
 
       db.query(sql, values, (err, result) => {
           if (err) {
@@ -271,6 +275,7 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
       res.status(500).json({ error: "Server error", details: error.message });
   }
 });
+
 
 /* ============================================
  ✅ API: Fetch All Gyms

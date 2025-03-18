@@ -43,6 +43,12 @@ export class AdminAddGymComponent {
     formData.append("address", this.gymData.address);
     formData.append("personal_trainer", this.gymData.personal_trainer ? "1" : "0");
   
+    // ✅ Append new required fields
+    formData.append("pressure_id", this.gymData.pressure_id);
+    formData.append("category_id", this.gymData.category_id);
+    formData.append("pricing_id", this.gymData.pricing_id);
+    formData.append("province_id", this.gymData.province_id);
+  
     if (this.selectedLogo) {
       formData.append("logo", this.selectedLogo); // ✅ Upload Logo
     }
@@ -62,6 +68,7 @@ export class AdminAddGymComponent {
       }
     });
   }
+  
   
   
   
