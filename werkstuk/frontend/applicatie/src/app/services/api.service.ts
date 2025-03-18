@@ -36,15 +36,19 @@ export class ApiService {
 
   /** ✅ Auto-fetch Authenticated User */
   fetchUser() {
-    this.http.get(`${this.apiUrl}/auth/user`, { withCredentials: true }).subscribe({
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('auth_token')}`
+    );
+  
+    this.http.get(`${this.apiUrl}/auth/user`, { headers, withCredentials: true }).subscribe({
       next: (user) => {
         console.log("✅ Authenticated User:", user);
         this.currentUserSubject.next(user);
       },
       error: (err) => {
         console.error("❌ Token error:", err);
-  
-        // ✅ Only logout if the error is "Unauthorized" (401)
+        
         if (err.status === 401) {
           console.warn("⏳ Token expired or invalid, clearing session...");
           this.logout().subscribe();
@@ -60,7 +64,7 @@ export class ApiService {
           localStorage.setItem('auth_token', res.token);
           localStorage.setItem('user', JSON.stringify(res.user));
           this.currentUserSubject.next(res.user);
-          console.log("🔑 JWT Token stored:", res.token); // ✅ Debugging
+          console.log("🔑 JWT Token stored:", res.token);
         } else {
           console.warn("❌ No token received!");
         }
@@ -77,7 +81,7 @@ export class ApiService {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
         this.currentUserSubject.next(null);
-        window.location.reload(); // ✅ Refresh to clear any cached user data
+        window.location.reload(); // ✅ Refresh page after logout
       })
     );
   }
@@ -104,7 +108,7 @@ export class ApiService {
   
     return this.http.get(`${this.apiUrl}/auth/user`, {
       headers,
-      withCredentials: true, // ✅ Ensure credentials (cookies) are sent
+      withCredentials: true, // ✅ Ensures cookies & credentials are sent
     });
   }
 

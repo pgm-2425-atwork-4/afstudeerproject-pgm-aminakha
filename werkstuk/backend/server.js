@@ -136,7 +136,7 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
   }
 });
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  let token = req.cookies.auth_token || req.headers.authorization?.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({ error: "Unauthorized: No token provided" });
@@ -156,6 +156,16 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow Authorization header
   credentials: true, // ✅ Allow sending cookies
 }));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 /* ============================================
  ✅ API: User Login (Check Hashed Password)
 =============================================== */
@@ -233,9 +243,12 @@ app.post("/logout", (req, res) => {
 
 app.get("/auth/user", verifyToken, (req, res) => {
   const sql = "SELECT id, username, email, profile_image FROM users WHERE id = ?";
-
+  
   db.query(sql, [req.user.id], (err, results) => {
-    if (err) return res.status(500).json({ error: "Database error" });
+    if (err) {
+      console.error("🔥 Database error:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
 
     if (results.length === 0) {
       return res.status(404).json({ error: "User not found" });
