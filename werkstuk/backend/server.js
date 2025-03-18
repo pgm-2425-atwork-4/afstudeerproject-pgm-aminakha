@@ -314,16 +314,16 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
 app.get("/gyms", (req, res) => {
   const sql = `
     SELECT 
-      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, g.logo, 
+      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
+      g.logo, 
       p.name AS province, 
       c.name AS category,
       pr.bundle_name AS pricing_bundle, pr.price
     FROM gyms g
-    LEFT JOIN provinces p ON g.province_id = p.id
-    LEFT JOIN categories c ON g.category_id = c.id
+    JOIN provinces p ON g.province_id = p.id
+    JOIN categories c ON g.category_id = c.id
     LEFT JOIN prices pr ON g.pricing_id = pr.id;
   `;
-
   db.query(sql, (err, gyms) => {
     if (err) {
       console.error("🔥 Database Query Error:", err);
