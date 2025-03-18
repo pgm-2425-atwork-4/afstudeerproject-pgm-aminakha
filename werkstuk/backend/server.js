@@ -343,7 +343,37 @@ app.get("/gyms", (req, res) => {
     res.json(results);
   });
 });
+app.get("/saved-gyms/:userId", (req, res) => {
+  const userId = req.params.userId;
 
+  const sql = `
+    SELECT g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.logo,
+      p.name AS province, c.name AS category,
+      pr.bundle_name AS pricing_bundle, pr.price,
+      GROUP_CONCAT(i.image_url) AS images
+    FROM saved_gyms sg
+    JOIN gyms g ON sg.gym_id = g.id
+    LEFT JOIN provinces p ON g.province_id = p.id
+    LEFT JOIN categories c ON g.category_id = c.id
+    LEFT JOIN prices pr ON g.pricing_id = pr.id
+    LEFT JOIN images i ON g.id = i.gym_id
+    WHERE sg.user_id = ?
+    GROUP BY g.id;
+  `;
+
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching saved gyms:", err);
+      return res.status(500).json({ error: "Database error", details: err.message });
+    }
+
+    results.forEach(gym => {
+      gym.images = gym.images ? gym.images.split(",") : [];
+    });
+
+    res.json(results);
+  });
+});
 
 const adminUpload = multer({ storage: gymStorage });
 

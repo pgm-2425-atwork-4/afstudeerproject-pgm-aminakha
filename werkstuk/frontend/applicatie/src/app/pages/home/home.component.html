@@ -1,3 +1,22 @@
 <main>    
     <app-hero-home></app-hero-home> 
+    <div class="saved-gyms-container">
+        <div class="section" *ngIf="userId">
+            <h2>💾 Your Saved Gyms</h2>
+            <div *ngIf="savedGyms.length === 0">
+              <p>You have no saved gyms.</p>
+            </div>
+            <div *ngFor="let gym of savedGyms" class="gym-card">
+              <img [src]="gym.logo" alt="{{ gym.name }}" class="gym-logo">
+              <h3>{{ gym.name }}</h3>
+              <p><strong>City:</strong> {{ gym.city }}</p>
+              <p><strong>Rating:</strong> ⭐ {{ gym.rating }}</p>
+              <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
+              <p><strong>Address:</strong> {{ gym.address }}</p>
+              <p><strong>Category:</strong> {{ gym.category }}</p>
+              <p><strong>Province:</strong> {{ gym.province }}</p>
+              <p><strong>Price:</strong> {{ gym.pricing_bundle }} - €{{ gym.price }}/month</p>
+            </div>
+          </div>
+    </div>
 </main>

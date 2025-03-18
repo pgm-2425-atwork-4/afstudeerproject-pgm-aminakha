@@ -90,4 +90,7 @@ getPricingPlans(): Observable<any> {
 getProvinces(): Observable<any[]> {
   return this.http.get<any[]>(`${this.apiUrl}/provinces`);
 }
+getSavedGyms(userId: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}/saved-gyms/${userId}`);
+}
 }
