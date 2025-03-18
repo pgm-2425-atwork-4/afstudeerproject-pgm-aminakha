@@ -36,22 +36,19 @@ export class ApiService {
 
   /** ✅ Auto-fetch Authenticated User */
   fetchUser() {
-    const token = localStorage.getItem('auth_token');
-    
-    if (!token) {
-      console.log("❌ No token found, logging out.");
-      this.currentUserSubject.next(null);
-      return;
-    }
-  
     this.http.get(`${this.apiUrl}/auth/user`, { withCredentials: true }).subscribe({
       next: (user) => {
         console.log("✅ Authenticated User:", user);
         this.currentUserSubject.next(user);
       },
       error: (err) => {
-        console.error("❌ Token might be invalid, logging out:", err);
-        this.logout().subscribe(); // ✅ Auto logout if token is invalid
+        console.error("❌ Token error:", err);
+  
+        // ✅ Only logout if the error is "Unauthorized" (401)
+        if (err.status === 401) {
+          console.warn("⏳ Token expired or invalid, clearing session...");
+          this.logout().subscribe();
+        }
       }
     });
   }
@@ -100,7 +97,15 @@ export class ApiService {
 
   /** ✅ Fetch Authenticated User */
   getAuthUser(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/auth/user`, { headers: this.getAuthHeaders(), withCredentials: true });
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('auth_token')}`
+    );
+  
+    return this.http.get(`${this.apiUrl}/auth/user`, {
+      headers,
+      withCredentials: true, // ✅ Ensure credentials (cookies) are sent
+    });
   }
 
   /** ✅ Fetch Categories */

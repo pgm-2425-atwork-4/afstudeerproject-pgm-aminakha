@@ -18,21 +18,7 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const app = express();
 app.use(cookieParser()); // ✅ Enable cookie parsing
-const verifyToken = (req, res, next) => {
-  const token = req.cookies.auth_token;
 
-  if (!token) {
-    return res.status(401).json({ error: "❌ Unauthorized: No token provided" });
-  }
-
-  jwt.verify(token, SECRET_KEY, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: "❌ Invalid token" });
-    }
-    req.user = user; // ✅ Attach user data to the request
-    next(); // ✅ Proceed to the next function
-  });
-};
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -149,6 +135,27 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized: No token provided" });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: "Invalid token" });
+    }
+    req.user = user;
+    next();
+  });
+};
+app.use(cors({
+  origin: ["https://pgm-2425-atwork-4.github.io", "http://localhost:4200"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow Authorization header
+  credentials: true, // ✅ Allow sending cookies
+}));
 /* ============================================
  ✅ API: User Login (Check Hashed Password)
 =============================================== */
@@ -226,7 +233,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/auth/user", verifyToken, (req, res) => {
   const sql = "SELECT id, username, email, profile_image FROM users WHERE id = ?";
-  
+
   db.query(sql, [req.user.id], (err, results) => {
     if (err) return res.status(500).json({ error: "Database error" });
 
