@@ -1,23 +1,26 @@
+<!-- ✅ Show loading message only if no gyms are loaded -->
 <div *ngIf="gyms.length === 0">
-    <p>Loading gyms...</p>
+  <p>Loading gyms...</p>
+</div>
+
+<!-- ✅ Corrected Gym Loop (Avoiding Duplicate Rendering) -->
+<div *ngFor="let gym of gyms" class="gym-card">
+  <!-- ✅ Display Gym Logo -->
+  <img *ngIf="gym.logo" [src]="gym.logo" alt="{{ gym.name }} Logo" class="gym-logo">
+
+  <!-- ✅ Display Gym Gallery Images (if available) -->
+  <div class="gym-gallery" *ngIf="gym.images && gym.images.length > 0">
+      <img *ngFor="let img of gym.images" [src]="img" alt="{{ gym.name }} Image" class="gym-image">
   </div>
-  
-  <div *ngFor="let gym of gyms" class="gym-card">
-    <img [src]="gym.image" alt="{{ gym.name }}" />
-    <h2>{{ gym.name }}</h2>
-    <p><strong>City:</strong> {{ gym.city }}</p>
-    <p><strong>Rating:</strong> ⭐{{ gym.rating }}</p>
-    <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
-    <p><strong>Address:</strong> {{ gym.address }}</p>
-    <p><strong>Province:</strong> {{ gym.province }}</p>
-    <p><strong>Category:</strong> {{ gym.category }}</p>
-    <p><strong>Personal Trainer Available:</strong> {{ gym.personal_trainer ? '✅ Yes' : '❌ No' }}</p>
-    <p><strong>Price:</strong> {{ gym.pricing_bundle }} - €{{ gym.price }}/month</p>
-    <div *ngFor="let gym of gyms" class="gym-card">
-      <img [src]="gym.image_url" alt="{{ gym.name }}" class="gym-image">
-      <h2>{{ gym.name }}</h2>
-      <p><strong>City:</strong> {{ gym.city }}</p>
-      <p><strong>Rating:</strong> ⭐ {{ gym.rating }}</p>
-    </div>
-  </div>
-  
+
+  <!-- ✅ Gym Info -->
+  <h2>{{ gym.name }}</h2>
+  <p><strong>City:</strong> {{ gym.city }}</p>
+  <p><strong>Rating:</strong> ⭐{{ gym.rating }}</p>
+  <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
+  <p><strong>Address:</strong> {{ gym.address }}</p>
+  <p><strong>Province:</strong> {{ gym.province }}</p>
+  <p><strong>Category:</strong> {{ gym.category }}</p>
+  <p><strong>Personal Trainer Available:</strong> {{ gym.personal_trainer ? '✅ Yes' : '❌ No' }}</p>
+  <p><strong>Price:</strong> {{ gym.pricing_bundle }} - €{{ gym.price }}/month</p>
+</div>
