@@ -18,7 +18,11 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private apiService: ApiService, 
     @Inject(PLATFORM_ID) private platformId: object
-  ) {}
+  ) {
+    this.apiService.currentUser$.subscribe(user => {
+      this.user = user;
+    });
+  }
 
   ngOnInit() {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -36,7 +40,10 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.apiService.logout(); 
-    this.router.navigate(['/login']);
+    this.apiService.logout().subscribe(() => {
+      console.log("🚪 User logged out!");
+      this.user = null;  // ✅ Remove user from UI
+      this.router.navigate(['/login']); // ✅ Redirect to login page
+    });
   }
 }
