@@ -58,13 +58,13 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// ✅ Middleware
-app.use(cors({
-  origin: ["https://pgm-2425-atwork-4.github.io", "http://localhost:4200"], // ✅ Allow both GitHub Pages & Localhost
+const corsOptions = {
+  origin: ["https://pgm-2425-atwork-4.github.io", "http://localhost:4200"], // ✅ Allow these origins
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type"],
-  credentials: true,
-}));
+  allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow auth headers
+  credentials: true, // ✅ Allow cookies & authentication headers
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(uploadDir)); // ✅ Serve images correctly
 
