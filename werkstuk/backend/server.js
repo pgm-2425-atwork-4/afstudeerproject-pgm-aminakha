@@ -220,7 +220,7 @@ app.get("/pressures", (req, res) => {
 });
 
 app.get("/pricing", (req, res) => {
-  const sql = "SELECT id, bundle_name, price FROM pricing";
+  const sql = "SELECT id, bundle_name, price FROM prices";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("🔥 Error fetching pricing:", err);

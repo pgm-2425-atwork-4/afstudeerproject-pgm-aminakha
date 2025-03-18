@@ -82,8 +82,9 @@ getPressureTypes(): Observable<any[]> {
 }
 
 
-getPricingPlans(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/pricing`);
+getPricingPlans(): Observable<any> {
+  console.log("📡 Fetching pricing plans from:", `${this.apiUrl}/pricing`);
+  return this.http.get(`${this.apiUrl}/pricing`);
 }
 
 getProvinces(): Observable<any[]> {
