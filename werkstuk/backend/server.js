@@ -59,12 +59,21 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 const corsOptions = {
-  origin: ["https://pgm-2425-atwork-4.github.io", "http://localhost:4200"], // ✅ Allow these origins
+  origin: "http://localhost:4200", // ✅ Allow local frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow auth headers
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // ✅ Allow cookies & authentication headers
 };
 app.use(cors(corsOptions));
+
+// ✅ Manually Set CORS Headers for Every Response
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:4200"); // ✅ Adjust if needed
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
+  next();
+});
 app.use(express.json());
 app.use('/uploads', express.static(uploadDir)); // ✅ Serve images correctly
 
