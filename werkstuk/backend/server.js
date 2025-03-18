@@ -494,6 +494,42 @@ app.get("/gyms", (req, res) => {
     res.json(results);
   });
 });
+app.get("/gyms/:id", (req, res) => {
+  const gymId = req.params.id;
+
+  const sql = `
+    SELECT 
+      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
+      g.logo, 
+      p.name AS province, 
+      c.name AS category,
+      pr.bundle_name AS pricing_bundle, pr.price,
+      GROUP_CONCAT(i.image_url) AS images
+    FROM gyms g
+    LEFT JOIN provinces p ON g.province_id = p.id
+    LEFT JOIN categories c ON g.category_id = c.id
+    LEFT JOIN prices pr ON g.pricing_id = pr.id
+    LEFT JOIN images i ON g.id = i.gym_id
+    WHERE g.id = ?
+    GROUP BY g.id;
+  `;
+
+  db.query(sql, [gymId], (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching gym:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "❌ Gym not found" });
+    }
+
+    // Convert image URLs from CSV string to an array
+    results[0].images = results[0].images ? results[0].images.split(",") : [];
+    
+    res.json(results[0]);
+  });
+});
 app.get("/saved-gyms", verifyToken, (req, res) => {
   const sql = `
     SELECT g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.logo,
