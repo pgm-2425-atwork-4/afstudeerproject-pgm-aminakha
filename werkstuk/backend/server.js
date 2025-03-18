@@ -315,50 +315,35 @@ app.get("/gyms", (req, res) => {
   const sql = `
     SELECT 
       g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
-      g.logo, 
+      g.logo, -- ✅ Added gym logo
       p.name AS province, 
       c.name AS category,
-      pr.bundle_name AS pricing_bundle, pr.price
+      pr.bundle_name AS pricing_bundle, pr.price,
+      GROUP_CONCAT(i.image_url) AS images -- ✅ Fetch multiple images
     FROM gyms g
-    JOIN provinces p ON g.province_id = p.id
-    JOIN categories c ON g.category_id = c.id
-    LEFT JOIN prices pr ON g.pricing_id = pr.id;
+    LEFT JOIN provinces p ON g.province_id = p.id
+    LEFT JOIN categories c ON g.category_id = c.id
+    LEFT JOIN prices pr ON g.pricing_id = pr.id
+    LEFT JOIN images i ON g.id = i.gym_id -- ✅ Get multiple images per gym
+    GROUP BY g.id; -- ✅ Group by gym ID to avoid duplicates
   `;
-  db.query(sql, (err, gyms) => {
+
+  db.query(sql, (err, results) => {
     if (err) {
       console.error("🔥 Database Query Error:", err);
       return res.status(500).json({ error: "Database error", details: err.message });
     }
 
-    // ✅ Fetch all images separately
-    const gymIds = gyms.map(g => g.id);
-    if (gymIds.length === 0) {
-      return res.json(gyms); // ✅ No gyms found, return empty array
-    }
-
-    const imageQuery = "SELECT gym_id, image_url FROM images WHERE gym_id IN (?)";
-    db.query(imageQuery, [gymIds], (imgErr, images) => {
-      if (imgErr) {
-        console.error("🔥 Error fetching gym images:", imgErr);
-        return res.status(500).json({ error: "Database error" });
-      }
-
-      // ✅ Attach images to gyms
-      const gymMap = {};
-      gyms.forEach(gym => {
-        gymMap[gym.id] = { ...gym, images: [] };
-      });
-
-      images.forEach(img => {
-        if (gymMap[img.gym_id]) {
-          gymMap[img.gym_id].images.push(img.image_url);
-        }
-      });
-
-      res.json(Object.values(gymMap));
+    // ✅ Convert images from CSV string to array
+    results.forEach(gym => {
+      gym.images = gym.images ? gym.images.split(",") : [];
     });
+
+    console.log("✅ Gyms Data:", results); // 🐛 Debugging
+    res.json(results);
   });
 });
+
 
 const adminUpload = multer({ storage: gymStorage });
 
