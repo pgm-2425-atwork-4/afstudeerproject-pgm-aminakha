@@ -215,10 +215,14 @@ app.post("/login", (req, res) => {
 
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("auth_token");
+  res.clearCookie("auth_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None",
+  });
+
   res.json({ message: "✅ Logged out successfully!" });
 });
-
 
 app.get("/auth/user", verifyToken, (req, res) => {
   const sql = "SELECT id, username, email, profile_image FROM users WHERE id = ?";

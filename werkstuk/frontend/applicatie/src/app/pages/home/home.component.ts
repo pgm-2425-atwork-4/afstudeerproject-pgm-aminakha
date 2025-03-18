@@ -57,13 +57,17 @@ export class HomeComponent implements OnInit {
       return;
     }
   
-    this.apiService.getSavedGyms(userId).subscribe({
-      next: (res) => {
-        console.log("✅ Saved Gyms Loaded:", res);
-        this.savedGyms = res;
-      },
-      error: (err) => {
-        console.error("🔥 Error fetching saved gyms:", err);
-      }
-    });
+    if (this.userId) {
+      this.apiService.getSavedGyms(this.userId as string).subscribe({
+        next: (res) => {
+          console.log("✅ Saved Gyms Loaded:", res);
+          this.savedGyms = res;
+        },
+        error: (err) => {
+          console.error("🔥 Error fetching saved gyms:", err);
+        }
+      });
+    } else {
+      console.warn("⚠️ No valid userId found. Skipping saved gyms fetch.");
+    }
   }}
