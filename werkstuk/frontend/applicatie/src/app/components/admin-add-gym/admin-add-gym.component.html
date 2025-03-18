@@ -6,11 +6,29 @@
     <input type="text" [(ngModel)]="gymData.address" name="address" placeholder="Address" required />
     <input type="checkbox" [(ngModel)]="gymData.personal_trainer" name="personal_trainer" /> Personal Trainer Available
   
-    <!-- ✅ New Fields -->
-    <input type="number" [(ngModel)]="gymData.pressure_id" name="pressure_id" placeholder="Pressure ID" required />
-    <input type="number" [(ngModel)]="gymData.category_id" name="category_id" placeholder="Category ID" required />
-    <input type="number" [(ngModel)]="gymData.pricing_id" name="pricing_id" placeholder="Pricing ID" required />
-    <input type="number" [(ngModel)]="gymData.province_id" name="province_id" placeholder="Province ID" required />
+    <!-- ✅ Select Pressure Type -->
+    <label>Pressure Type:</label>
+    <select [(ngModel)]="gymData.pressure_id" name="pressure_id" required>
+      <option *ngFor="let pressure of pressures" [value]="pressure.id">{{ pressure.name }}</option>
+    </select>
+  
+    <!-- ✅ Select Category -->
+    <label>Category:</label>
+    <select [(ngModel)]="gymData.category_id" name="category_id" required>
+      <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+    </select>
+  
+    <!-- ✅ Select Pricing Plan -->
+    <label>Pricing Plan:</label>
+    <select [(ngModel)]="gymData.pricing_id" name="pricing_id" required>
+      <option *ngFor="let pricing of pricingPlans" [value]="pricing.id">{{ pricing.bundle_name }} - €{{ pricing.price }}</option>
+    </select>
+  
+    <!-- ✅ Select Province -->
+    <label>Province:</label>
+    <select [(ngModel)]="gymData.province_id" name="province_id" required>
+      <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
+    </select>
   
     <!-- ✅ Gym Logo Upload -->
     <label>Gym Logo:</label>

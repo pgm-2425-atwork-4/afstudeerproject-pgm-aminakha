@@ -2,7 +2,7 @@
 <button routerLink="/admin/add-gym">+ Add Gym</button>
 
 <div *ngFor="let gym of gyms" class="gym-card">
-  <img [src]="gym.image" alt="{{ gym.name }}" class="gym-image">
+  <img [src]="gym.logo || 'assets/default-logo.png'" alt="{{ gym.name }}" class="gym-image">
   <h2>{{ gym.name }}</h2>
   <p><strong>City:</strong> {{ gym.city }}</p>
   <p><strong>Rating:</strong> ⭐ {{ gym.rating }}</p>

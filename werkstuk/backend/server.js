@@ -208,7 +208,38 @@ const imageStorage = new CloudinaryStorage({
 
 const uploadLogo = multer({ storage: logoStorage }).single("logo"); // Single file
 const uploadImages = multer({ storage: imageStorage }).array("images", 5); // Multiple files (Max: 5)
+app.get("/pressures", (req, res) => {
+  const sql = "SELECT id, name FROM pressures";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching pressures:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json(results);
+  });
+});
 
+app.get("/pricing", (req, res) => {
+  const sql = "SELECT id, bundle_name, price FROM pricing";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching pricing:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json(results);
+  });
+});
+
+app.get("/provinces", (req, res) => {
+  const sql = "SELECT id, name FROM provinces";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching provinces:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json(results);
+  });
+});
 
 const gymUpload = multer({ storage: gymStorage });
 app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {

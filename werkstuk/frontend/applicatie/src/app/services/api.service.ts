@@ -77,4 +77,16 @@ export class ApiService {
 getAdminGyms(adminId: string): Observable<any> {
   return this.http.get(`${this.apiUrl}/admin/gyms/${adminId}`);
 }
+getPressureTypes(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/pressures`);
+}
+
+
+getPricingPlans(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/pricing`);
+}
+
+getProvinces(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/provinces`);
+}
 }
