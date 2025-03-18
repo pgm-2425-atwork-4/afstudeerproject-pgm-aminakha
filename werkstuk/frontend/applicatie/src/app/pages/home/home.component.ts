@@ -16,16 +16,26 @@ export class HomeComponent implements OnInit {
   gyms: any[] = [];
   savedGyms: any[] = [];
   userId: string | null = null;
+  user: any = null; // ✅ Declare user
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    this.fetchGyms();
-
-    // ✅ Check if user is logged in
-    this.userId = localStorage.getItem("userId");
-    if (this.userId) {
-      this.fetchSavedGyms();
+    const storedUser = localStorage.getItem("user");
+    console.log("🔍 Stored User from localStorage:", storedUser); // ✅ Check what's in localStorage
+  
+    if (storedUser) {
+      this.user = JSON.parse(storedUser);
+      this.userId = this.user?.id ? String(this.user.id) : null;
+  
+      console.log("🆔 Logged-in User ID:", this.userId); // ✅ Check the retrieved user ID
+  
+      if (this.userId) {
+        this.fetchSavedGyms(this.userId);
+      }
+    } else {
+      this.userId = null;
+      console.log("❌ No user logged in! User ID is:", this.userId); // ✅ Log if no user
     }
   }
 
@@ -41,17 +51,19 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  fetchSavedGyms() {
-    if (!this.userId) return;
-    
-    this.apiService.getSavedGyms(this.userId).subscribe({
+  fetchSavedGyms(userId: string | null) {
+    if (!userId) {
+      console.warn("⚠️ No user ID provided. Skipping saved gyms fetch.");
+      return;
+    }
+  
+    this.apiService.getSavedGyms(userId).subscribe({
       next: (res) => {
-        console.log("✅ Saved Gyms loaded:", res);
+        console.log("✅ Saved Gyms Loaded:", res);
         this.savedGyms = res;
       },
       error: (err) => {
         console.error("🔥 Error fetching saved gyms:", err);
       }
     });
-  }
-}
+  }}

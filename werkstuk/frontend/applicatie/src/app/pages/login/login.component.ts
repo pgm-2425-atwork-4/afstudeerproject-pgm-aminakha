@@ -20,19 +20,23 @@ export class LoginComponent {
   constructor(private apiService: ApiService, private router: Router) {}
 
   login() {
-    this.apiService.loginUser(this.email, this.password).subscribe({
-      next: (response) => {
-        console.log("✅ Login successful:", response);
-
-        if (response.user.role === 'admin') {
-          this.router.navigate(['/admin-dashboard']);
-        } else {
-          this.router.navigate(['/user-profile', response.user.id]); // ✅ Pass user ID
+    this.apiService.loginUser(this.email, this.password).subscribe(
+      (res: any) => {
+        if (res.user) {
+          console.log("✅ Login successful:", res.user);
+          localStorage.setItem('user', JSON.stringify(res.user)); // ✅ Store user data
+          window.dispatchEvent(new Event('storage')); // ✅ Update navbar dynamically
+  
+          if (res.user.role === 'admin') {
+            this.router.navigate(['/admin-dashboard']);
+          } else {
+            this.router.navigate(['/home']); // ✅ Redirect to Home so saved gyms load
+          }
         }
       },
-      error: () => {
+      (error) => {
         this.message = '❌ Login Failed! Invalid email or password.';
       }
-    });
+    );
   }
 }

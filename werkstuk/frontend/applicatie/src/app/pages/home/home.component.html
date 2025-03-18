@@ -1,22 +1,20 @@
 <main>    
     <app-hero-home></app-hero-home> 
     <div class="saved-gyms-container">
-        <div class="section" *ngIf="userId">
-            <h2>💾 Your Saved Gyms</h2>
-            <div *ngIf="savedGyms.length === 0">
-              <p>You have no saved gyms.</p>
+        <div *ngIf="userId">
+            <h3>📂 Your Saved Gyms</h3>
+            <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
+            <div *ngFor="let gym of savedGyms">
+              <h4>{{ gym.name }}</h4>
+              <p>{{ gym.city }}</p>
             </div>
-            <div *ngFor="let gym of savedGyms" class="gym-card">
-              <img [src]="gym.logo" alt="{{ gym.name }}" class="gym-logo">
-              <h3>{{ gym.name }}</h3>
-              <p><strong>City:</strong> {{ gym.city }}</p>
-              <p><strong>Rating:</strong> ⭐ {{ gym.rating }}</p>
-              <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
-              <p><strong>Address:</strong> {{ gym.address }}</p>
-              <p><strong>Category:</strong> {{ gym.category }}</p>
-              <p><strong>Province:</strong> {{ gym.province }}</p>
-              <p><strong>Price:</strong> {{ gym.pricing_bundle }} - €{{ gym.price }}/month</p>
-            </div>
+          </div>
+
+          <div class="no-user-container" *ngIf="!userId">
+            <h2> <img src="/images/user-solid (1).svg" alt="Avatar">Inloggen om je opgeslagen gyms te bekijken</h2>
+            <p><a routerLink="/login">Log u in</a></p>
+            <p><span></span>OF <span></span></p>
+            <p><a routerLink="/register">Registreer</a></p>
           </div>
     </div>
 </main>

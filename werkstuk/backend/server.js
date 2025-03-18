@@ -7,10 +7,28 @@ const path = require("path");
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const cloudinary = require("cloudinary").v2;
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const SECRET_KEY = process.env.SECRET_KEY;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
- 
-const app = express();
 
+const app = express();
+app.use(cookieParser()); // ✅ Enable cookie parsing
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.auth_token;
+
+  if (!token) {
+    return res.status(401).json({ error: "❌ Unauthorized: No token provided" });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: "❌ Invalid token" });
+    }
+    req.user = user; // ✅ Attach user data to the request
+    next(); // ✅ Proceed to the next function
+  });
+};
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -134,7 +152,20 @@ app.post("/login", (req, res) => {
     }
 
     const user = results[0];
-
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "❌ Incorrect password" });
+    }
+    const token = jwt.sign(
+      { id: user.id, username: user.username, role: user.role },
+      SECRET_KEY,
+      { expiresIn: "2h" } // Token expires in 2 hours
+    );
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Secure in production
+      maxAge: 2 * 60 * 60 * 1000, // 2 hours
+    });
     res.json({
       message: "✅ Login successful!",
       user: {
@@ -146,8 +177,28 @@ app.post("/login", (req, res) => {
         birthday: user.birthday,
         role: user.role,
         profile_image: user.profile_image || null,
-      },
+      },token
     });
+  });
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("auth_token");
+  res.json({ message: "✅ Logged out successfully!" });
+});
+
+
+app.get("/auth/user", verifyToken, (req, res) => {
+  const sql = "SELECT id, username, email, profile_image FROM users WHERE id = ?";
+  
+  db.query(sql, [req.user.id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(results[0]);
   });
 });
 
@@ -343,9 +394,7 @@ app.get("/gyms", (req, res) => {
     res.json(results);
   });
 });
-app.get("/saved-gyms/:userId", (req, res) => {
-  const userId = req.params.userId;
-
+app.get("/saved-gyms", verifyToken, (req, res) => {
   const sql = `
     SELECT g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.logo,
       p.name AS province, c.name AS category,
@@ -361,11 +410,8 @@ app.get("/saved-gyms/:userId", (req, res) => {
     GROUP BY g.id;
   `;
 
-  db.query(sql, [userId], (err, results) => {
-    if (err) {
-      console.error("🔥 Error fetching saved gyms:", err);
-      return res.status(500).json({ error: "Database error", details: err.message });
-    }
+  db.query(sql, [req.user.id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
 
     results.forEach(gym => {
       gym.images = gym.images ? gym.images.split(",") : [];
@@ -374,7 +420,6 @@ app.get("/saved-gyms/:userId", (req, res) => {
     res.json(results);
   });
 });
-
 const adminUpload = multer({ storage: gymStorage });
 
 app.post("/admin/upload-gym-image", adminUpload.single("image"), (req, res) => {

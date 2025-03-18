@@ -1,0 +1,36 @@
+.no-user-container {
+    & img {
+        width:3rem;
+    }
+    background-color: var( --primary-color);
+    color:var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;  
+          padding: 1rem;
+
+    & h2 {
+        display: flex;
+        gap: 1rem;
+        font-size: 3rem;
+        
+    }
+    & p {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        & span {
+        
+       
+            width: 4rem;
+            height: .3rem;
+            display: block;
+            background-color: #616161;
+            border-radius: var(--standard-border-radius);
+          }
+    }
+}
