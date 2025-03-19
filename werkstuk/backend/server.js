@@ -503,6 +503,7 @@ app.get("/gyms/:id", (req, res) => {
       g.logo, 
       p.name AS province, 
       c.name AS category,
+            pres.name AS pressure,  
       pr.bundle_name AS pricing_bundle, pr.price,
       GROUP_CONCAT(i.image_url) AS images
     FROM gyms g
