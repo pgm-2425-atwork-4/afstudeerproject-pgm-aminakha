@@ -281,6 +281,8 @@ app.get("/saved-gyms/:userId", verifyToken, (req, res) => {
     SELECT g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.logo,
       p.name AS province, c.name AS category,
       pr.bundle_name AS pricing_bundle, pr.price,
+            pres.name AS pressure,
+
       GROUP_CONCAT(i.image_url) AS images
     FROM saved_gyms sg
     JOIN gyms g ON sg.gym_id = g.id
@@ -288,6 +290,7 @@ app.get("/saved-gyms/:userId", verifyToken, (req, res) => {
     LEFT JOIN categories c ON g.category_id = c.id
     LEFT JOIN prices pr ON g.pricing_id = pr.id
     LEFT JOIN images i ON g.id = i.gym_id
+    LEFT JOIN pressures pres ON g.pressure_id = pres.id
     WHERE sg.user_id = ?
     GROUP BY g.id;
   `;
