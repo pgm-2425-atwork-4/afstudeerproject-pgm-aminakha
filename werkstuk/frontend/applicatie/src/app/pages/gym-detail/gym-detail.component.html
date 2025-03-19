@@ -7,7 +7,8 @@
     <p><strong>Trainer Available:</strong> {{ gym.personal_trainer ? 'Yes' : 'No' }}</p>
     <p><strong>Category:</strong> {{ gym.category }}</p>
     <p><strong>Pricing:</strong> 💰 {{ gym.pricing_bundle }} - €{{ gym.price }}</p>
-  
+    <p><strong>Pressure Level:</strong> {{ gym.pressure }}</p>
+
     <!-- Save Gym Button -->
     <button (click)="saveGym()">💾 Save Gym</button>
   </div>

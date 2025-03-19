@@ -1,4 +1,4 @@
-.no-user-container {
+.no-user-container, .saved-gyms-container {
     & img {
         width:3rem;
     }
@@ -14,7 +14,9 @@
         display: flex;
         gap: 1rem;
         font-size: 3rem;
-        
+        &.title-saved-gyms {
+            font-family:"Archivo", sans-serif;
+        }
     }
     & p {
         display: flex;

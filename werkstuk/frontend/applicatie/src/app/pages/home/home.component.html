@@ -2,11 +2,12 @@
     <app-hero-home></app-hero-home> 
     <div class="saved-gyms-container">
         <div *ngIf="userId">
-            <h3>📂 Your Saved Gyms</h3>
+            <h2 class="title-saved-gyms">OPGESLAGEN GYM’S <img src="/images/heart.svg" alt="Heart"></h2>
             <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
             <div *ngFor="let gym of savedGyms">
-              <h4>{{ gym.name }}</h4>
-              <p>{{ gym.city }}</p>
+            
+              <gym-card *ngFor="let gym of savedGyms" [gym]="gym"></gym-card>
+
             </div>
           </div>
 

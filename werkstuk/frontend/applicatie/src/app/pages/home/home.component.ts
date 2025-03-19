@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeroHomeComponent } from '../../components/hero-home/hero-home.component';
 import { ApiService } from '../../services/api.service';
+import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeroHomeComponent],
+  imports: [CommonModule, RouterModule, HeroHomeComponent,GymCardComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
