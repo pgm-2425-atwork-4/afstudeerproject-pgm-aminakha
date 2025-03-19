@@ -9,7 +9,6 @@
 
           <!-- Loop through saved gyms and pass each gym to gym-card -->
           <gym-card *ngFor="let gym of savedGyms" [gym]="gym"></gym-card>
-
       </div>
 
       <div class="no-user-container" *ngIf="!userId">
