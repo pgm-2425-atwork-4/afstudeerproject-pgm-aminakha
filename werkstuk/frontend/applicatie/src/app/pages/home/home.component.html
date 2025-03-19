@@ -1,21 +1,25 @@
 <main>    
-    <app-hero-home></app-hero-home> 
-    <div class="saved-gyms-container">
-        <div *ngIf="userId">
-            <h2 class="title-saved-gyms">OPGESLAGEN GYM’S <img src="/images/heart.svg" alt="Heart"></h2>
-            <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
-            <div *ngFor="let gym of savedGyms">
-            
-              <gym-card *ngFor="let gym of savedGyms" [gym]="gym"></gym-card>
+  <app-hero-home></app-hero-home> 
+  <div class="saved-gyms-container">
+      <div *ngIf="userId">
+          <h2 class="title-saved-gyms">OPGESLAGEN GYM’S 
+              <img src="/images/heart.svg" alt="Heart">
+          </h2>
+          <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
 
-            </div>
-          </div>
+          <!-- Loop through saved gyms and pass each gym to gym-card -->
+          <gym-card *ngFor="let gym of savedGyms" [gym]="gym"></gym-card>
 
-          <div class="no-user-container" *ngIf="!userId">
-            <h2> <img src="/images/user-solid (1).svg" alt="Avatar">Inloggen om je opgeslagen gyms te bekijken</h2>
-            <p><a routerLink="/login">Log u in</a></p>
-            <p><span></span>OF <span></span></p>
-            <p><a routerLink="/register">Registreer</a></p>
-          </div>
-    </div>
+      </div>
+
+      <div class="no-user-container" *ngIf="!userId">
+          <h2> 
+              <img src="/images/user-solid (1).svg" alt="Avatar">
+              Inloggen om je opgeslagen gyms te bekijken
+          </h2>
+          <p><a routerLink="/login">Log u in</a></p>
+          <p><span></span>OF <span></span></p>
+          <p><a routerLink="/register">Registreer</a></p>
+      </div>
+  </div>
 </main>

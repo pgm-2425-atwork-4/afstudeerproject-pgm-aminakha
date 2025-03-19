@@ -466,17 +466,20 @@ app.get("/gyms", (req, res) => {
   const sql = `
     SELECT 
       g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
-      g.logo, -- ✅ Added gym logo
+      g.logo, 
       p.name AS province, 
       c.name AS category,
       pr.bundle_name AS pricing_bundle, pr.price,
-      GROUP_CONCAT(i.image_url) AS images -- ✅ Fetch multiple images
+      pres.name AS pressure,
+      GROUP_CONCAT(i.image_url) AS images
     FROM gyms g
     LEFT JOIN provinces p ON g.province_id = p.id
     LEFT JOIN categories c ON g.category_id = c.id
     LEFT JOIN prices pr ON g.pricing_id = pr.id
-    LEFT JOIN images i ON g.id = i.gym_id -- ✅ Get multiple images per gym
-    GROUP BY g.id; -- ✅ Group by gym ID to avoid duplicates
+    LEFT JOIN images i ON g.id = i.gym_id 
+        LEFT JOIN pressures pres ON g.pressure_id = pres.id  
+
+    GROUP BY g.id; 
   `;
 
   db.query(sql, (err, results) => {

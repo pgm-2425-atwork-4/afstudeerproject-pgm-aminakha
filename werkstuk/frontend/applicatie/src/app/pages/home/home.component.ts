@@ -38,6 +38,8 @@ export class HomeComponent implements OnInit {
       this.userId = null;
       console.log("❌ No user logged in! User ID is:", this.userId); // ✅ Log if no user
     }
+    this.fetchGyms();
+
   }
 
   fetchGyms() {
