@@ -34,17 +34,17 @@ export class GymsComponent implements OnInit {
     });
   }
   searchGyms() {
-    const query = this.searchQuery.toLowerCase().trim();
-    if (!query) {
-      this.filteredGyms = this.gyms; // If empty, show all gyms
-      return;
+    if (!this.searchQuery) {
+      // If no search query, show all gyms again
+      this.filteredGyms = [...this.gyms]; 
+    } else {
+      const query = this.searchQuery.toLowerCase().trim();
+      this.filteredGyms = this.gyms.filter(gym =>
+        gym.name.toLowerCase().includes(query) ||
+        gym.city.toLowerCase().includes(query) ||
+        gym.province.toLowerCase().includes(query) ||
+        (gym.category && gym.category.toLowerCase().includes(query))
+      );
     }
-  
-    this.filteredGyms = this.gyms.filter(gym =>
-      gym.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      gym.city.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      gym.province.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      gym.category.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
   }
 }

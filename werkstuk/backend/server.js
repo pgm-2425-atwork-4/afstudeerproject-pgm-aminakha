@@ -469,8 +469,7 @@ app.get("/gyms", (req, res) => {
   const sql = `
     SELECT 
       g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
-      g.logo, 
-       g.email, g.phone, g.website,
+      g.logo, g.email, g.phone, g.website,
       p.name AS province, 
       c.name AS category,
       pr.bundle_name AS pricing_bundle, pr.price,
