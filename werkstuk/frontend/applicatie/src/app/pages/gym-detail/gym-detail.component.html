@@ -8,7 +8,9 @@
     <p><strong>Category:</strong> {{ gym.category }}</p>
     <p><strong>Pricing:</strong> 💰 {{ gym.pricing_bundle }} - €{{ gym.price }}</p>
     <p><strong>Pressure Level:</strong> {{ gym.pressure }}</p>
-
+    <div class="gym-gallery" *ngIf="gym.images && gym.images.length > 0">
+      <img *ngFor="let img of gym.images" [src]="img" alt="{{ gym.name }} Image" class="gym-image">
+  </div>
     <!-- Save Gym Button -->
     <button (click)="saveGym()">💾 Save Gym</button>
   </div>

@@ -33,7 +33,13 @@ export class GymsComponent implements OnInit {
       }
     });
   }
-  onSearchChange() {
+  searchGyms() {
+    const query = this.searchQuery.toLowerCase().trim();
+    if (!query) {
+      this.filteredGyms = this.gyms; // If empty, show all gyms
+      return;
+    }
+  
     this.filteredGyms = this.gyms.filter(gym =>
       gym.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       gym.city.toLowerCase().includes(this.searchQuery.toLowerCase()) ||

@@ -1,38 +1,38 @@
+
+<div class="gyms-container">
+  <div class="gyms-content">
+    <div class="search-input">
+      <input type="text" [(ngModel)]="searchQuery" (input)="searchGyms()" placeholder="Search gyms..." class="search-box">
+    <button>Filters<svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 16 16" fill="white">
+<path d="M0 3H16V1H0V3Z" fill="white"/>
+<path d="M2 7H14V5H2V7Z" fill="white"/>
+<path d="M4 11H12V9H4V11Z" fill="white"/>
+<path d="M10 15H6V13H10V15Z" fill="white"/>
+</svg></button>
+    </div>
+    
 <!-- ✅ Show loading message only if no gyms are loaded -->
-<div *ngIf="gyms.length === 0">
-  <p>Loading gyms...</p>
-</div>
-<!-- ✅ Search Bar -->
-<input 
-  type="text" 
-  placeholder="Search for a gym..." 
-  [(ngModel)]="searchQuery" 
-  (input)="onSearchChange()" 
-  class="search-input"
->
 <div *ngIf="filteredGyms.length === 0">
   <p>No gyms found...</p>
 </div>
-<!-- ✅ Corrected Gym Loop (Avoiding Duplicate Rendering) -->
-<div *ngFor="let gym of gyms" class="gym-card">
-  <!-- ✅ Display Gym Logo -->
+
+<!-- ✅ Corrected Gym Loop (Filtered Gyms) -->
+ <ul  >
+  <li *ngFor="let gym of filteredGyms" >
+    <div class="gym-card-descritpion">  <!-- Use filteredGyms -->
   <img *ngIf="gym.logo" [src]="gym.logo" alt="{{ gym.name }} Logo" class="gym-logo">
-
-  <!-- ✅ Display Gym Gallery Images (if available) -->
-  <div class="gym-gallery" *ngIf="gym.images && gym.images.length > 0">
-      <img *ngFor="let img of gym.images" [src]="img" alt="{{ gym.name }} Image" class="gym-image">
-  </div>
-
-  <!-- ✅ Gym Info -->
-  <h2>{{ gym.name }}</h2>
-  <p><strong>City:</strong> {{ gym.city }}</p>
+  <div class="small-gym-description">
+      <h2>{{ gym.name }}</h2>
   <p><strong>Rating:</strong> ⭐{{ gym.rating }}</p>
   <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
   <p><strong>Address:</strong> {{ gym.address }}</p>
-  <p><strong>Province:</strong> {{ gym.province }}</p>
-  <p><strong>Category:</strong> {{ gym.category }}</p>
-  <p><strong>Personal Trainer Available:</strong> {{ gym.personal_trainer ? '✅ Yes' : '❌ No' }}</p>
-  <p><strong>Price:</strong> {{ gym.pricing_bundle }} - €{{ gym.price }}/month</p>
-  <a [routerLink]="['/gym-detail', gym.id]" class="gym-link">Link</a>
+  </div>
 
+
+  <a [routerLink]="['/gym-detail', gym.id]" class="gym-link">Link</a>
+</div>
+  </li>
+ </ul>
+
+  </div>
 </div>
