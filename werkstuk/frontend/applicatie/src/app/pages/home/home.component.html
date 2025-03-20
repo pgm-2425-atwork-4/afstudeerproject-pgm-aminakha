@@ -6,9 +6,10 @@
               <img src="/images/heart.svg" alt="Heart">
           </h2>
           <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
+          <ul>
+                      <gym-card *ngFor="let gym of savedGyms" [gym]="gym"></gym-card>
 
-          <!-- Loop through saved gyms and pass each gym to gym-card -->
-          <gym-card *ngFor="let gym of savedGyms" [gym]="gym"></gym-card>
+          </ul>
       </div>
 
       <div class="no-user-container" *ngIf="!userId">

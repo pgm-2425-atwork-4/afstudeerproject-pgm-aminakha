@@ -2,7 +2,17 @@
 <div *ngIf="gyms.length === 0">
   <p>Loading gyms...</p>
 </div>
-
+<!-- ✅ Search Bar -->
+<input 
+  type="text" 
+  placeholder="Search for a gym..." 
+  [(ngModel)]="searchQuery" 
+  (input)="onSearchChange()" 
+  class="search-input"
+>
+<div *ngIf="filteredGyms.length === 0">
+  <p>No gyms found...</p>
+</div>
 <!-- ✅ Corrected Gym Loop (Avoiding Duplicate Rendering) -->
 <div *ngFor="let gym of gyms" class="gym-card">
   <!-- ✅ Display Gym Logo -->

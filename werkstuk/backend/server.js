@@ -201,13 +201,13 @@ app.post("/login", (req, res) => {
       const token = jwt.sign(
         { id: user.id, username: user.username, role: user.role },
         SECRET_KEY,
-        { expiresIn: "2h" } // Token expires in 2 hours
+        { expiresIn: "4h" } // Token expires in 2 hours
       );
 
       res.cookie("auth_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        maxAge: 2 * 60 * 60 * 1000, // 2 hours
+        maxAge: 4 * 60 * 60 * 1000, // 2 hours
       });
 
       res.json({
@@ -259,7 +259,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/auth/user", verifyToken, (req, res) => {
-  const sql = "SELECT id, username, email, profile_image FROM users WHERE id = ?";
+  const sql = "SELECT id, username, email, profile_image,role FROM users WHERE id = ?";
   
   db.query(sql, [req.user.id], (err, results) => {
     if (err) {

@@ -33,8 +33,9 @@ export class HeaderComponent implements OnInit {
 
       // ✅ Subscribe to user changes
       this.apiService.currentUser$.subscribe(user => {
-        console.log("✅ User Data for Header:", user);
+        console.log("✅ User Data for Header:", user + this.user.role);
         this.user = user;
+
       });
     }
   }

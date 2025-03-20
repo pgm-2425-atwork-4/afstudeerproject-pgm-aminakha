@@ -1,0 +1,73 @@
+.gym-card {    
+    font-family:"Anton", sans-serif;
+    width: 22rem;
+    position: relative;
+
+    & img {
+        width: 100%;
+        object-fit: cover;  
+        height:10rem;
+        border-radius: var(--standard-border-radius) var(--standard-border-radius) 0 0;
+    }
+   & .description {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 1.5rem;
+    border-radius: 0 0 var(--standard-border-radius) var(--standard-border-radius);
+    & img {
+        width: 2rem;
+        height: 2rem;
+
+    }
+    & p {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        &.description--middle {
+            border-right: 2px solid var(--primary-color);
+            border-left: 2px solid var(--primary-color);
+            padding: 0 1rem;
+        } 
+        
+    }
+ 
+    }
+    & .link-gym {
+        position: absolute;
+        bottom: 40%;
+        right: 5%;
+        
+        & a{ 
+             background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: .5rem;
+            display:flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .5rem;
+            transition: all .3s ease;
+            &:hover {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            transition: all .3s ease;
+            box-shadow: -3px 3px var(--secondary-color);
+            & svg {
+                fill: var(--secondary-color);
+                transition: fill .3s;   
+            }
+            transform:translateY(-.3rem);
+        }
+
+        }
+        & svg {
+            width: 2rem;
+            height: 2rem;
+        }
+        
+    }
+  
+}
