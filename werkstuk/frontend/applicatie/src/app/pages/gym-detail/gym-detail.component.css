@@ -1,5 +1,16 @@
 .gym-detail-container {
     & .gym-detail-content {
+        & .general-information {
+        & h2 {
+            font-size: 3.7rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Archivo", sans-serif;
+           
+        }    
+        }
         & .gym-detail-content--description {
             background-color: var(--primary-color);
             color: var(--secondary-color);

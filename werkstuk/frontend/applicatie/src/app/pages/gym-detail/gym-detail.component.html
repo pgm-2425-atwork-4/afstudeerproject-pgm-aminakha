@@ -41,12 +41,14 @@
   </div>
 
   <div class="general-information">
-    <h2></h2>
+
+    <h2>Algemene informatie</h2>
+      <p><strong>Location:</strong> {{ gym.city }}, {{ gym.address }}</p>
+    
   </div>
    
   </div>
 
-  <p><strong>Location:</strong> {{ gym.city }}, {{ gym.address }}</p>
   <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
   <p><strong>Trainer Available:</strong> {{ gym.personal_trainer ? 'Yes' : 'No' }}</p>
   <p><strong>Pricing:</strong> 💰 {{ gym.pricing_bundle }} - €{{ gym.price }}</p>

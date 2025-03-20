@@ -406,7 +406,7 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
 });
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), (req, res) => {
   try {
-      const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id } = req.body;
+      const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id ,email,phone,website } = req.body;
 
       // ✅ Get logo URL
       const logoUrl = req.files["logo"] ? req.files["logo"][0].path : null;
@@ -426,10 +426,10 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
       console.log("📍 Province ID:", province_id);
 
       const sql = `
-          INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logo)
+          INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logo,email,phone,website )
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const values = [name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logoUrl];
+      const values = [name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logoUrl,email,phone,website ];
 
       db.query(sql, values, (err, result) => {
           if (err) {
@@ -470,6 +470,7 @@ app.get("/gyms", (req, res) => {
     SELECT 
       g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
       g.logo, 
+       g.email, g.phone, g.website,
       p.name AS province, 
       c.name AS category,
       pr.bundle_name AS pricing_bundle, pr.price,
@@ -579,7 +580,7 @@ app.post("/admin/upload-gym-image", adminUpload.single("image"), (req, res) => {
   res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl });
 });
 app.post("/admin/add-gym", adminUpload.single("image"), (req, res) => {
-  const { name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, admin_id, description } = req.body;
+  const { name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, admin_id, description,email,phone,website } = req.body;
 
   if (!req.file) {
     return res.status(400).json({ error: "❌ No image uploaded!" });
@@ -588,11 +589,11 @@ app.post("/admin/add-gym", adminUpload.single("image"), (req, res) => {
   const imageUrl = req.file.path; // ✅ Cloudinary Image URL
 
   const sql = `
-    INSERT INTO gyms (name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, image_url, admin_id, description)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO gyms (name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, image_url, admin_id, description,email,phone,website )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)
   `;
   
-  const values = [name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, imageUrl, admin_id, description];
+  const values = [name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, imageUrl, admin_id, description,email,phone,website ];
 
   db.query(sql, values, (err, result) => {
     if (err) {
