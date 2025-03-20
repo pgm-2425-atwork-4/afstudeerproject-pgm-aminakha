@@ -506,7 +506,7 @@ app.get("/gyms/:id", (req, res) => {
   const sql = `
     SELECT 
       g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
-      g.logo, 
+      g.logo, g.email, g.phone, g.website,
       p.name AS province, 
       c.name AS category,
             pres.name AS pressure,  
