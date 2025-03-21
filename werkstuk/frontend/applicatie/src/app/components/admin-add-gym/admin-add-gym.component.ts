@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // ✅ Import FormsModule
+import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-admin-add-gym',
   standalone: true,
-  imports: [CommonModule, FormsModule], // ✅ Add FormsModule here
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-add-gym.component.html',
   styleUrls: ['./admin-add-gym.component.css']
 })
@@ -22,6 +22,9 @@ export class AdminAddGymComponent implements OnInit {
     category_id: '',
     pricing_id: '',
     province_id: '',
+    email: '',
+    phone: '',
+    website: ''
   };
 
   selectedLogo: File | null = null;
@@ -36,7 +39,6 @@ export class AdminAddGymComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    // ✅ Fetch Dropdown Options
     this.apiService.getPressureTypes().subscribe((data: any) => this.pressures = data);
     this.apiService.getCategories().subscribe((data: any) => this.categories = data);
     this.apiService.getPricingPlans().subscribe((data: any) => this.pricingPlans = data);
@@ -60,12 +62,15 @@ export class AdminAddGymComponent implements OnInit {
     formData.append('opening_hours', this.gymData.opening_hours);
     formData.append('address', this.gymData.address);
     formData.append('personal_trainer', this.gymData.personal_trainer ? '1' : '0');
-
-    // ✅ Append selected IDs
     formData.append('pressure_id', this.gymData.pressure_id);
     formData.append('category_id', this.gymData.category_id);
     formData.append('pricing_id', this.gymData.pricing_id);
     formData.append('province_id', this.gymData.province_id);
+    
+    // ✅ New Fields
+    formData.append('email', this.gymData.email);
+    formData.append('phone', this.gymData.phone);
+    formData.append('website', this.gymData.website);
 
     if (this.selectedLogo) {
       formData.append('logo', this.selectedLogo);

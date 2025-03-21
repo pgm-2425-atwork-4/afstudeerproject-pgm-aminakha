@@ -406,7 +406,7 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
 });
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), (req, res) => {
   try {
-      const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id ,email,phone,website } = req.body;
+      const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
 
       // ✅ Get logo URL
       const logoUrl = req.files["logo"] ? req.files["logo"][0].path : null;
@@ -418,46 +418,22 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
           return res.status(400).json({ error: "❌ Missing required fields" });
       }
 
-      console.log("📸 Logo URL:", logoUrl);
-      console.log("📷 Image URLs:", imageUrls);
-      console.log("🛠️ Pressure ID:", pressure_id);
-      console.log("📂 Category ID:", category_id);
-      console.log("💰 Pricing ID:", pricing_id);
-      console.log("📍 Province ID:", province_id);
-
       const sql = `
-          INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logo,email,phone,website )
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logo, email, phone, website)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      const values = [name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logoUrl,email,phone,website ];
+      const values = [name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logoUrl, email, phone, website];
 
       db.query(sql, values, (err, result) => {
           if (err) {
               console.error("🔥 Database Insert Error:", err);
-              return res.status(500).json({ error: "Database error", details: err.message });
+              return res.status(500).json({ error: "Database error" });
           }
-
-          const gymId = result.insertId;
-
-          // ✅ Insert images into `images` table
-          if (imageUrls.length > 0) {
-              const imageInsertSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
-              const imageValues = imageUrls.map(url => [gymId, url]);
-
-              db.query(imageInsertSql, [imageValues], (imageErr) => {
-                  if (imageErr) {
-                      console.error("🔥 Image Insert Error:", imageErr);
-                      return res.status(500).json({ error: "Image insert failed", details: imageErr.message });
-                  }
-                  res.status(201).json({ message: "✅ Gym Added!", gymId, logo: logoUrl, images: imageUrls });
-              });
-          } else {
-              res.status(201).json({ message: "✅ Gym Added!", gymId, logo: logoUrl });
-          }
+          res.status(201).json({ message: "✅ Gym Added!", gymId: result.insertId, logo: logoUrl });
       });
   } catch (error) {
       console.error("🔥 Unexpected Error:", error);
-      res.status(500).json({ error: "Server error", details: error.message });
+      res.status(500).json({ error: "Server error" });
   }
 });
 
