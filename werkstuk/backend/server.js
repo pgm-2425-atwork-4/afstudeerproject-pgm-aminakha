@@ -408,41 +408,35 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
 // Fetch comments for a specific gym
 app.get("/comments/:gymId", (req, res) => {
   const gymId = req.params.gymId;
-
-  const sql = `SELECT c.comment_text, c.title, c.created_at, c.likes, u.username 
-               FROM comments c 
-               JOIN users u ON c.user_id = u.id 
-               WHERE c.gym_id = ? 
-               ORDER BY c.created_at DESC`;
-
+  const sql = "SELECT * FROM comments WHERE gym_id = ?";
   db.query(sql, [gymId], (err, results) => {
     if (err) {
       console.error("🔥 Error fetching comments:", err);
       return res.status(500).json({ error: "Database error" });
     }
-
-    res.json(results); // Return the list of comments
+    res.json(results); // Send the comments
   });
 });
+// POST route to add a comment
 app.post("/comments", verifyToken, (req, res) => {
   const { gymId, commentText, title } = req.body;
+  const userId = req.user.id; // Extract user ID from the token
 
-  if (!gymId || !commentText || !title) {
-    return res.status(400).json({ error: "Missing gymId, commentText, or title" });
-  }
-
-  const userId = req.user.id; // Get the logged-in user's ID from the token
-
-  const sql = "INSERT INTO comments (user_id, gym_id, comment_text, title, likes) VALUES (?, ?, ?, ?, ?)";
-  const values = [userId, gymId, commentText, title, 0]; // Likes start from 0
+  const sql = "INSERT INTO comments (user_id, gym_id, comment_text, title) VALUES (?, ?, ?, ?)";
+  const values = [userId, gymId, commentText, title];
 
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error("🔥 Error adding comment:", err);
       return res.status(500).json({ error: "Database error" });
     }
-
-    res.status(201).json({ message: "Comment added successfully!" });
+    res.status(201).json({
+      id: result.insertId,
+      user_id: userId,
+      gym_id: gymId,
+      comment_text: commentText,
+      title: title,
+    });
   });
 });
 

@@ -192,8 +192,8 @@ export class ApiService {
   getProvinces(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/provinces`, { headers: this.getAuthHeaders() });
   }
-  getComments(gymId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/comments?gym_id=${gymId}`);
+  getComments(gymId: string): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`/comments/${gymId}`); // Make sure this path is correct
   }
   addComment(commentData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/comments`, commentData);

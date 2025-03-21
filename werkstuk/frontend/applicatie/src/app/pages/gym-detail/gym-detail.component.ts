@@ -61,13 +61,13 @@ export class GymDetailComponent implements OnInit {
       alert("You must be logged in to submit a comment!");
       return;
     }
-
+  
     const newCommentData = {
       gymId: this.gym.id,
       commentText: this.newComment,
-      title: this.newCommentTitle
+      title: this.newCommentTitle,
     };
-
+  
     this.apiService.addComment(newCommentData).subscribe({
       next: (data) => {
         alert("Comment submitted successfully!");
@@ -75,10 +75,12 @@ export class GymDetailComponent implements OnInit {
         this.newComment = ""; // Reset the comment input
         this.newCommentTitle = ""; // Reset the title input
       },
-      error: (err) => console.error("❌ Error adding comment:", err)
+      error: (err) => {
+        console.error("❌ Error adding comment:", err);
+        alert("Failed to submit comment!");
+      },
     });
   }
-
   likeComment(commentId: number): void {
     this.apiService.likeComment(commentId).subscribe({
       next: (data) => {
