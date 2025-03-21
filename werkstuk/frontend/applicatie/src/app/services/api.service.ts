@@ -156,7 +156,9 @@ export class ApiService {
   getGymById(gymId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/gyms/${gymId}`, { headers: this.getAuthHeaders() });
   }
-
+  getPrices(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/prices`, { headers: this.getAuthHeaders() });
+  }
   /** ✅ Upload Gym Image */
   uploadGymImage(file: File): Observable<any> {
     const formData = new FormData();
