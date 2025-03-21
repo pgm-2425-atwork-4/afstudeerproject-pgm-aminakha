@@ -500,6 +500,17 @@ app.get("/gyms", (req, res) => {
     res.json(results);
   });
 });
+app.get("/prices", (req, res) => {
+  const sql = "SELECT * FROM prices";
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching prices:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json(results);
+  });
+});
 
 app.get("/gyms/:id", (req, res) => {
   const gymId = req.params.id;  // Extract gym ID from the URL
