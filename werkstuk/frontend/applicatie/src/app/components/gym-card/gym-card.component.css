@@ -2,7 +2,9 @@
     font-family:"Anton", sans-serif;
     width: 22rem;
     position: relative;
-
+    list-style: none;
+    border:solid 2px var(--primary-color);
+    border-radius: var(--standard-border-radius);
     & img {
         width: 100%;
         object-fit: cover;  

@@ -1,25 +1,49 @@
 <main>    
-  <app-hero-home></app-hero-home> 
-  <div class="saved-gyms-container">
-      <div *ngIf="userId">
-          <h2 class="title-saved-gyms">OPGESLAGEN GYM’S 
-              <img src="/images/heart.svg" alt="Heart">
-          </h2>
-          <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
-          <ul>
-                      <gym-card *ngFor="let gym of savedGyms" [gym]="gym"></gym-card>
-            
-          </ul>
+    <app-hero-home></app-hero-home> 
+
+    <!-- Saved Gyms Section -->
+    <div class="saved-gyms-container">
+        <div *ngIf="userId">
+            <h2 class="title-saved-gyms">
+                OPGESLAGEN GYM’S 
+                <img src="/images/heart.svg" alt="Heart">
+            </h2>
+            <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
+            <div *ngFor="let gym of savedGyms" class="gym-card-item">
+                <gym-card [gym]="gym"></gym-card>
+            </div>
+        </div>
+  
+        <div class="no-user-container" *ngIf="!userId">
+            <h2> 
+                <img src="/images/user-solid (1).svg" alt="Avatar">
+                Inloggen om je opgeslagen gyms te bekijken
+            </h2>
+            <p><a routerLink="/login">Log u in</a></p>
+            <p><span></span>OF <span></span></p>
+            <p><a routerLink="/register">Registreer</a></p>
+        </div>
+    </div>
+  
+    <!-- For You Section -->
+    <div class="for-you-container">
+        <div class="for-you-container__title">
+             <h2>For You</h2>
+        </div>
+     
+
+      <!-- Tags container, aligned to the bottom left -->
+      <div class="tags-container">
+        <div class="tags-container__title">
+            <h2>TAGS</h2>
+        </div>
+        <p *ngIf="selectedCity" class="tag">{{ selectedCity }} <img src="/images/compass.svg" alt=""></p>
+        <p *ngIf="selectedCategory" class="tag"><span >{{ selectedCategory }}</span></p>
       </div>
 
-      <div class="no-user-container" *ngIf="!userId">
-          <h2> 
-              <img src="/images/user-solid (1).svg" alt="Avatar">
-              Inloggen om je opgeslagen gyms te bekijken
-          </h2>
-          <p><a routerLink="/login">Log u in</a></p>
-          <p><span></span>OF <span></span></p>
-          <p><a routerLink="/register">Registreer</a></p>
+      <!-- Gym Cards Section -->
+      <div *ngFor="let gym of filteredGyms; let i = index" class="gym-card-item" [ngClass]="{'gym-card-top-left': i === 0, 'gym-card-top-right': i === 1, 'gym-card-bottom': i === 2}">
+        <gym-card [gym]="gym"></gym-card>
       </div>
-  </div>
+    </div>
 </main>
