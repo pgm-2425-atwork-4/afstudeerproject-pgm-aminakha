@@ -472,7 +472,7 @@ app.get("/gyms", (req, res) => {
       g.logo, g.email, g.phone, g.website,
       p.name AS province, 
       c.name AS category,
-      pr.bundle_name AS pricing_bundle, pr.price,
+      pr.description AS pricing_bundle, pr.price,
       pres.name AS pressure,
       GROUP_CONCAT(i.image_url) AS images
     FROM gyms g
@@ -505,33 +505,21 @@ app.get("/gyms/:id", (req, res) => {
   const gymId = req.params.id;  // Extract gym ID from the URL
 
   const sql = `
-    SELECT 
-      g.id, 
-      g.name, 
-      g.city, 
-      g.rating, 
-      g.opening_hours, 
-      g.address, 
-      g.personal_trainer, 
-      g.logo, 
-      g.email, 
-      g.phone, 
-      g.website,
-      p.name AS province, 
-      c.name AS category,
-      pres.name AS pressure,
-      pr.bundle_name AS pricing_bundle, 
-      pr.price AS pricing_price,
-      GROUP_CONCAT(i.image_url) AS images
-    FROM gyms g
-    LEFT JOIN provinces p ON g.province_id = p.id
-    LEFT JOIN categories c ON g.category_id = c.id
-    LEFT JOIN prices pr ON g.pricing_id = pr.id
-    LEFT JOIN images i ON g.id = i.gym_id
-    LEFT JOIN pressures pres ON g.pressure_id = pres.id
-    WHERE g.id = ?
-    GROUP BY g.id;
-  `;
+  SELECT 
+    g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
+    g.logo, 
+    p.name AS province, 
+    c.name AS category,
+    pr.bundle_name AS pricing_bundle, pr.price,
+    GROUP_CONCAT(i.image_url) AS images
+  FROM gyms g
+  LEFT JOIN provinces p ON g.province_id = p.id
+  LEFT JOIN categories c ON g.category_id = c.id
+  LEFT JOIN prices pr ON g.pricing_id = pr.id
+  LEFT JOIN images i ON g.id = i.gym_id
+  WHERE g.id = ?
+  GROUP BY g.id;
+`;
 
   db.query(sql, [gymId], (err, results) => {
     if (err) {
