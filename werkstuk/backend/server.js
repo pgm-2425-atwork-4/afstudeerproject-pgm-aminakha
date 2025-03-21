@@ -49,7 +49,7 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 app.use(cors({
-  origin: ["localhost:4200", "https://pgm-2425-atwork-4.github.io","localhost:4200/login"], // ✅ Allow frontend
+  origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io","http://localhost:4200/login"], // ✅ Allow frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // ✅ Allow cookies & authentication headers
@@ -57,7 +57,7 @@ app.use(cors({
 
 // ✅ Manually Set CORS Headers for Every Response
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "localhost:4200");
+  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
