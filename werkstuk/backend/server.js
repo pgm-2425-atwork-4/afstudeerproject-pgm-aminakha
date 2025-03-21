@@ -414,7 +414,7 @@ app.get("/comments/:gymId", (req, res) => {
       console.error("🔥 Error fetching comments:", err);
       return res.status(500).json({ error: "Database error" });
     }
-    res.json(results); // Send the comments
+    res.json(results); // Return an empty array if no comments
   });
 });
 // POST route to add a comment

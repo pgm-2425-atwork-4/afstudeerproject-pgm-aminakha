@@ -59,7 +59,9 @@
           </div>
         </div>
       </div>
-
+<div *ngIf="gym.noCommentsMessage">
+        <p>{{ gym.noCommentsMessage }}</p>
+      </div>
       <!-- Add Comment Form (Visible only if logged in) -->
       <div *ngIf="userId" class="add-comment-form">
         <label for="commentTitle">Title</label>
@@ -70,6 +72,7 @@
         <button (click)="submitComment()">Submit Comment</button>
       </div>
 
+      
       <div *ngIf="!userId" class="login-message">
         <p>You must be logged in to add a comment!</p>
       </div>
