@@ -56,9 +56,22 @@
   </div>
    
   </div>
-
-  <p><strong>Trainer Available:</strong> {{ gym.personal_trainer ? 'Yes' : 'No' }}</p>
+  <div class="gym-pricing">
+    <h2>Lidmaatschapsopties</h2>
   
+    <ul *ngIf="gymPrices.length > 0; else noPrices">
+      <li *ngFor="let bundle of gymPrices">
+        <h3>{{ bundle.bundle_name }} - €{{ bundle.price }}</h3>
+        <p>{{ bundle.description }}</p>
+      </li>
+    </ul>
+  
+    <ng-template #noPrices>
+      <p>Geen lidmaatschapsopties beschikbaar voor deze gym.</p>
+    </ng-template>
+  </div>
+  <p><strong>Trainer Available:</strong> {{ gym.personal_trainer ? 'Yes' : 'No' }}</p>
+ 
   <li *ngFor="let bundle of gym.pricing_bundles; let i = index">
     {{ bundle }} - €{{ gym.prices[i] }}
   </li>

@@ -530,7 +530,7 @@ app.get("/gyms/:id", (req, res) => {
     LEFT JOIN prices pr ON g.pricing_id = pr.id
     LEFT JOIN images i ON g.id = i.gym_id 
         LEFT JOIN pressures pres ON g.pressure_id = pres.id  
-
+  WHERE g.id = ?
     GROUP BY g.id; 
   `;
 
