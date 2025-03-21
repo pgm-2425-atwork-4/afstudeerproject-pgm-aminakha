@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router'; // ✅ Import RouterModule
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from './services/api.service'; // ✅ Import the API Service
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ HeaderComponent,CommonModule,RouterOutlet], // ✅ Ensure RouterModule is included
+  imports: [ HeaderComponent,FooterComponent,CommonModule,RouterOutlet], // ✅ Ensure RouterModule is included
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   providers: [ApiService] // ✅ Add the API Service to the providers array

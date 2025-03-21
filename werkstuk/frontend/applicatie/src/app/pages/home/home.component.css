@@ -60,11 +60,12 @@
         position:absolute;
         top: 50%;
         left: 50%;
+        text-transform: uppercase;
         transform: translate(-50%, -50%) rotate(90deg);    
         width: 31rem;
     }
         font-family: "Archivo", sans-serif;
-        font-size: 4rem;
+        font-size: 3.5rem;
     }
     
 

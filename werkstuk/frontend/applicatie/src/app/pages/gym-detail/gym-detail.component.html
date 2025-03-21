@@ -73,6 +73,28 @@
         </svg><strong>Trainer Available:</strong> {{ gym.personal_trainer ? 'Yes' : 'No' }}</p>
 
   </div>
+  <div class="comments-section">
+    <h2>Comments</h2>
+
+    <!-- Display Comments -->
+    <div class="comments-list">
+      <div *ngFor="let comment of gym.comments">
+        <div class="comment">
+          <p><strong>{{ comment.user.username }}:</strong> {{ comment.comment_text }}</p>
+          <p><small>Posted on: {{ comment.created_at | date:'short' }}</small></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Comment Form (Visible only if logged in) -->
+    <div *ngIf="userId" class="add-comment-form">
+      <textarea [(ngModel)]="newComment" placeholder="Write your comment here..." rows="4"></textarea>
+      <button (click)="submitComment()">Submit Comment</button>
+    </div>
+    <div *ngIf="!userId" class="login-message">
+      <p>You must be logged in to add a comment!</p>
+    </div>
+  </div>
   </div>
  
  

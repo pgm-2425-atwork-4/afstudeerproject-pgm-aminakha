@@ -15,6 +15,8 @@ export class GymDetailComponent implements OnInit {
   userId: string | null = null;
   prices: any[] = []; // Full list of pricing options
   gymPrices: any[] = []; // Filtered list for the current gym
+  gymComments: any[] = []; // Comments for the gym
+  newComment: string = ""; // New comment to be added
 
   constructor(private route: ActivatedRoute, private apiService: ApiService) {}
 
@@ -46,6 +48,37 @@ export class GymDetailComponent implements OnInit {
     if (user) {
       this.userId = JSON.parse(user).id;
     }
+  }
+
+  fetchComments(gymId: string): void {
+    this.apiService.getComments(gymId).subscribe({
+      next: (data) => {
+        this.gym.comments = data;
+        console.log("💬 Comments for Gym:", this.gym.comments);
+      },
+      error: (err) => console.error("❌ Error fetching comments:", err)
+    });
+  }
+  submitComment(): void {
+    if (!this.userId) {
+      alert("You must be logged in to submit a comment!");
+      return;
+    }
+
+    const newCommentData = {
+      user_id: this.userId,
+      gym_id: this.gym.id,
+      comment_text: this.newComment
+    };
+
+    this.apiService.addComment(newCommentData).subscribe({
+      next: (data) => {
+        alert("Comment submitted successfully!");
+        this.gym.comments.push(data); // Add new comment to the list
+        this.newComment = ""; // Reset the comment input
+      },
+      error: (err) => console.error("❌ Error adding comment:", err)
+    });
   }
 
   fetchPrices(gymId: number) {

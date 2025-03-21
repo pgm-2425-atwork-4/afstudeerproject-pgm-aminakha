@@ -190,7 +190,12 @@ export class ApiService {
   getProvinces(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/provinces`, { headers: this.getAuthHeaders() });
   }
-
+  getComments(gymId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/comments?gym_id=${gymId}`);
+  }
+  addComment(commentData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/comments`, commentData);
+  }
   /** ✅ Fetch Saved Gyms */
   getSavedGyms(userId: string): Observable<any> {
     console.log(`📡 Fetching saved gyms for User ID: ${userId}`);

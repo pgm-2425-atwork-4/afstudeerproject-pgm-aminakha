@@ -1,43 +1,96 @@
-
 <div class="gyms-container">
   <div class="gyms-content">
     <div class="search-input">
       <input type="text" [(ngModel)]="searchQuery" (input)="searchGyms()" placeholder="Search gyms..." class="search-box">
-
-    <button>Filters<svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 16 16" fill="white">
-<path d="M0 3H16V1H0V3Z" fill="white"/>
-<path d="M2 7H14V5H2V7Z" fill="white"/>
-<path d="M4 11H12V9H4V11Z" fill="white"/>
-<path d="M10 15H6V13H10V15Z" fill="white"/>
-</svg></button>
+      
+      <button (click)="toggleFilterModal()">Filters
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 16 16" fill="white">
+          <path d="M0 3H16V1H0V3Z" fill="white"/>
+          <path d="M2 7H14V5H2V7Z" fill="white"/>
+          <path d="M4 11H12V9H4V11Z" fill="white"/>
+          <path d="M10 15H6V13H10V15Z" fill="white"/>
+        </svg>
+      </button>
     </div>
-    
-<!-- ✅ Show loading message only if no gyms are loaded -->
-<div *ngIf="filteredGyms.length === 0">
-  <p>No gyms found...</p>
+
+    <!-- Filter Modal -->
+    <div class="filter-modal" *ngIf="isFilterModalActive">
+      <div class="modal-content">
+        <h3>Filters</h3>
+
+        <label for="province">Kies een provincie</label>
+        <select id="province" [(ngModel)]="selectedProvince">
+          <option value="Oost-Vlaanderen">Oost-Vlaanderen</option>
+          <option value="West-Vlaanderen">West-Vlaanderen</option>
+          <option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</option>
+        </select>
+
+        <label for="city">Kies een stad</label>
+        <select id="city" [(ngModel)]="selectedCity">
+          <option value="Gent">Gent</option>
+          <option value="Deinze">Deinze</option>
+        </select>
+
+        <label for="rating">Kies een rating</label>
+        <select id="rating" [(ngModel)]="selectedRating">
+          <option value="1/5">1/5</option>
+          <option value="2/5">2/5</option>
+          <option value="3/5">3/5</option>
+          <option value="4/5">4/5</option>
+          <option value="5/5">5/5</option>
+        </select>
+
+        <label for="type">Type Gym</label>
+        <select id="type" [(ngModel)]="selectedType">
+          <option *ngFor="let category of categories" [value]="category.name">{{ category.name }}</option>
+        </select>
+
+        <label>Personal Trainer</label>
+<div class="personal-trainer-options">
+  <!-- YES Option -->
+  <input  type="radio" id="personal-trainer-yes" name="personalTrainer" [(ngModel)]="selectedPersonalTrainer" value="1">
+  <label for="personal-trainer-yes">JA</label>
+
+  <!-- NO Option -->
+  <input type="radio" id="personal-trainer-no" name="personalTrainer" [(ngModel)]="selectedPersonalTrainer" value="0">
+  <label for="personal-trainer-no">NEE</label>
 </div>
 
-<!-- ✅ Corrected Gym Loop (Filtered Gyms) -->
-<ul>
-  <li *ngFor="let gym of filteredGyms">
-    <div class="gym-card-descritpion">
-      <img *ngIf="gym.logo" [src]="gym.logo" alt="{{ gym.name }} Logo" class="gym-logo">
-      <div class="small-gym-description">
-        <h1>{{ gym.name }}</h1>
-        <ul class="gym-card__list">
-          <li><p><strong>Rating:</strong> ⭐{{ gym.rating }}</p></li>
-          <li><p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p></li>
-          <li><p><strong>City:</strong> {{ gym.city }}</p></li>
-          <li *ngIf="gym.personal_trainer"><p><strong>Personal Trainer:</strong> Available</p></li>
-
-        </ul>
+        <button class="apply-btn" (click)="applyFilters()">Filteren</button>
+        <button class="close-btn" (click)="toggleFilterModal()"><svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 24 24" fill="none">
+          <g id="Menu / Close_LG">
+          <path id="Vector" d="M21 21L12 12M12 12L3 3M12 12L21.0001 3M12 12L3 21.0001" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          </svg></button>
       </div>
-      <p class="gym-card__link">
-        <a [routerLink]="['/gym-detail', gym.id]" class="gym-link">Bekijk meer</a>
-      </p>
     </div>
-  </li>
-</ul>
 
+    <!-- Display message if no gyms are found -->
+    <div *ngIf="filteredGyms.length === 0">
+      <p>No gyms found...</p>
+    </div>
+
+    <!-- List of filtered gyms -->
+    <ul>
+      <li *ngFor="let gym of filteredGyms">
+        <div class="gym-card-descritpion">
+          <img *ngIf="gym.logo" [src]="gym.logo" alt="{{ gym.name }} Logo" class="gym-logo">
+          <div class="small-gym-description">
+            <h1>{{ gym.name }}</h1>
+            <ul class="gym-card__list">
+              <li><p><strong>Rating:</strong> {{ gym.rating }}<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" id="Layer_1" width="2rem" height="2rem" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
+                <path fill="white" d="M62.799,23.737c-0.47-1.399-1.681-2.419-3.139-2.642l-16.969-2.593L35.069,2.265  C34.419,0.881,33.03,0,31.504,0c-1.527,0-2.915,0.881-3.565,2.265l-7.623,16.238L3.347,21.096c-1.458,0.223-2.669,1.242-3.138,2.642  c-0.469,1.4-0.115,2.942,0.916,4l12.392,12.707l-2.935,17.977c-0.242,1.488,0.389,2.984,1.62,3.854  c1.23,0.87,2.854,0.958,4.177,0.228l15.126-8.365l15.126,8.365c0.597,0.33,1.254,0.492,1.908,0.492c0.796,0,1.592-0.242,2.269-0.72  c1.231-0.869,1.861-2.365,1.619-3.854l-2.935-17.977l12.393-12.707C62.914,26.68,63.268,25.138,62.799,23.737z"/>
+                </svg></p></li>
+              <li><p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p></li>
+              <li><p><strong>City:</strong> {{ gym.city }}</p></li>
+              <li *ngIf="gym.personal_trainer"><p><strong>Personal Trainer:</strong> Available</p></li>
+            </ul>
+          </div>
+          <p class="gym-card__link">
+            <a [routerLink]="['/gym-detail', gym.id]" class="gym-link">Bekijk meer</a>
+          </p>
+        </div>
+      </li>
+    </ul>
   </div>
 </div>

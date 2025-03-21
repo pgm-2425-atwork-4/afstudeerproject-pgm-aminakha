@@ -404,6 +404,48 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
   const imageUrl = req.file.path; // ✅ Get Cloudinary URL
   res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl });
 });
+
+// Fetch comments for a specific gym
+app.get("/comments/:gymId", (req, res) => {
+  const gymId = req.params.gymId; // Get the gymId from the URL
+
+  const sql = `SELECT c.comment_text, c.created_at, u.username 
+               FROM comments c 
+               JOIN users u ON c.user_id = u.id 
+               WHERE c.gym_id = ? 
+               ORDER BY c.created_at DESC`;
+
+  db.query(sql, [gymId], (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching comments:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    res.json(results); // Return the list of comments
+  });
+});
+app.post("/comments", verifyToken, (req, res) => {
+  const { gymId, commentText } = req.body;
+
+  if (!gymId || !commentText) {
+    return res.status(400).json({ error: "Missing gymId or comment text" });
+  }
+
+  const userId = req.user.id; // Get the logged-in user's ID from the token
+
+  const sql = "INSERT INTO comments (user_id, gym_id, comment_text) VALUES (?, ?, ?)";
+  const values = [userId, gymId, commentText];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("🔥 Error adding comment:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    res.status(201).json({ message: "Comment added successfully!" });
+  });
+});
+
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), async (req, res) => {
   try {
       const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
