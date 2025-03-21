@@ -407,9 +407,9 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
 
 // Fetch comments for a specific gym
 app.get("/comments/:gymId", (req, res) => {
-  const gymId = req.params.gymId; // Get the gymId from the URL
+  const gymId = req.params.gymId;
 
-  const sql = `SELECT c.comment_text, c.created_at, u.username 
+  const sql = `SELECT c.comment_text, c.title, c.created_at, c.likes, u.username 
                FROM comments c 
                JOIN users u ON c.user_id = u.id 
                WHERE c.gym_id = ? 
@@ -425,16 +425,16 @@ app.get("/comments/:gymId", (req, res) => {
   });
 });
 app.post("/comments", verifyToken, (req, res) => {
-  const { gymId, commentText } = req.body;
+  const { gymId, commentText, title } = req.body;
 
-  if (!gymId || !commentText) {
-    return res.status(400).json({ error: "Missing gymId or comment text" });
+  if (!gymId || !commentText || !title) {
+    return res.status(400).json({ error: "Missing gymId, commentText, or title" });
   }
 
   const userId = req.user.id; // Get the logged-in user's ID from the token
 
-  const sql = "INSERT INTO comments (user_id, gym_id, comment_text) VALUES (?, ?, ?)";
-  const values = [userId, gymId, commentText];
+  const sql = "INSERT INTO comments (user_id, gym_id, comment_text, title, likes) VALUES (?, ?, ?, ?, ?)";
+  const values = [userId, gymId, commentText, title, 0]; // Likes start from 0
 
   db.query(sql, values, (err, result) => {
     if (err) {
