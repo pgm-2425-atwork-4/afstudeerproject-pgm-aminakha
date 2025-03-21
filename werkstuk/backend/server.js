@@ -545,9 +545,12 @@ app.get("/gyms/:id", (req, res) => {
     }
 
     // Convert image URLs from CSV string to an array
-   
+    const gym = results[0];
+    gym.images = gym.images ? gym.images.split(",") : [];
+    gym.pricing_bundle = gym.pricing_bundle || "No pricing available";
+    gym.pricing_price = gym.pricing_price || "N/A";
 
-    res.json(results[0]);
+    res.json(gym);
   });
 });
 
