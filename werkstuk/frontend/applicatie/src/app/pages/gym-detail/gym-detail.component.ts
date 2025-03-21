@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true, // ✅ If it's a standalone component
-
   selector: 'app-gym-detail',
   templateUrl: './gym-detail.component.html',
   styleUrls: ['./gym-detail.component.css'],
@@ -19,18 +18,25 @@ export class GymDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const gymId = this.route.snapshot.paramMap.get('id');
-
+  
     if (gymId) {
       this.apiService.getGymById(gymId).subscribe({
         next: (data) => {
           this.gym = data;
           console.log("🏋️‍♂️ Gym Details:", this.gym);
+  
+          // Split the pricing_bundles and prices into arrays
+          this.gym.pricing_bundles = this.gym.pricing_bundles ? this.gym.pricing_bundles.split(',') : [];
+          this.gym.prices = this.gym.prices ? this.gym.prices.split(',') : [];
+  
+          console.log("Pricing Bundles:", this.gym.pricing_bundles);
+          console.log("Prices:", this.gym.prices);
         },
         error: (err) => console.error("❌ Error fetching gym:", err)
       });
     }
-
-    // Load User ID
+  
+    // Load User ID from localStorage
     const user = localStorage.getItem('user');
     if (user) {
       this.userId = JSON.parse(user).id;

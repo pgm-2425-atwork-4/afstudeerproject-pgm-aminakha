@@ -43,7 +43,9 @@ export class GymsComponent implements OnInit {
         gym.name.toLowerCase().includes(query) ||
         gym.city.toLowerCase().includes(query) ||
         gym.province.toLowerCase().includes(query) ||
-        (gym.category && gym.category.toLowerCase().includes(query))
+        (gym.category && gym.category.toLowerCase().includes(query)) ||
+        (gym.pricing_bundle && gym.pricing_bundle.toLowerCase().includes(query)) ||  // ✅ Search by pricing bundle name
+        (gym.price && gym.price.toString().includes(query)) // ✅ Search by price value
       );
     }
   }

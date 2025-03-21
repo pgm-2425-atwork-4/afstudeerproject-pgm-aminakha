@@ -500,24 +500,35 @@ app.get("/gyms", (req, res) => {
     res.json(results);
   });
 });
+
 app.get("/gyms/:id", (req, res) => {
-  const gymId = req.params.id;
+  const gymId = req.params.id;  // Extract gym ID from the URL
 
   const sql = `
     SELECT 
-      g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.personal_trainer, 
-      g.logo, g.email, g.phone, g.website,
+      g.id, 
+      g.name, 
+      g.city, 
+      g.rating, 
+      g.opening_hours, 
+      g.address, 
+      g.personal_trainer, 
+      g.logo, 
+      g.email, 
+      g.phone, 
+      g.website,
       p.name AS province, 
       c.name AS category,
-            pres.name AS pressure,  
-      pr.bundle_name AS pricing_bundle, pr.price,
+      pres.name AS pressure,
+      pr.bundle_name AS pricing_bundle, 
+      pr.price AS pricing_price,
       GROUP_CONCAT(i.image_url) AS images
     FROM gyms g
     LEFT JOIN provinces p ON g.province_id = p.id
     LEFT JOIN categories c ON g.category_id = c.id
     LEFT JOIN prices pr ON g.pricing_id = pr.id
     LEFT JOIN images i ON g.id = i.gym_id
-        LEFT JOIN pressures pres ON g.pressure_id = pres.id 
+    LEFT JOIN pressures pres ON g.pressure_id = pres.id
     WHERE g.id = ?
     GROUP BY g.id;
   `;
@@ -533,11 +544,15 @@ app.get("/gyms/:id", (req, res) => {
     }
 
     // Convert image URLs from CSV string to an array
-    results[0].images = results[0].images ? results[0].images.split(",") : [];
-    
-    res.json(results[0]);
+    const gym = results[0];
+    gym.images = gym.images ? gym.images.split(",") : [];
+    gym.pricing_bundle = gym.pricing_bundle || "No pricing available";
+    gym.pricing_price = gym.pricing_price || "N/A";
+
+    res.json(gym);
   });
 });
+
 app.get("/saved-gyms", verifyToken, (req, res) => {
   const sql = `
     SELECT g.id, g.name, g.city, g.rating, g.opening_hours, g.address, g.logo,

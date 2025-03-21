@@ -8,8 +8,35 @@
             align-items: center;
             justify-content: center;
             font-family: "Archivo", sans-serif;
+           border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0rem;
+            line-height: 1.6;
+            & svg {
+                width: 2rem;
+                height: 2rem;
+            }
            
-        }    
+        }     & ul {
+                width: 100%;
+                max-width: var(--max-width);
+                margin: 0 auto;
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+                 & li {
+                     & p {
+                            font-size: 1.2rem;
+                            padding-top: 1rem;
+                            font-family: "Archivo", sans-serif;
+                            & strong {
+                                text-decoration: underline;
+                                font-weight: bold;
+                            }
+                     }
+                 }
+            }
+        
         }
         & .gym-detail-content--description {
             background-color: var(--primary-color);

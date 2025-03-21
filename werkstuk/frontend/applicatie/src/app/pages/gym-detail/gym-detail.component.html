@@ -43,15 +43,23 @@
   <div class="general-information">
 
     <h2>Algemene informatie</h2>
-      <p><strong>Location:</strong> {{ gym.city }}, {{ gym.address }}</p>
-      <p><strong>Phone:</strong> {{ gym.phone }}</p>
-      <p><strong>Email:</strong> {{ gym.email }}</p>
-      <p><strong>Website:</strong> <a href="{{ gym.website }}" target="_blank">{{ gym.website }}</a></p>
+    <ul>
+            <li><p>Email: <strong><a href="mailto:{{ gym.email }}">{{ gym.email }}</a></strong></p></li>
+            <li><p>Phone: <strong><a href="tel:{{ gym.phone }}">{{ gym.phone }}</a></strong></p></li>
+            <li><p>Website: <strong><a href="{{ gym.website }}" target="_blank">{{ gym.name }}</a></strong></p></li>
+              <li>     <p>Location: <a href="https://www.google.com/maps/place/Basic-Fit/@51.0376448,3.7427729,683m/data=!3m1!1e3!4m15!1m8!3m7!1s0x47c376a9bd9b91dd:0x80019b9410b6b950!2sHoveniersstraat,+9050+Gent!3b1!8m2!3d51.0376415!4d3.7453478!16s%2Fg%2F1tglm1l0!3m5!1s0x47c376a869e1d3ab:0xd411af0197dcc780!8m2!3d51.0374309!4d3.7477722!16s%2Fg%2F1tsbl8rr?entry=ttu&g_ep=EgoyMDI1MDMxOC4wIKXMDSoJLDEwMjExNjM5SAFQAw%3D%3D" target="_blank"><strong>{{ gym.city }}, {{ gym.address }}</strong></a></p></li>
+            <li>  <p>Opening Hours: {{ gym.opening_hours }}</p></li>
+
+    </ul>
+     
+      
   </div>
    
   </div>
 
-  <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
   <p><strong>Trainer Available:</strong> {{ gym.personal_trainer ? 'Yes' : 'No' }}</p>
-  <p><strong>Pricing:</strong> 💰 {{ gym.pricing_bundle }} - €{{ gym.price }}</p>
+  
+  <li *ngFor="let bundle of gym.pricing_bundles; let i = index">
+    {{ bundle }} - €{{ gym.prices[i] }}
+  </li>
   <!-- Save Gym Button -->      <button (click)="saveGym()">💾 Save Gym</button>

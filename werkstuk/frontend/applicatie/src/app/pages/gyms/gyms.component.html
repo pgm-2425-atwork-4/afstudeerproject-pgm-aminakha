@@ -2,7 +2,12 @@
 <div class="gyms-container">
   <div class="gyms-content">
     <div class="search-input">
-      <input type="text" [(ngModel)]="searchQuery" (input)="searchGyms()" placeholder="Zoek een gym" class="search-box">
+      <input 
+  type="text" 
+  [(ngModel)]="searchQuery" 
+  (ngModelChange)="searchGyms()" 
+  placeholder="Search gyms..." 
+  class="search-box">
     <button>Filters<svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 16 16" fill="white">
 <path d="M0 3H16V1H0V3Z" fill="white"/>
 <path d="M2 7H14V5H2V7Z" fill="white"/>
