@@ -456,6 +456,8 @@ app.post("/comments/like", verifyToken, (req, res) => {
   const { commentId } = req.body;
   const userId = req.user.id; // Get the user ID from the token
 
+  console.log(`User ID: ${userId}, Comment ID: ${commentId}`); // Add logging here to check if the values are correct
+
   // Fetch the comment from the database
   const getCommentSql = "SELECT * FROM comments WHERE id = ?";
   db.query(getCommentSql, [commentId], (err, result) => {
@@ -469,17 +471,14 @@ app.post("/comments/like", verifyToken, (req, res) => {
     }
 
     const comment = result[0];
-
-    // Check if the user has already liked the comment
     const likedByUsers = comment.liked_by_users ? comment.liked_by_users.split(",") : [];
+    
     if (likedByUsers.includes(userId.toString())) {
       return res.status(400).json({ error: "You have already liked this comment" });
     }
 
-    // Add user to the liked_by_users field
     likedByUsers.push(userId.toString());
 
-    // Update the liked_by_users field and increment the likes count
     const updateCommentSql = "UPDATE comments SET liked_by_users = ?, likes = likes + 1 WHERE id = ?";
     db.query(updateCommentSql, [likedByUsers.join(","), commentId], (err2, result2) => {
       if (err2) {

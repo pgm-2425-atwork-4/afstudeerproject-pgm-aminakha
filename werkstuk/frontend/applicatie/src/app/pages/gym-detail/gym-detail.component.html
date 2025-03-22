@@ -55,8 +55,12 @@
             <p><strong>{{ comment.username }}:</strong> {{ comment.comment_text }}</p> <!-- Display the username -->
             <p><small>Posted on: {{ comment.created_at | date:'short' }}</small></p>
             <p>Likes: {{ comment.likes }}</p>
-            <button (click)="likeComment(comment.id)">Like</button>
-          </div>
+            <button 
+            (click)="likeComment(comment.id)" 
+            [disabled]="comment.userLiked">
+            Like
+          </button>          
+        </div>
         </div>
       </div>
 <div *ngIf="gym.noCommentsMessage">

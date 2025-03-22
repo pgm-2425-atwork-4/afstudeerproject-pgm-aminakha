@@ -94,10 +94,10 @@ export class GymDetailComponent implements OnInit {
     this.apiService.likeComment(commentId).subscribe({
       next: (data) => {
         alert("Comment liked!");
-        // Optionally, update the comment's likes count in the frontend
         const comment = this.gym.comments.find((c: any) => c.id === commentId);
         if (comment) {
-          comment.likes++;  // Increment the likes count for this comment
+          comment.likes++; // Increase the likes count for the comment
+          comment.userLiked = true; // Flag to track if the user has liked the comment
         }
       },
       error: (err) => {
