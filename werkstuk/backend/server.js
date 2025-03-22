@@ -459,39 +459,44 @@ app.post('/comments/like', (req, res) => {
     return res.status(400).json({ error: "Missing commentId or userId" });
   }
 
-  // First, check if the user has already liked the comment
-  const checkSql = "SELECT * FROM comments WHERE id = ?";
-  db.query(checkSql, [commentId], (err, results) => {
+  // Get the current likedByUsers value from the database
+  const sql = "SELECT liked_by_users, likes FROM comments WHERE id = ?";
+  db.query(sql, [commentId], (err, results) => {
     if (err) {
-      console.error("Error checking if user has liked the comment:", err);
-      return res.status(500).json({ error: "Error checking like status" });
+      console.error("Error fetching comment data:", err);
+      return res.status(500).json({ error: "Error fetching comment data" });
     }
 
-    if (results.length > 0) {
-      const likedByUsers = JSON.parse(results[0].liked_by_users || '[]'); // Ensure 'liked_by_users' is an array
-      
-      // Check if the user has already liked the comment
-      if (likedByUsers.includes(userId)) {
-        return res.status(400).json({ error: "You have already liked this comment" });
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    const likedByUsers = results[0].liked_by_users || ""; // Empty string if no likes yet
+    const likes = results[0].likes;
+
+    // Split the likedByUsers string into an array
+    const likedUsersArray = likedByUsers ? likedByUsers.split(',') : [];
+
+    // Check if the user has already liked the comment
+    if (likedUsersArray.includes(userId.toString())) {
+      return res.status(400).json({ error: "You have already liked this comment" });
+    }
+
+    // Add the current user to likedByUsers
+    const newLikedByUsers = likedByUsers ? `${likedByUsers},${userId}` : userId.toString();
+
+    // Update the likes count and likedByUsers field
+    const updateSql = "UPDATE comments SET likes = ?, liked_by_users = ? WHERE id = ?";
+    db.query(updateSql, [likes + 1, newLikedByUsers, commentId], (err, results) => {
+      if (err) {
+        console.error("Error updating comment data:", err);
+        return res.status(500).json({ error: "Error updating comment data" });
       }
 
-      // Add the user to the liked_by_users array and update likes
-      likedByUsers.push(userId);
-      const updateSql = "UPDATE comments SET likes = likes + 1, liked_by_users = ? WHERE id = ?";
-      db.query(updateSql, [JSON.stringify(likedByUsers), commentId], (err, results) => {
-        if (err) {
-          console.error("Error liking comment:", err);
-          return res.status(500).json({ error: "Error processing like" });
-        }
-
-        res.status(200).json({ message: "Comment liked successfully" });
-      });
-    } else {
-      return res.status(400).json({ error: "Comment not found" });
-    }
+      res.status(200).json({ message: "Comment liked successfully" });
+    });
   });
 });
-
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), async (req, res) => {
   try {
       const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
