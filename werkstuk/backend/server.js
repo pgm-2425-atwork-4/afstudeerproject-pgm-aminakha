@@ -459,16 +459,38 @@ app.post('/comments/like', (req, res) => {
     return res.status(400).json({ error: "Missing commentId or userId" });
   }
 
-  // Here, we would update the like count or insert a like
-  const sql = "UPDATE comments SET likes = likes + 1 WHERE id = ? AND user_id != ?";
-  db.query(sql, [commentId, userId], (err, results) => {
+  // First, check if the user has already liked the comment
+  const checkSql = "SELECT * FROM likes WHERE comment_id = ? AND user_id = ?";
+  db.query(checkSql, [commentId, userId], (err, results) => {
     if (err) {
-      console.error("Error liking comment:", err);
-      return res.status(500).json({ error: "Error processing like" });
+      console.error("Error checking if user has liked the comment:", err);
+      return res.status(500).json({ error: "Error checking like status" });
     }
 
-    // Return success
-    res.status(200).json({ message: "Comment liked successfully" });
+    if (results.length > 0) {
+      // If user has already liked the comment
+      return res.status(400).json({ error: "You have already liked this comment" });
+    }
+
+    // Insert a new like in the likes table
+    const insertSql = "INSERT INTO likes (comment_id, user_id) VALUES (?, ?)";
+    db.query(insertSql, [commentId, userId], (err, results) => {
+      if (err) {
+        console.error("Error inserting like:", err);
+        return res.status(500).json({ error: "Error processing like" });
+      }
+
+      // Update the likes count in the comments table
+      const updateSql = "UPDATE comments SET likes = likes + 1 WHERE id = ?";
+      db.query(updateSql, [commentId], (err, results) => {
+        if (err) {
+          console.error("Error updating likes count:", err);
+          return res.status(500).json({ error: "Error updating likes count" });
+        }
+
+        res.status(200).json({ message: "Comment liked successfully" });
+      });
+    });
   });
 });
 
