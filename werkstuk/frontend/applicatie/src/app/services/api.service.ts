@@ -138,11 +138,20 @@ export class ApiService {
   getUserById(userId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/${userId}`, { headers: this.getAuthHeaders() });
   }
-  updateUserProfile(userId: string, formData: FormData, options: { headers: HttpHeaders }): Observable<any> {
-    console.log("Headers:", options.headers);
+  updateUserProfile(userId: string, formData: FormData): Observable<any> {
+    const token = localStorage.getItem('auth_token');
     
-    
-    return this.http.put(`${this.apiUrl}/users/${userId}`, formData, options);
+    if (!token) {
+      console.error("No token found in localStorage.");
+      return new Observable(observer => observer.error('No token found'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}` // Attach Authorization header
+    });
+
+    // Make the PUT request to update the profile
+    return this.http.put(`${this.apiUrl}/users/${userId}`, formData, { headers });
   }
 
   /** ✅ Register New User */
