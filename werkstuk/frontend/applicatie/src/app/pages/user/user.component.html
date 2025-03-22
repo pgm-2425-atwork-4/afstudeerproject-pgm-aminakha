@@ -69,18 +69,23 @@
       <button class="save-btn" type="submit">Sla op</button>
     </form>
     </div>
-    <h3>Your Saved Gyms</h3>
-      <div *ngIf="savedGyms.length === 0">You have no saved gyms.</div>
+    
+    
+      </div>
+     
+</div>
+
+<div class="saved-gyms-container">
+  <h2 >Your Saved Gyms</h2>
+      <div class="no-gyms-container" *ngIf="savedGyms.length === 0"><p>Je hebt nog niks zoek een gym op : <a routerLink="/gyms" routerActive="active">Gyms</a></p></div>
       <div *ngFor="let gym of savedGyms">
         <!-- Add gym card component to display gym details -->
         <gym-card [gym]="gym"></gym-card>
         <button (click)="deleteSavedGym(gym.id)">Delete</button> <!-- Delete button -->
 
       </div>
-    
-      </div>
-     
 </div>
+
 </div>
 
   

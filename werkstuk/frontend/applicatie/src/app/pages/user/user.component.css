@@ -1,4 +1,39 @@
 .user-profile-container {
+    & .saved-gyms-container {
+        & h2 {
+            padding-top:0rem;
+            padding-bottom: 0rem;
+            line-height: 82px;
+        }
+    }
+    & .no-gyms-container {
+        
+        & p {
+            font-family: 'Archivo', sans-serif;
+            font-size: 2rem;
+            text-align: center;
+            padding: 2rem;
+            letter-spacing: .1rem;
+            padding-top: 0;
+            letter-spacing: -1px;
+            & a {
+                text-decoration: none;
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+                padding: .5rem;
+                border-radius: var(--large-border-radius);
+                border: 1px solid var(--primary-color);
+                transition: all .3s ease;
+
+                &:hover {
+                    background-color: var(--secondary-color);
+                    color: var(--primary-color);
+                    transition: all .3s ease;
+                    border: 1px solid var(--primary-color);
+                }
+            }
+        }
+    }
     
     & h1, h2 {
         font-family: 'Archivo', sans-serif;  

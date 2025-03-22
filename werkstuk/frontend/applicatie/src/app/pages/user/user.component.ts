@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service'; // ✅ Import API Service
 import { GymCardComponent } from '../../components/gym-card/gym-card.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, FormsModule,GymCardComponent],
+  imports: [CommonModule, FormsModule,GymCardComponent,RouterLink],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
