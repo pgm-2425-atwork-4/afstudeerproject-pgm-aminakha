@@ -91,16 +91,14 @@ export class GymDetailComponent implements OnInit {
     });
   }
   likeComment(commentId: number): void {
-    const userId = this.userId; // Ensure userId is available in the component
-  
-    // Check if userId is null or undefined before calling the service
-    if (!userId) {
+    // Ensure the user is authenticated before attempting to like the comment
+    if (!this.userId) {
       alert("You must be logged in to like a comment!");
       return;
     }
   
-    // Send the commentId and userId to the backend
-    this.apiService.likeComment(commentId, userId).subscribe({
+    // Call the service to like the comment
+    this.apiService.likeComment(commentId).subscribe({
       next: (data) => {
         console.log("Comment liked!");
         const comment = this.gym.comments.find((c: any) => c.id === commentId);

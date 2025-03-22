@@ -452,44 +452,29 @@ app.post("/comments", verifyToken, (req, res) => {
     });
   });
 });
-app.post("/comments/like", verifyToken, (req, res) => {
-  const { commentId, userId } = req.body;
+app.post('/comments/like', (req, res) => {
+  const { commentId } = req.body;
+  const userId = req.user.id; // Get the user ID from the authentication token
 
+  if (!commentId || !userId) {
+    return res.status(400).json({ error: 'Comment ID or User ID is missing' });
+  }
 
-  console.log(`User ID: ${userId}, Comment ID: ${commentId}`); // Add logging here to check if the values are correct
-
-  // Fetch the comment from the database
-  const getCommentSql = "SELECT * FROM comments WHERE id = ?";
-  db.query(getCommentSql, [commentId], (err, result) => {
+  // Now, handle liking the comment (example logic)
+  const sql = "UPDATE comments SET likes = likes + 1 WHERE id = ? AND user_id != ?";
+  db.query(sql, [commentId, userId], (err, result) => {
     if (err) {
-      console.error("🔥 Error fetching comment:", err);
-      return res.status(500).json({ error: "Database error" });
+      return res.status(500).json({ error: 'Database error' });
     }
 
-    if (result.length === 0) {
-      return res.status(404).json({ error: "Comment not found" });
+    if (result.affectedRows > 0) {
+      return res.status(200).json({ message: 'Comment liked successfully!' });
+    } else {
+      return res.status(400).json({ error: 'You have already liked this comment.' });
     }
-
-    const comment = result[0];
-    const likedByUsers = comment.liked_by_users ? comment.liked_by_users.split(",") : [];
-    
-    if (likedByUsers.includes(userId.toString())) {
-      return res.status(400).json({ error: "You have already liked this comment" });
-    }
-
-    likedByUsers.push(userId.toString());
-
-    const updateCommentSql = "UPDATE comments SET liked_by_users = ?, likes = likes + 1 WHERE id = ?";
-    db.query(updateCommentSql, [likedByUsers.join(","), commentId], (err2, result2) => {
-      if (err2) {
-        console.error("🔥 Error updating comment:", err2);
-        return res.status(500).json({ error: "Database error" });
-      }
-
-      res.status(200).json({ message: "Comment liked successfully!" });
-    });
   });
 });
+
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), async (req, res) => {
   try {
       const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
