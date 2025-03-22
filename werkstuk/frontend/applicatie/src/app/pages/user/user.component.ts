@@ -3,11 +3,12 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core'; 
 import { ApiService } from '../../services/api.service'; // ✅ Import API Service
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
   providers: [ApiService] // ✅ Provide the service
@@ -15,6 +16,7 @@ import { ApiService } from '../../services/api.service'; // ✅ Import API Servi
 export class UserProfileComponent implements OnInit {
   user: any = null;
   isBrowser: boolean = false; 
+  profileImage: File | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -58,7 +60,29 @@ export class UserProfileComponent implements OnInit {
   }
   
   
+  onImageSelected(event: any) {
+    this.profileImage = event.target.files[0];
+  }
+  updateUserProfile() {
+    const formData = new FormData();
+    formData.append('username', this.user.username);
+    formData.append('firstname', this.user.firstname);
+    formData.append('lastname', this.user.lastname);
+    formData.append('email', this.user.email);
+    formData.append('birthday', this.user.birthday);
+    if (this.profileImage) {
+      formData.append('profileImage', this.profileImage);
+    }
 
+    this.apiService.updateUserProfile(this.user.id, formData).subscribe(
+      (response) => {
+        console.log('Profile updated:', response);
+      },
+      (error) => {
+        console.error('Error updating profile:', error);
+      }
+    );
+  }
   /**
    * ✅ Format profile image URL correctly for Render deployment
    */

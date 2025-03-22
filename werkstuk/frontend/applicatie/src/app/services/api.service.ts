@@ -141,6 +141,9 @@ export class ApiService {
   getUserById(userId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/${userId}`, { headers: this.getAuthHeaders() });
   }
+  updateUserProfile(userId: string, formData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/${userId}`, formData);
+  }
 
   /** ✅ Register New User */
   registerUser(formData: FormData): Observable<any> {

@@ -44,8 +44,12 @@ max-width:var(--max-width);
             font-family: 'Work Sans', sans-serif;
             font-size: 1.5rem;
             line-height: 2rem;
-            text-align: center;
             padding-top: 12rem;
+            & .username {
+                font-weight: bold;
+                text-align: center;
+                font-size: 4rem;
+            }
         }
        }
 } 
