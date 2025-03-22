@@ -13,6 +13,7 @@ import { AdminDashboardComponent } from './app/pages/admin-dashboard/admin-dashb
 import { AdminAddGymComponent } from './app/components/admin-add-gym/admin-add-gym.component';
 import { GymDetailComponent } from './app/pages/gym-detail/gym-detail.component';
 import { OverOnsComponent } from './app/pages/over-ons/over-ons.component';
+import { ExercisesComponent } from './app/pages/exercises/exercises.component';
 bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(), // ✅ HTTP Client
@@ -21,6 +22,7 @@ bootstrapApplication(AppComponent, {
       { path: 'login', component: LoginComponent },
       {path: 'register', component: RegisterComponent},        
       {path:"over-ons", component: OverOnsComponent},
+{path:"oefeningen", component: ExercisesComponent},
 
 { path: 'user-profile/:id', component: UserProfileComponent },
 { 

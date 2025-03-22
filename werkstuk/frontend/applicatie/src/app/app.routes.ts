@@ -11,7 +11,7 @@ import { AdminCategoryComponent } from './components/admin-category/admin-catego
 import { AdminAddGymComponent } from './components/admin-add-gym/admin-add-gym.component';
 import { GymDetailComponent } from './pages/gym-detail/gym-detail.component';
 import { OverOnsComponent } from './pages/over-ons/over-ons.component';
-
+import { ExercisesComponent } from './pages/exercises/exercises.component';
 
 // ✅ Client-side routes (CSR)
 export const routes: Routes = [
@@ -22,6 +22,7 @@ export const routes: Routes = [
   {path:"gyms", component: GymsComponent},
   { path: 'gym-detail/:id', component: GymDetailComponent },
 {path:"over-ons", component: OverOnsComponent},
+{path:"oefeningen", component: ExercisesComponent},
   { 
     path: 'admin', 
     component: AdminDashboardComponent, 
