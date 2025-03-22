@@ -166,9 +166,8 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/admin/upload-gym-image`, formData, { headers: this.getAuthHeaders() });
   }
   likeComment(commentId: number, userId: number): Observable<any> {
-    // Send the commentId and userId to the backend
     return this.http.post<any>(`${this.apiUrl}/comments/like`, { commentId, userId }, {
-      headers: this.getAuthHeaders() // Ensure the auth headers are sent for verification
+      headers: this.getAuthHeaders()  // Make sure the headers are being sent
     });
   }
   /** ✅ Add New Gym */
