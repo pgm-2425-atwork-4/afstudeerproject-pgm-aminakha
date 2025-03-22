@@ -318,6 +318,7 @@ app.get("/users/:id", (req, res) => {
 app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, res) => {
   const userId = req.params.id;
   const { username, firstname, lastname, email, password, birthday } = req.body;
+  const formattedBirthday = new Date(birthday).toISOString().split('T')[0]; // '2000-05-16'
 
   // Ensure required fields are present
   if (!username || !firstname || !lastname || !email || !birthday) {
@@ -329,7 +330,7 @@ app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, re
   const profileImage = req.file ? req.file.path : null;
 
   let updateQuery = "UPDATE users SET username = ?, firstname = ?, lastname = ?, email = ?, birthday = ?";
-  let values = [username, firstname, lastname, email, birthday];
+  let values = [username, firstname, lastname, email, formattedBirthday];
 
   if (hashedPassword) {
     updateQuery += ", password = ?";

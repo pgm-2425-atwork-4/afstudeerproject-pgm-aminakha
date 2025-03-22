@@ -42,8 +42,9 @@ export class UserProfileComponent implements OnInit {
     formData.append('firstname', this.user.firstname);
     formData.append('lastname', this.user.lastname);
     formData.append('email', this.user.email);
-    formData.append('birthday', this.user.birthday);
-    
+    const formattedBirthday = new Date(this.user.birthday).toISOString().split('T')[0]; 
+    formData.append('birthday', formattedBirthday);
+   
     if (this.profileImage) {
       formData.append('profileImage', this.profileImage);
     }
