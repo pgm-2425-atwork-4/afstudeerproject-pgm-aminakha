@@ -454,6 +454,7 @@ app.post("/comments", verifyToken, (req, res) => {
 });
 app.post('/comments/like', (req, res) => {
   const { commentId, userId } = req.body;
+  console.log('Received request with:', { commentId, userId });
 
   if (!commentId || !userId) {
     return res.status(400).json({ error: "Missing commentId or userId" });
