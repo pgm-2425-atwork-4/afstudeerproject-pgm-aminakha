@@ -174,7 +174,7 @@ app.use((req, res, next) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  const sql = "SELECT id, username, firstname, lastname, email, birthday, profile_image, role, password FROM users WHERE email = ?";
+  const sql = "SELECT id, username, firstname, lastname, email, password FROM users WHERE email = ?";
   db.query(sql, [email], async (err, results) => {
     if (err) {
       console.error("🔥 Error fetching user:", err);
@@ -187,48 +187,21 @@ app.post("/login", (req, res) => {
 
     const user = results[0];
 
-    // ✅ Compare entered password with hashed password from database
+    // Compare entered password with hashed password from DB
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "❌ Incorrect password" });
     }
 
-    try {
-      if (!SECRET_KEY) {
-        throw new Error("SECRET_KEY is missing from environment variables.");
-      }
+    const token = jwt.sign(
+      { id: user.id, username: user.username, role: user.role },
+      process.env.SECRET_KEY,
+      { expiresIn: "4h" }
+    );
 
-      const token = jwt.sign(
-        { id: user.id, username: user.username, role: user.role },
-        SECRET_KEY,
-        { expiresIn: "4h" } // Token expires in 2 hours
-      );
-
-      res.cookie("auth_token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 4 * 60 * 60 * 1000, // 2 hours
-      });
-
-      res.json({
-        message: "✅ Login successful!",
-        user: {
-          id: user.id,
-          username: user.username,
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-          birthday: user.birthday,
-          role: user.role,
-          profile_image: user.profile_image || null,
-        },
-        token,
-      });
-
-    } catch (error) {
-      console.error("🔥 Error creating JWT:", error);
-      res.status(500).json({ error: "Server error during authentication." });
-    }
+    // Send the token in the response and store it in cookies
+    res.cookie("auth_token", token, { httpOnly: true, secure: false });
+    res.json({ message: "✅ Login successful!", token }); // Send token back to the client
   });
 });
 

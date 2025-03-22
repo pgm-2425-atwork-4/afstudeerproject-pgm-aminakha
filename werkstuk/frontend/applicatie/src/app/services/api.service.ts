@@ -66,15 +66,10 @@ export class ApiService {
   
   /** ✅ Login Method - Stores JWT Token & User Data */
   loginUser(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { email, password }, { withCredentials: true }).pipe(
-      tap((res: any) => {
-        if (res.token) {
-          localStorage.setItem('auth_token', res.token);  // ✅ Store in localStorage
-          localStorage.setItem('user', JSON.stringify(res.user));
-          this.currentUserSubject.next(res.user);
-          console.log("🔑 JWT Token stored in localStorage:", res.token);
-        } else {
-          console.warn("❌ No token received!");
+    return this.http.post(`${this.apiUrl}/login`, { email, password }).pipe(
+      tap((response: any) => {
+        if (response.token) {
+          localStorage.setItem('auth_token', response.token); // Store the token in localStorage
         }
       })
     );
@@ -142,7 +137,8 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/users/${userId}`, { headers: this.getAuthHeaders() });
   }
   updateUserProfile(userId: string, formData: FormData): Observable<any> {
-    return this.http.put(`${this.apiUrl}/users/${userId}`, formData);
+    const headers = this.getAuthHeaders();
+    return this.http.put(`${this.apiUrl}/users/${userId}`, formData, { headers });
   }
 
   /** ✅ Register New User */
