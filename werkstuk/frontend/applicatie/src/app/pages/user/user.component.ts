@@ -4,18 +4,18 @@ import { ActivatedRoute } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core'; 
 import { ApiService } from '../../services/api.service'; // ✅ Import API Service
 import { FormsModule } from '@angular/forms';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
   providers: [ApiService] // ✅ Provide the service
 })
 export class UserProfileComponent implements OnInit {
   user: any = null;
-  isBrowser: boolean = false; 
   profileImage: File | null = null;
 
   constructor(
@@ -42,27 +42,10 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  loadUserProfile() {
-    const userId = this.route.snapshot.paramMap.get('id');
-    console.log("🔍 Fetching user with ID:", userId);
-  
-    if (userId) {
-      this.apiService.getUserById(userId).subscribe({
-        next: (res) => {
-          console.log("✅ User data received:", res);
-          this.user = res;
-        },
-        error: (error) => {
-          console.error("🔥 Error fetching user:", error);
-        }
-      });
-    }
-  }
-  
-  
   onImageSelected(event: any) {
     this.profileImage = event.target.files[0];
   }
+
   updateUserProfile() {
     const formData = new FormData();
     formData.append('username', this.user.username);
@@ -74,7 +57,22 @@ export class UserProfileComponent implements OnInit {
       formData.append('profileImage', this.profileImage);
     }
 
-    this.apiService.updateUserProfile(this.user.id, formData).subscribe(
+    // Fetch token from localStorage
+    const token = localStorage.getItem('auth_token');
+    console.log("🔐 Auth token:", token);
+
+    if (!token) {
+      console.error("No token found in localStorage.");
+      return;
+    }
+
+    // Create HttpHeaders with Authorization token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}` // Sending the token in the Authorization header
+    });
+
+    // Call API to update profile
+    this.apiService.updateUserProfile(this.user.id, formData, { headers }).subscribe(
       (response) => {
         console.log('Profile updated:', response);
       },
@@ -83,9 +81,7 @@ export class UserProfileComponent implements OnInit {
       }
     );
   }
-  /**
-   * ✅ Format profile image URL correctly for Render deployment
-   */
+
   getProfileImageUrl(profileImage: string): string {
     if (!profileImage) {
       return 'images/default-user.jpg'; // ✅ Show default image if no profile picture

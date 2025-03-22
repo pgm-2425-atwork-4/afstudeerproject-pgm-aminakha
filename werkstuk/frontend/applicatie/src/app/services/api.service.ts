@@ -100,6 +100,8 @@ export class ApiService {
   /** ✅ Secure API Request with JWT */
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
+    console.log("🔒Hier Auth token:", token);
+    
     if (!token) {
       console.warn("❌ No auth token found in localStorage!");
       return new HttpHeaders();
@@ -136,9 +138,11 @@ export class ApiService {
   getUserById(userId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/${userId}`, { headers: this.getAuthHeaders() });
   }
-  updateUserProfile(userId: string, formData: FormData): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.put(`${this.apiUrl}/users/${userId}`, formData, { headers });
+  updateUserProfile(userId: string, formData: FormData, options: { headers: HttpHeaders }): Observable<any> {
+    console.log("Headers:", options.headers);
+    
+    
+    return this.http.put(`${this.apiUrl}/users/${userId}`, formData, options);
   }
 
   /** ✅ Register New User */

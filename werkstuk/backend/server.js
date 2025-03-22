@@ -136,7 +136,7 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
   }
 });
 const verifyToken = (req, res, next) => {
-  let token = req.cookies.auth_token || req.headers.authorization?.split(" ")[1];
+  let token = req.cookies.auth_token || req.headers['authorization']?.split(" ")[1]; // Check both cookies and headers
 
   if (!token) {
     return res.status(401).json({ error: "Unauthorized: No token provided" });
