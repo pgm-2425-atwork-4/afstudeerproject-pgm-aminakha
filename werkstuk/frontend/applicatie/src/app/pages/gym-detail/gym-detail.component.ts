@@ -91,27 +91,27 @@ export class GymDetailComponent implements OnInit {
     });
   }
   likeComment(commentId: number): void {
-    const userId = this.userId;
-  
+    const userId = this.userId;  // Ensure this is a number
+    
     if (typeof userId !== 'number' || userId == null) {
       console.error('User ID is not valid');
       return;
     }
   
-    console.log('Sending request with:', { commentId, userId }); // Add this line
-    
+    console.log('Sending request with:', { commentId, userId });  // Log to ensure correct values
+  
     this.apiService.likeComment(commentId, userId).subscribe({
       next: (response) => {
         console.log("Comment liked successfully!");
         const comment = this.gym.comments.find((c: { id: number }) => c.id === commentId);
         if (comment) {
-          comment.likes++; // Increase the like count for the specific comment
+          comment.likes++;  // Increase the like count for the specific comment
         }
       },
       error: (err) => {
         console.error("Error liking comment:", err);
         if (err.error && err.error.error) {
-          alert(err.error.error);
+          alert(err.error.error);  // Show the error message (e.g., already liked)
         } else {
           alert("Failed to like the comment. Please try again later.");
         }

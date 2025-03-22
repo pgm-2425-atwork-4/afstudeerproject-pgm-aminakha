@@ -454,43 +454,43 @@ app.post("/comments", verifyToken, (req, res) => {
 });
 app.post('/comments/like', (req, res) => {
   const { commentId, userId } = req.body;
-  console.log('Received request with:', { commentId, userId });
-
+  
   if (!commentId || !userId) {
     return res.status(400).json({ error: "Missing commentId or userId" });
   }
 
-  // Check if the user has already liked the comment
-  const checkLikeQuery = "SELECT * FROM likes WHERE comment_id = ? AND user_id = ?";
+  // Check if the user already liked the comment
+  const checkLikeQuery = `SELECT * FROM likes WHERE comment_id = ? AND user_id = ?`;
   db.query(checkLikeQuery, [commentId, userId], (err, results) => {
     if (err) {
-      console.error("Error checking like:", err);
-      return res.status(500).json({ error: "Error checking like" });
+      console.error('Error checking like status:', err);
+      return res.status(500).json({ error: 'Error checking like status' });
     }
 
-    // If the user has already liked the comment
     if (results.length > 0) {
-      return res.status(400).json({ error: "You have already liked this comment" });
+      return res.status(400).json({ error: 'You have already liked this comment' });
     }
 
-    // If the user has not liked the comment yet, insert the like
-    const insertLikeQuery = "INSERT INTO likes (comment_id, user_id) VALUES (?, ?)";
-    db.query(insertLikeQuery, [commentId, userId], (err) => {
+    // Insert a new like
+    const insertLikeQuery = `INSERT INTO likes (comment_id, user_id) VALUES (?, ?)`;
+    db.query(insertLikeQuery, [commentId, userId], (err, result) => {
       if (err) {
-        console.error("Error liking comment:", err);
-        return res.status(500).json({ error: "Error processing like" });
+        console.error('Error inserting like:', err);
+        return res.status(500).json({ error: 'Error liking comment' });
       }
 
-      // Update the likes count in the comments table
-      const updateLikesQuery = "UPDATE comments SET likes = likes + 1 WHERE id = ?";
-      db.query(updateLikesQuery, [commentId], (err) => {
+      // Update the likes count and liked_by_users field in the comments table
+      const updateCommentQuery = `
+        UPDATE comments 
+        SET likes = likes + 1, liked_by_users = CONCAT(IFNULL(liked_by_users, ''), ?, ',') 
+        WHERE id = ?`;
+      db.query(updateCommentQuery, [userId, commentId], (err, result) => {
         if (err) {
-          console.error("Error updating comment likes:", err);
-          return res.status(500).json({ error: "Error updating likes count" });
+          console.error('Error updating comment:', err);
+          return res.status(500).json({ error: 'Error updating comment' });
         }
 
-        // Successfully liked the comment
-        res.status(200).json({ message: "Comment liked successfully" });
+        res.status(200).json({ message: 'Comment liked successfully' });
       });
     });
   });
