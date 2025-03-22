@@ -4,8 +4,8 @@
         <ul>
             <li><a routerLink="/" routerActive="active">Home</a></li>
             <li><a routerLink="/gyms" routerActive="active">Gyms</a></li>
-            <li><a href="/oefeningen">Oefeningen</a></li>
-            <li><a href="/over-ons">Over ons</a></li>
+            <li><a href="/oefeningen" >Oefeningen</a></li>
+            <li><a a routerLink="/over-ons"  routerActive="active">Over ons</a></li>
             <li *ngIf="user?.role === 'admin'">
                 <p><a routerLink="/admin">Admin Dashboard</a></p>
               </li>
