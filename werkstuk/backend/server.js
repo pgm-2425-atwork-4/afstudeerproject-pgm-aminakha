@@ -452,7 +452,28 @@ app.post("/comments", verifyToken, (req, res) => {
     });
   });
 });
+app.post("/comments/like", verifyToken, (req, res) => {
+  const { commentId } = req.body;
+  
+  if (!commentId) {
+    return res.status(400).json({ error: "Comment ID is required to like a comment." });
+  }
 
+  // Increment the likes for the comment
+  const sql = "UPDATE comments SET likes = likes + 1 WHERE id = ?";
+  db.query(sql, [commentId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error liking comment:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    res.status(200).json({ message: "Comment liked successfully!" });
+  });
+});
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), async (req, res) => {
   try {
       const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
