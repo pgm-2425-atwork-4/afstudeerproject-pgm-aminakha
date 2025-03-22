@@ -455,20 +455,44 @@ app.post("/comments", verifyToken, (req, res) => {
 app.post('/comments/like', (req, res) => {
   const { commentId, userId } = req.body;
 
+  // Check if commentId and userId are provided
   if (!commentId || !userId) {
     return res.status(400).json({ error: "Missing commentId or userId" });
   }
 
-  // Update the likes count in the comments table
-  const sql = "UPDATE comments SET likes = likes + 1 WHERE id = ? AND user_id != ?";
-  db.query(sql, [commentId, userId], (err, results) => {
+  // Check if the user has already liked the comment
+  const checkLikeQuery = "SELECT * FROM likes WHERE comment_id = ? AND user_id = ?";
+  db.query(checkLikeQuery, [commentId, userId], (err, results) => {
     if (err) {
-      console.error("Error liking comment:", err);
-      return res.status(500).json({ error: "Error processing like" });
+      console.error("Error checking like:", err);
+      return res.status(500).json({ error: "Error processing like check" });
     }
 
-    // Return a success message in JSON format
-    res.status(200).json({ message: "Comment liked successfully" });
+    // If the user has already liked the comment, send an error
+    if (results.length > 0) {
+      return res.status(400).json({ error: "You have already liked this comment" });
+    }
+
+    // Insert the like into the likes table
+    const insertLikeQuery = "INSERT INTO likes (comment_id, user_id) VALUES (?, ?)";
+    db.query(insertLikeQuery, [commentId, userId], (err, results) => {
+      if (err) {
+        console.error("Error inserting like:", err);
+        return res.status(500).json({ error: "Error processing like" });
+      }
+
+      // Update the likes count in the comments table
+      const updateLikesQuery = "UPDATE comments SET likes = likes + 1 WHERE id = ?";
+      db.query(updateLikesQuery, [commentId], (err, results) => {
+        if (err) {
+          console.error("Error updating likes count:", err);
+          return res.status(500).json({ error: "Error updating like count" });
+        }
+
+        // Return a success message
+        res.status(200).json({ message: "Comment liked successfully" });
+      });
+    });
   });
 });
 

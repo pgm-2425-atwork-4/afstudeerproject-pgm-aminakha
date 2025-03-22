@@ -90,31 +90,31 @@ export class GymDetailComponent implements OnInit {
       },
     });
   }
-  likeComment(commentId: string): void {
-    const userId = this.userId;  // Ensure userId is available
+  likeComment(commentId: number): void {
+    const userId = this.userId; // Ensure this is a number, or check for null/undefined
   
-    // Convert to number (if needed)
-    const commentIdNumber = Number(commentId);
-    const userIdNumber = Number(userId);
-  
-    if (!userIdNumber) {
-      alert("You must be logged in to like a comment.");
+    if (typeof userId !== 'number' || userId == null) {
+      console.error('User ID is not valid');
       return;
     }
   
-    // Call the API service to like the comment, passing the commentId and userId
-    this.apiService.likeComment(commentIdNumber, userIdNumber).subscribe({
-      next: (data) => {
-        console.log("Comment liked!");
-        const comment = this.gym.comments.find((c: any) => c.id === commentIdNumber);
+    this.apiService.likeComment(commentId, userId).subscribe({
+      next: (response) => {
+        console.log("Comment liked successfully!");
+  
+        // Update the UI
+        const comment = this.gym.comments.find((c: { id: number }) => c.id === commentId);
         if (comment) {
-          comment.likes++; // Increment the likes count
-          comment.userLiked = true; // Mark as liked by the current user
+          comment.likes++; // Increase the like count for the specific comment
         }
       },
       error: (err) => {
-        console.error("❌ Error liking comment:", err);
-        alert("Failed to like the comment. Please try again later.");
+        console.error("Error liking comment:", err);
+        if (err.error && err.error.error) {
+          alert(err.error.error); // Show the error message (e.g., already liked)
+        } else {
+          alert("Failed to like the comment. Please try again later.");
+        }
       }
     });
   }

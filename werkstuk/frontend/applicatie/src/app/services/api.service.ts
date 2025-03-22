@@ -167,7 +167,7 @@ export class ApiService {
   }
   likeComment(commentId: number, userId: number): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/comments/like`, { commentId, userId }, {
-      headers: this.getAuthHeaders()  // Make sure the headers are being sent
+      headers: this.getAuthHeaders() // Make sure the headers are sent for authentication
     });
   }
   /** ✅ Add New Gym */
