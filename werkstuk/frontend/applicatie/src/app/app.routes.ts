@@ -21,7 +21,7 @@ export const routes: Routes = [
   { path: 'user-profile/:id', component: UserProfileComponent },
   {path:"gyms", component: GymsComponent},
   { path: 'gym-detail/:id', component: GymDetailComponent },
-
+{path:"over-ons", component: OverOnsComponent},
   { 
     path: 'admin', 
     component: AdminDashboardComponent, 
@@ -32,8 +32,8 @@ export const routes: Routes = [
       { path: 'add-gym', component: AdminAddGymComponent } // ✅ Ensure this matches
     ]
   },  
-  { path: '**', redirectTo: '' },
-  {path:"over-ons", component: OverOnsComponent}
+  { path: '**', redirectTo: '' }
+  
 ];
 
 // ✅ Server-side routes (SSR) with Prerendering
