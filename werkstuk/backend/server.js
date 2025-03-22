@@ -471,7 +471,8 @@ app.post('/comments/like', (req, res) => {
       return res.status(404).json({ error: "Comment not found" });
     }
 
-    const likedByUsers = results[0].liked_by_users ? JSON.parse(results[0].liked_by_users) : [];
+    // Ensure liked_by_users is parsed into an array
+    let likedByUsers = results[0].liked_by_users ? JSON.parse(results[0].liked_by_users) : [];
 
     // Check if the user has already liked this comment
     if (likedByUsers.includes(userId)) {
