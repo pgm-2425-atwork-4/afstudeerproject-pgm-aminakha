@@ -406,12 +406,13 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
 });
 
 // Fetch comments for a specific gym
+// Fetch comments for a specific gym
 app.get("/comments/:gymId", (req, res) => {
   const gymId = req.params.gymId;
   const sql = `
     SELECT 
       c.id, c.user_id, c.gym_id, c.comment_text, c.created_at, c.title, c.likes,
-      u.username
+      u.username, u.profile_image
     FROM comments c
     JOIN users u ON c.user_id = u.id
     WHERE c.gym_id = ?
