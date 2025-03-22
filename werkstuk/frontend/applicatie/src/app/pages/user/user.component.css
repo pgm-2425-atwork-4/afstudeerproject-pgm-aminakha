@@ -6,7 +6,7 @@
         text-transform: uppercase;
         font-size:5rem;
         letter-spacing: -0.25rem;
-        padding-bottom: 22rem;        
+        padding-bottom: 18rem;        
         /* <img *ngIf="user?.profile_image" [src]="getProfileImageUrl(user.profile_image)" alt="User Profile"> */
     }
     & img {
@@ -28,6 +28,65 @@
         background-color: var(--primary-color);
         color: var(--secondary-color);
         transform: translateY(-18%);
+        & .edit-container {
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding-bottom: 2rem;
+            & form {
+                margin-top: 2rem;
+                background-color: var(--secondary-color);
+                color: var(--primary-color);
+                padding: var(--standard-padding_margin);
+                border-radius: var(--standard-border-radius);
+                display: flex;
+                gap: 1rem;
+             & .save-btn {
+                font-size: 1.5rem;
+                width:13rem
+             }
+             & label {
+                font-family: 'Archivo', sans-serif;
+                
+             }
+                & input {
+                    width: 100%;
+                    padding: .5rem;
+                    background-color: var(--primary-color);
+                    color: var(--secondary-color);
+                    border: 1px solid var(--secondary-color);
+                    border-radius: var(--large-border-radius);
+                    font-family:"Archivo", sans-serif;
+                    transition: all .3s ease;
+
+                    &:hover {
+                        background-color: var(--secondary-color);
+                        color: var(--primary-color);
+                        border: 1px solid var(--primary-color);
+                        transition: all .3s ease;
+                    }
+                }
+            }
+            & button  {
+                font-family: 'Archivo', sans-serif;
+                font-size: 2rem;    
+                background-color: var(--secondary-color);
+                color: var(--primary-color);
+                padding: .5rem;
+                border-radius: var(--standard-border-radius);
+                border: 1px solid var(--primary-color);
+                transition: all .3s ease;
+
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: var(--secondary-color);
+                    border: 1px solid var(--secondary-color);
+                    transform:translateY(-.5rem);
+                    transition: all .3s ease;
+                }
+
+            }
+        }
          & h2 {
              padding-bottom: 1rem;
              margin-bottom: 2rem;
@@ -44,6 +103,7 @@ max-width:var(--max-width);
             font-size: 1.5rem;
             line-height: 2rem;
             padding-top: 12rem;
+            padding-bottom: 0;
             & .username {
                 font-weight: bold;
                 text-align: center;

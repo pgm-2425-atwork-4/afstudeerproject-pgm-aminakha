@@ -686,6 +686,33 @@ app.get("/saved-gyms", verifyToken, (req, res) => {
     res.json(results);
   });
 });
+// Add this route to your Express server
+
+// DELETE endpoint to remove a saved gym
+app.delete("/saved-gyms/:userId/:gymId", verifyToken, (req, res) => {
+  const { userId, gymId } = req.params;
+
+  if (!userId || !gymId) {
+    return res.status(400).json({ error: "❌ Missing userId or gymId" });
+  }
+
+  // SQL query to delete the saved gym
+  const sql = "DELETE FROM saved_gyms WHERE user_id = ? AND gym_id = ?";
+
+  db.query(sql, [userId, gymId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error deleting saved gym:", err);
+      return res.status(500).json({ error: "❌ Error deleting gym" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "❌ Saved gym not found" });
+    }
+
+    res.json({ message: "✅ Saved gym deleted successfully!" });
+  });
+});
+
 const adminUpload = multer({ storage: gymStorage });
 
 app.post("/admin/upload-gym-image", adminUpload.single("image"), (req, res) => {

@@ -33,8 +33,9 @@
     <ng-template #loading>
       <p>Loading...</p>
     </ng-template>
-    <button (click)="toggleFormVisibility()">
-      {{ showForm ? 'Hide' : 'Edit Profile' }}
+    <div class="edit-container">
+      <button (click)="toggleFormVisibility()">
+      {{ showForm ? 'Verberg' : 'Verander gegevens' }}
     </button>
      <!-- Form for Editing Profile -->
       <div *ngIf="showForm">
@@ -65,8 +66,18 @@
         <input type="file" id="profileImage" (change)="onImageSelected($event)" />
       </div>
   
-      <button type="submit">Save Changes</button>
+      <button class="save-btn" type="submit">Sla op</button>
     </form>
+    </div>
+    <h3>Your Saved Gyms</h3>
+      <div *ngIf="savedGyms.length === 0">You have no saved gyms.</div>
+      <div *ngFor="let gym of savedGyms">
+        <!-- Add gym card component to display gym details -->
+        <gym-card [gym]="gym"></gym-card>
+        <button (click)="deleteSavedGym(gym.id)">Delete</button> <!-- Delete button -->
+
+      </div>
+    
       </div>
      
 </div>

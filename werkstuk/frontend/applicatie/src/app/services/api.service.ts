@@ -233,5 +233,14 @@ export class ApiService {
   saveGym(userId: string, gymId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/save-gym`, { userId, gymId }, { headers: this.getAuthHeaders() });
   }
+  deleteSavedGym(userId: string, gymId: string): Observable<any> {
+    const token = localStorage.getItem('auth_token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}` // Attach Authorization header
+    });
+  
+    // Make the DELETE request to delete the saved gym
+    return this.http.delete(`${this.apiUrl}/saved-gyms/${userId}/${gymId}`, { headers });
+  }
   
 }
