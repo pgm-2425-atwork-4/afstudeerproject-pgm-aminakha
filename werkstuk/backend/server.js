@@ -453,25 +453,26 @@ app.post("/comments", verifyToken, (req, res) => {
   });
 });
 app.post('/comments/like', (req, res) => {
-  const { commentId } = req.body;
-  const userId = req.user.id; // Get the user ID from the authentication token
+  const { commentId, userId } = req.body;
 
   if (!commentId || !userId) {
-    return res.status(400).json({ error: 'Comment ID or User ID is missing' });
+    return res.status(400).json({ error: 'Missing commentId or userId' });
   }
 
-  // Now, handle liking the comment (example logic)
-  const sql = "UPDATE comments SET likes = likes + 1 WHERE id = ? AND user_id != ?";
+  // Logic to check if the user has already liked the comment (if necessary)
+  const sql = `
+    INSERT INTO likes (comment_id, user_id)
+    VALUES (?, ?)
+    ON DUPLICATE KEY UPDATE likes = likes + 1;
+  `;
   db.query(sql, [commentId, userId], (err, result) => {
     if (err) {
-      return res.status(500).json({ error: 'Database error' });
+      console.error("🔥 Error liking comment:", err);
+      return res.status(500).json({ error: "Failed to like comment" });
     }
 
-    if (result.affectedRows > 0) {
-      return res.status(200).json({ message: 'Comment liked successfully!' });
-    } else {
-      return res.status(400).json({ error: 'You have already liked this comment.' });
-    }
+    // Successfully liked the comment
+    res.status(200).json({ message: "Comment liked successfully!" });
   });
 });
 

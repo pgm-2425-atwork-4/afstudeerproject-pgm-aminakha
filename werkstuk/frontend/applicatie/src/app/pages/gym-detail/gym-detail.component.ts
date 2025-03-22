@@ -91,20 +91,20 @@ export class GymDetailComponent implements OnInit {
     });
   }
   likeComment(commentId: number): void {
-    // Ensure the user is authenticated before attempting to like the comment
-    if (!this.userId) {
-      alert("You must be logged in to like a comment!");
+    const userId = this.userId;  // Make sure the user ID is being retrieved correctly
+    if (!userId) {
+      alert("You must be logged in to like a comment.");
       return;
     }
   
-    // Call the service to like the comment
-    this.apiService.likeComment(commentId).subscribe({
+    // Call the API service to like the comment, passing the commentId and userId
+    this.apiService.likeComment(commentId, userId).subscribe({
       next: (data) => {
         console.log("Comment liked!");
         const comment = this.gym.comments.find((c: any) => c.id === commentId);
         if (comment) {
-          comment.likes++; // Update the likes count
-          comment.userLiked = true; // Mark the comment as liked by this user
+          comment.likes++; // Increment the likes count
+          comment.userLiked = true; // Mark as liked by the current user
         }
       },
       error: (err) => {
