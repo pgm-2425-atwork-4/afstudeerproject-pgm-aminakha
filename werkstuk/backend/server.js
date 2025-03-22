@@ -456,23 +456,19 @@ app.post('/comments/like', (req, res) => {
   const { commentId, userId } = req.body;
 
   if (!commentId || !userId) {
-    return res.status(400).json({ error: 'Missing commentId or userId' });
+    return res.status(400).send("Missing commentId or userId");
   }
 
-  // Logic to check if the user has already liked the comment (if necessary)
-  const sql = `
-    INSERT INTO likes (comment_id, user_id)
-    VALUES (?, ?)
-    ON DUPLICATE KEY UPDATE likes = likes + 1;
-  `;
-  db.query(sql, [commentId, userId], (err, result) => {
+  // Update the likes count in the comments table
+  const sql = "UPDATE comments SET likes = likes + 1 WHERE id = ? AND user_id != ?";
+  db.query(sql, [commentId, userId], (err, results) => {
     if (err) {
-      console.error("🔥 Error liking comment:", err);
-      return res.status(500).json({ error: "Failed to like comment" });
+      console.error("Error liking comment:", err);
+      return res.status(500).send("Error processing like");
     }
 
-    // Successfully liked the comment
-    res.status(200).json({ message: "Comment liked successfully!" });
+    // Return a success message
+    res.status(200).send("Comment liked successfully");
   });
 });
 
