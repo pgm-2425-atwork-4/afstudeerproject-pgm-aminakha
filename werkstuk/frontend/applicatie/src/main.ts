@@ -19,7 +19,9 @@ bootstrapApplication(AppComponent, {
     provideRouter([       // ✅ Angular 18 Routing
       { path: '', component: HomeComponent },
       { path: 'login', component: LoginComponent },
-      {path: 'register', component: RegisterComponent},
+      {path: 'register', component: RegisterComponent},        
+      {path:"over-ons", component: OverOnsComponent},
+
 { path: 'user-profile/:id', component: UserProfileComponent },
 { 
   path: 'admin', 
@@ -33,7 +35,6 @@ bootstrapApplication(AppComponent, {
 },
       {path: 'gyms', component: GymsComponent},
         { path: 'gym-detail/:id', component: GymDetailComponent },
-        {path:"over-ons", component: OverOnsComponent}
       
     ])
   ],
