@@ -12,7 +12,7 @@ import { GymsComponent } from './app/pages/gyms/gyms.component';
 import { AdminDashboardComponent } from './app/pages/admin-dashboard/admin-dashboard.component';
 import { AdminAddGymComponent } from './app/components/admin-add-gym/admin-add-gym.component';
 import { GymDetailComponent } from './app/pages/gym-detail/gym-detail.component';
-
+import { OverOnsComponent } from './app/pages/over-ons/over-ons.component';
 bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(), // ✅ HTTP Client
@@ -33,6 +33,7 @@ bootstrapApplication(AppComponent, {
 },
       {path: 'gyms', component: GymsComponent},
         { path: 'gym-detail/:id', component: GymDetailComponent },
+        {path:"over-ons", component: OverOnsComponent}
       
     ])
   ],

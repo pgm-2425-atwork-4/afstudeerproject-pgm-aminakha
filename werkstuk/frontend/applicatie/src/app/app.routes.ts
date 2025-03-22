@@ -10,7 +10,7 @@ import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard
 import { AdminCategoryComponent } from './components/admin-category/admin-category.component';
 import { AdminAddGymComponent } from './components/admin-add-gym/admin-add-gym.component';
 import { GymDetailComponent } from './pages/gym-detail/gym-detail.component';
-
+import { OverOnsComponent } from './pages/over-ons/over-ons.component';
 
 
 // ✅ Client-side routes (CSR)
@@ -33,6 +33,7 @@ export const routes: Routes = [
     ]
   },  
   { path: '**', redirectTo: '' },
+  {path:"over-ons", component: OverOnsComponent}
 ];
 
 // ✅ Server-side routes (SSR) with Prerendering
