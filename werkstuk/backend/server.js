@@ -414,6 +414,9 @@ app.get("/comments/:gymId", (req, res) => {
       console.error("🔥 Error fetching comments:", err);
       return res.status(500).json({ error: "Database error" });
     }
+    if (results.length === 0) {
+      return res.status(404).json({ message: "No comments yet for this gym. Be the first to comment!" });
+    }
     res.json(results); // Return an empty array if no comments
   });
 });
