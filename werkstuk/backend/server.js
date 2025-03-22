@@ -459,16 +459,38 @@ app.post('/comments/like', (req, res) => {
     return res.status(400).json({ error: "Missing commentId or userId" });
   }
 
-  // Update the likes count in the comments table
-  const sql = "UPDATE comments SET likes = likes + 1 WHERE id = ? AND user_id != ?";
-  db.query(sql, [commentId, userId], (err, results) => {
+  // Check if the user has already liked the comment
+  const checkIfLikedQuery = "SELECT liked_by_users FROM comments WHERE id = ?";
+  db.query(checkIfLikedQuery, [commentId], (err, results) => {
     if (err) {
-      console.error("Error liking comment:", err);
-      return res.status(500).json({ error: "Error processing like" });
+      console.error("Error checking if user liked comment:", err);
+      return res.status(500).json({ error: "Error checking like status" });
     }
 
-    // Return a success message in JSON format
-    res.status(200).json({ message: "Comment liked successfully" });
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    const likedByUsers = results[0].liked_by_users ? JSON.parse(results[0].liked_by_users) : [];
+
+    // Check if the user has already liked this comment
+    if (likedByUsers.includes(userId)) {
+      return res.status(400).json({ error: "You have already liked this comment" });
+    }
+
+    // User has not liked the comment, so we proceed to like it
+    likedByUsers.push(userId);  // Add the user to the list of users who liked the comment
+    const updateLikesQuery = "UPDATE comments SET likes = likes + 1, liked_by_users = ? WHERE id = ?";
+    
+    // Update the comment with the new like count and the updated list of users who liked it
+    db.query(updateLikesQuery, [JSON.stringify(likedByUsers), commentId], (updateErr, updateResults) => {
+      if (updateErr) {
+        console.error("Error updating like count:", updateErr);
+        return res.status(500).json({ error: "Error liking the comment" });
+      }
+
+      return res.status(200).json({ message: "Comment liked successfully" });
+    });
   });
 });
 
