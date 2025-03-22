@@ -13,7 +13,7 @@ import { ApiService } from '../../services/api.service'; // ✅ Import API servi
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  backgroundImg: string = '/images/running.png'; 
+  backgroundImg: string = 'https://res.cloudinary.com/dwkf8avz2/image/upload/v1742656539/user_uploads/qgz1edlvt97zzbmtkqxt.png'; 
   username: string = '';
   password: string = '';
   firstname: string = '';

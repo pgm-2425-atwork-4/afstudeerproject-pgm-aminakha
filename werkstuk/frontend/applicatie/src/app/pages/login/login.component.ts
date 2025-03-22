@@ -12,7 +12,7 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  backgroundImg: string = '/images/running.png'; 
+  backgroundImg: string = 'https://res.cloudinary.com/dwkf8avz2/image/upload/v1742656539/user_uploads/qgz1edlvt97zzbmtkqxt.png'; 
   email: string = ''; 
   password: string = '';
   message: string = ''; 
