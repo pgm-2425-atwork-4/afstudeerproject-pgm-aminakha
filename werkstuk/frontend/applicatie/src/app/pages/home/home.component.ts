@@ -17,7 +17,6 @@ export class HomeComponent implements OnInit {
   filteredGyms: any[] = [];
   savedGyms: any[] = [];
   userId: string | null = null;
-  user: any = null; // ✅ Declare user
   selectedCity: string = 'Gent';  // Default city selection
   selectedCategory: string = 'Indoors';  // Default category selection
   maxGyms: number = 3;  // Limit to 3 gyms
@@ -25,23 +24,42 @@ export class HomeComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    const storedUser = localStorage.getItem("user");
-    console.log("🔍 Stored User from localStorage:", storedUser); // ✅ Check what's in localStorage
+    const token = localStorage.getItem("auth_token"); // Get the token from localStorage
+    console.log("🔍 Stored Token:", token); // Debugging token
     
-    if (storedUser) {
-      this.user = JSON.parse(storedUser);
-      this.userId = this.user?.id ? String(this.user.id) : null;
-      console.log("🆔 Logged-in User ID:", this.userId); // ✅ Check the retrieved user ID
-      if (this.userId) {
+    if (token) {
+      // Decode the token to extract the payload
+      const decodedToken = this.decodeJWT(token);
+      console.log("🔑 Decoded Token:", decodedToken);
+
+      // Extract userId from the decoded payload
+      if (decodedToken && decodedToken.id) {
+        this.userId = decodedToken.id.toString(); // Save userId
+        console.log("🆔 User ID from Token:", this.userId);
+        
+        // Fetch saved gyms after extracting the userId
         this.fetchSavedGyms(this.userId);
       }
-    } else {
-      this.userId = null;
-      console.log("❌ No user logged in! User ID is:", this.userId); // ✅ Log if no user
     }
+
+    // Fetch gyms regardless of user status
     this.fetchGyms();
   }
 
+  // Decode JWT Token function
+  decodeJWT(token: string): any {
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      console.error("❌ Invalid token structure");
+      return null;
+    }
+    
+    const payload = parts[1]; // The payload is the second part of the token
+    const decoded = atob(payload); // Decode the Base64 string
+    return JSON.parse(decoded); // Parse it into a JSON object
+  }
+
+  // Fetch gyms from the API
   fetchGyms() {
     this.apiService.getGyms().subscribe({
       next: (res) => {
@@ -55,26 +73,23 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  // Fetch saved gyms for the logged-in user
   fetchSavedGyms(userId: string | null) {
     if (!userId) {
       console.warn("⚠️ No user ID provided. Skipping saved gyms fetch.");
       return;
     }
   
-    if (this.userId) {
-      this.apiService.getSavedGyms(this.userId as string).subscribe({
-        next: (res) => {
-          console.log("✅ Saved Gyms Loaded:", res);
-          this.savedGyms = res;
-          this.filterGyms();  // Reapply filters after loading saved gyms
-        },
-        error: (err) => {
-          console.error("🔥 Error fetching saved gyms:", err);
-        }
-      });
-    } else {
-      console.warn("⚠️ No valid userId found. Skipping saved gyms fetch.");
-    }
+    this.apiService.getSavedGyms(userId).subscribe({
+      next: (res) => {
+        console.log("✅ Saved Gyms Loaded:", res);
+        this.savedGyms = res;
+        this.filterGyms();  // Reapply filters after loading saved gyms
+      },
+      error: (err) => {
+        console.error("🔥 Error fetching saved gyms:", err);
+      }
+    });
   }
 
   // This method will filter gyms based on the selected city, category, and remove saved gyms

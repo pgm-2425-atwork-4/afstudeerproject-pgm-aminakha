@@ -6,8 +6,7 @@
         text-transform: uppercase;
         font-size:5rem;
         letter-spacing: -0.25rem;
-        padding-bottom: 15rem;
-        
+        padding-bottom: 22rem;        
         /* <img *ngIf="user?.profile_image" [src]="getProfileImageUrl(user.profile_image)" alt="User Profile"> */
     }
     & img {
@@ -21,7 +20,7 @@
         position: relative;
         position:absolute;
         transform: translate(-50%, -50%);
-        top: 44%;
+        top: 48%;
         left: 50%;
     }
   
@@ -49,6 +48,19 @@ max-width:var(--max-width);
                 font-weight: bold;
                 text-align: center;
                 font-size: 4rem;
+            }
+            & p {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                font-size: 3rem;
+                font-family: 'Archivo', sans-serif;
+                gap: .5rem;
+                margin-bottom: .5rem;
+                & svg {
+                    width: 3rem;
+                    height: 3rem;
+                }
             }
         }
        }

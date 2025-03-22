@@ -13,9 +13,12 @@ import { ApiService } from '../../services/api.service'; // ✅ Import API Servi
 export class UserProfileComponent implements OnInit {
   user: any = null;
   profileImage: File | null = null;
+  showForm: boolean = false;  // Add this line to control form visibility
 
   constructor(private apiService: ApiService) {}
-
+  toggleFormVisibility() {
+    this.showForm = !this.showForm;  // Toggle the form visibility
+  }
   ngOnInit() {
     // Fetch user details (Similar to how you fetch gym details)
     const userId = '26';  // Example, use dynamic ID in your case

@@ -23,7 +23,10 @@ export class LoginComponent {
     this.apiService.loginUser(this.email, this.password).subscribe(
       (res: any) => {
         console.log("✅ Login successful:", res);
-
+        if (res.token && res.user) {
+          localStorage.setItem('auth_token', res.token); // Store the token
+          console.log('Stored User in LocalStorage:', res.user);
+        }
         // ✅ Fetch the logged-in user immediately after login
         this.apiService.fetchUser();
 
