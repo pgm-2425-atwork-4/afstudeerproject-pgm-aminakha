@@ -165,7 +165,7 @@ export class ApiService {
     formData.append('image', file);
     return this.http.post(`${this.apiUrl}/admin/upload-gym-image`, formData, { headers: this.getAuthHeaders() });
   }
-  likeComment(commentId: number): Observable<Comment> {
+  likeComment(commentId: number): Observable<any> {
     return this.http.post<Comment>(`${this.apiUrl}/comments/like`, { commentId });
   }
   /** ✅ Add New Gym */
@@ -192,11 +192,13 @@ export class ApiService {
   getProvinces(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/provinces`, { headers: this.getAuthHeaders() });
   }
-  getComments(gymId: string): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`/comments/${gymId}`); // Make sure this path is correct
+  getComments(gymId: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<any>(`${this.apiUrl}/comments/${gymId}`, { headers: this.getAuthHeaders() });
   }
   addComment(commentData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/comments`, commentData);
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(`${this.apiUrl}/comments`, commentData, { headers: this.getAuthHeaders() });
   }
   /** ✅ Fetch Saved Gyms */
   getSavedGyms(userId: string): Observable<any> {

@@ -71,7 +71,9 @@
         <textarea id="commentText" [(ngModel)]="newComment" placeholder="Write your comment here..." rows="4"></textarea>
         <button (click)="submitComment()">Submit Comment</button>
       </div>
-
+      <div *ngIf="gym.noCommentsMessage">
+        <p>{{ gym.noCommentsMessage }}</p>
+      </div>
       
       <div *ngIf="!userId" class="login-message">
         <p>You must be logged in to add a comment!</p>

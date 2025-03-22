@@ -48,19 +48,19 @@ export class GymDetailComponent implements OnInit {
   fetchComments(gymId: string): void {
     this.apiService.getComments(gymId).subscribe({
       next: (data) => {
-        this.gym.comments = data; // Store the comments
-        
-        if (this.gym.comments.length === 0) {
-          console.log("No comments yet for this gym.");
-          this.gym.noCommentsMessage = "No comments yet. Be the first to add a comment!";
-        } else {
+        if (data && data.length > 0) {
+          this.gym.comments = data; // Store the comments
           console.log("💬 Comments for Gym:", this.gym.comments);
-          this.gym.noCommentsMessage = ""; // Clear the no-comments message if there are comments
+        } else {
+          // Handle no comments scenario
+          console.log("No comments available for this gym.");
+          this.gym.noCommentsMessage = "Be the first to comment!";
         }
       },
       error: (err) => {
         console.error("❌ Error fetching comments:", err);
-      }
+        this.gym.noCommentsMessage = "Failed to fetch comments. Please try again later.";
+      },
     });
   }
 
