@@ -94,12 +94,16 @@ export class GymDetailComponent implements OnInit {
     this.apiService.likeComment(commentId).subscribe({
       next: (data) => {
         alert("Comment liked!");
-        const comment = this.gym.comments.find((c: any) => c.id === commentId); // Using any type for 'c'
+        // Optionally, update the comment's likes count in the frontend
+        const comment = this.gym.comments.find((c: any) => c.id === commentId);
         if (comment) {
-          comment.likes++;  // Increase likes in the UI
+          comment.likes++;  // Increment the likes count for this comment
         }
       },
-      error: (err: any) => console.error("❌ Error liking comment:", err)
+      error: (err) => {
+        console.error("❌ Error liking comment:", err);
+        alert("Failed to like the comment. Please try again later.");
+      }
     });
   }
 

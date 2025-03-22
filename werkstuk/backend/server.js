@@ -454,24 +454,41 @@ app.post("/comments", verifyToken, (req, res) => {
 });
 app.post("/comments/like", verifyToken, (req, res) => {
   const { commentId } = req.body;
-  
-  if (!commentId) {
-    return res.status(400).json({ error: "Comment ID is required to like a comment." });
-  }
+  const userId = req.user.id; // Get the user ID from the token
 
-  // Increment the likes for the comment
-  const sql = "UPDATE comments SET likes = likes + 1 WHERE id = ?";
-  db.query(sql, [commentId], (err, result) => {
+  // Fetch the comment from the database
+  const getCommentSql = "SELECT * FROM comments WHERE id = ?";
+  db.query(getCommentSql, [commentId], (err, result) => {
     if (err) {
-      console.error("🔥 Error liking comment:", err);
+      console.error("🔥 Error fetching comment:", err);
       return res.status(500).json({ error: "Database error" });
     }
 
-    if (result.affectedRows === 0) {
+    if (result.length === 0) {
       return res.status(404).json({ error: "Comment not found" });
     }
 
-    res.status(200).json({ message: "Comment liked successfully!" });
+    const comment = result[0];
+
+    // Check if the user has already liked the comment
+    const likedByUsers = comment.liked_by_users ? comment.liked_by_users.split(",") : [];
+    if (likedByUsers.includes(userId.toString())) {
+      return res.status(400).json({ error: "You have already liked this comment" });
+    }
+
+    // Add user to the liked_by_users field
+    likedByUsers.push(userId.toString());
+
+    // Update the liked_by_users field and increment the likes count
+    const updateCommentSql = "UPDATE comments SET liked_by_users = ?, likes = likes + 1 WHERE id = ?";
+    db.query(updateCommentSql, [likedByUsers.join(","), commentId], (err2, result2) => {
+      if (err2) {
+        console.error("🔥 Error updating comment:", err2);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      res.status(200).json({ message: "Comment liked successfully!" });
+    });
   });
 });
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), async (req, res) => {
