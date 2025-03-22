@@ -460,37 +460,35 @@ app.post('/comments/like', (req, res) => {
   }
 
   // First, check if the user has already liked the comment
-  const checkSql = "SELECT * FROM likes WHERE comment_id = ? AND user_id = ?";
-  db.query(checkSql, [commentId, userId], (err, results) => {
+  const checkSql = "SELECT * FROM comments WHERE id = ?";
+  db.query(checkSql, [commentId], (err, results) => {
     if (err) {
       console.error("Error checking if user has liked the comment:", err);
       return res.status(500).json({ error: "Error checking like status" });
     }
 
     if (results.length > 0) {
-      // If user has already liked the comment
-      return res.status(400).json({ error: "You have already liked this comment" });
-    }
-
-    // Insert a new like in the likes table
-    const insertSql = "INSERT INTO likes (comment_id, user_id) VALUES (?, ?)";
-    db.query(insertSql, [commentId, userId], (err, results) => {
-      if (err) {
-        console.error("Error inserting like:", err);
-        return res.status(500).json({ error: "Error processing like" });
+      const likedByUsers = JSON.parse(results[0].liked_by_users || '[]'); // Ensure 'liked_by_users' is an array
+      
+      // Check if the user has already liked the comment
+      if (likedByUsers.includes(userId)) {
+        return res.status(400).json({ error: "You have already liked this comment" });
       }
 
-      // Update the likes count in the comments table
-      const updateSql = "UPDATE comments SET likes = likes + 1 WHERE id = ?";
-      db.query(updateSql, [commentId], (err, results) => {
+      // Add the user to the liked_by_users array and update likes
+      likedByUsers.push(userId);
+      const updateSql = "UPDATE comments SET likes = likes + 1, liked_by_users = ? WHERE id = ?";
+      db.query(updateSql, [JSON.stringify(likedByUsers), commentId], (err, results) => {
         if (err) {
-          console.error("Error updating likes count:", err);
-          return res.status(500).json({ error: "Error updating likes count" });
+          console.error("Error liking comment:", err);
+          return res.status(500).json({ error: "Error processing like" });
         }
 
         res.status(200).json({ message: "Comment liked successfully" });
       });
-    });
+    } else {
+      return res.status(400).json({ error: "Comment not found" });
+    }
   });
 });
 
