@@ -406,9 +406,16 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
 });
 
 // Fetch comments for a specific gym
-app.get("/comments/:gymId", verifyToken, (req, res) => {
+app.get("/comments/:gymId", (req, res) => {
   const gymId = req.params.gymId;
-  const sql = "SELECT * FROM comments WHERE gym_id = ?";
+  const sql = `
+    SELECT 
+      c.id, c.user_id, c.gym_id, c.comment_text, c.created_at, c.title, c.likes,
+      u.username
+    FROM comments c
+    JOIN users u ON c.user_id = u.id
+    WHERE c.gym_id = ?
+  `;
   
   db.query(sql, [gymId], (err, results) => {
     if (err) {
@@ -420,7 +427,7 @@ app.get("/comments/:gymId", verifyToken, (req, res) => {
       return res.status(404).json({ message: "No comments available for this gym" });
     }
 
-    res.json(results); // Send the comments
+    res.json(results); // Send the comments along with the user data
   });
 });
 // POST route to add a comment
