@@ -91,13 +91,22 @@ export class GymDetailComponent implements OnInit {
     });
   }
   likeComment(commentId: number): void {
-    this.apiService.likeComment(commentId).subscribe({
+    const userId = this.userId; // Ensure userId is available in the component
+  
+    // Check if userId is null or undefined before calling the service
+    if (!userId) {
+      alert("You must be logged in to like a comment!");
+      return;
+    }
+  
+    // Send the commentId and userId to the backend
+    this.apiService.likeComment(commentId, userId).subscribe({
       next: (data) => {
-        alert("Comment liked!");
+        console.log("Comment liked!");
         const comment = this.gym.comments.find((c: any) => c.id === commentId);
         if (comment) {
-          comment.likes++; // Increase the likes count for the comment
-          comment.userLiked = true; // Flag to track if the user has liked the comment
+          comment.likes++; // Update the likes count
+          comment.userLiked = true; // Mark the comment as liked by this user
         }
       },
       error: (err) => {
@@ -106,7 +115,6 @@ export class GymDetailComponent implements OnInit {
       }
     });
   }
-
   // Fetch pricing data for the gym
   fetchPrices(gymId: number) {
     this.apiService.getPrices().subscribe({

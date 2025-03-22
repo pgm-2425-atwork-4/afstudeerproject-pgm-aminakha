@@ -453,8 +453,8 @@ app.post("/comments", verifyToken, (req, res) => {
   });
 });
 app.post("/comments/like", verifyToken, (req, res) => {
-  const { commentId } = req.body;
-  const userId = req.user.id; // Get the user ID from the token
+  const { commentId, userId } = req.body;
+
 
   console.log(`User ID: ${userId}, Comment ID: ${commentId}`); // Add logging here to check if the values are correct
 
