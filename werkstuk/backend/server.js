@@ -346,7 +346,7 @@ app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, re
   const userId = req.params.id;
   const { username, firstname, lastname, email, password, birthday } = req.body;
 
-  // Ensure that new fields (password, etc.) are valid
+  // Ensure that required fields are present
   if (!username || !firstname || !lastname || !email || !birthday) {
     return res.status(400).json({ error: "Missing required fields" });
   }
@@ -355,6 +355,7 @@ app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, re
   let hashedPassword = password ? await bcrypt.hash(password, 10) : null;
   const profileImage = req.file ? req.file.path : null;
 
+  // Construct the SQL query
   let updateQuery = "UPDATE users SET username = ?, firstname = ?, lastname = ?, email = ?, birthday = ?";
   let values = [username, firstname, lastname, email, birthday];
 
@@ -370,6 +371,7 @@ app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, re
 
   updateQuery += " WHERE id = ?";
 
+  // Update the user in the database
   db.query(updateQuery, [...values, userId], (err, result) => {
     if (err) {
       console.error("🔥 Error updating user:", err);
@@ -379,6 +381,8 @@ app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, re
     res.json({ message: "✅ Profile updated successfully!" });
   });
 });
+
+
 const logoStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
