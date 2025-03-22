@@ -102,7 +102,7 @@ export class GymDetailComponent implements OnInit {
       next: (response) => {
         console.log("Comment liked successfully!");
   
-        // Update the UI
+        // Update the UI to reflect the like
         const comment = this.gym.comments.find((c: { id: number }) => c.id === commentId);
         if (comment) {
           comment.likes++; // Increase the like count for the specific comment
@@ -111,7 +111,11 @@ export class GymDetailComponent implements OnInit {
       error: (err) => {
         console.error("Error liking comment:", err);
         if (err.error && err.error.error) {
-          alert(err.error.error); // Show the error message (e.g., already liked)
+          if (err.error.error === "You have already liked this comment") {
+            alert("You have already liked this comment");
+          } else {
+            alert("Failed to like the comment. Please try again later.");
+          }
         } else {
           alert("Failed to like the comment. Please try again later.");
         }
