@@ -60,20 +60,24 @@
     }
   }
 
-  @media (max-width: 768px) {
-   & h1 {
-      font-size: 4rem;
+  @media (max-width: 1024px) {
+   & h1  {
+      font-size: 3.5rem;
       letter-spacing: -2px;
+    }
+    & .category-container {
+      & h2 {
+        font-size: 2rem;
+      }
     }
 
    & form {
-      flex-direction: column;
+    display: flex;
+      flex-direction: row;
       gap: 1rem;
     }
 
-   & form input {
-      width: 100%;
-    }
+   
 
    & form button {
       margin-left: 0;

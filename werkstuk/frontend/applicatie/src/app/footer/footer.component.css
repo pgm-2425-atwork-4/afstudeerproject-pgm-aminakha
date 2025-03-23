@@ -82,6 +82,29 @@
 /* Media Queries */
 
 /* For tablets */
+
+@media (max-width: 1024px) {
+   .footer {
+    & .footer-container {
+        & .information-container {
+            & .footer-quote {
+                & p {
+                    font-size: 2rem;
+                    width:28rem
+                }
+            } 
+        }
+        & .footer-logo {
+            & h2 {
+                font-size: 10rem;
+            }
+            & p {
+                font-size: 3rem;    
+            }
+        }
+    }
+   }
+  }
 @media (max-width: 768px) {
     .footer .footer-container .information-container {
         flex-direction: column;

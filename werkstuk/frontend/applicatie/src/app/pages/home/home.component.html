@@ -36,8 +36,11 @@
         <div class="tags-container__title">
             <h2>TAGS</h2>
         </div>
-        <p *ngIf="selectedCity" class="tag">{{ selectedCity }} <img src="/images/compass.svg" alt=""></p>
+        <div class="tags">
+           <p *ngIf="selectedCity" class="tag">{{ selectedCity }} <img src="/images/compass.svg" alt=""></p>
         <p *ngIf="selectedCategory" class="tag"><span >{{ selectedCategory }}</span></p>
+        </div>
+       
       </div>
   
       <!-- Gym Cards Section -->

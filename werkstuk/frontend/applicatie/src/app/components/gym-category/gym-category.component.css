@@ -31,6 +31,20 @@
 
   }
 
+
+  @media (max-width: 1024px) {
+   .category-container {
+    & h2 {
+      font-size: 2.2rem;
+      letter-spacing: -2px;
+    }
+    & .category-card {
+      padding: 1rem;
+      font-size: 1.5rem;
+      margin: .2rem;
+    }
+   }
+  }
   @media (max-width: 480px) {
     .category-container {
       & h2 {

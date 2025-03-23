@@ -73,3 +73,8 @@
     }
   
 }
+@media (max-width: 1024px) {
+    .gym-card {
+        width: 54rem;
+    }
+  }
