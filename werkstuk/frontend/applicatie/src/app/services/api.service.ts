@@ -75,7 +75,9 @@ export class ApiService {
     );
   }
   uploadCategory(formData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/categories`, formData);
+    return this.http.post(`${this.apiUrl}/categories`, formData, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   updateCategory(categoryId: number, formData: FormData): Observable<any> {

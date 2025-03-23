@@ -6,6 +6,35 @@
     align-items: center;
     margin-top: 1.25rem;
     margin-bottom: 1.25rem;
+    flex-direction: column;
+    & ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+    & h2 {
+      font-family: "Archivo", sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 1.25rem;
+      margin-top: 1.25rem;
+    }
+    & .card {
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      border-radius: 0.3125rem;
+      margin-top: 1.25rem;
+      & button {
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
+        font-family: "Archivo", sans-serif;
+        font-size: 1rem;
+        padding: 0.5rem;
+        border-radius: 0.3125rem;
+        margin-right: 0.625rem;
+      }
+    }
     & form {
       display: flex;
       flex-direction: column;

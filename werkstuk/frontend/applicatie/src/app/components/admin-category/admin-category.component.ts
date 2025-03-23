@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UploadService } from '../../services/upload.service';
 import { ApiService } from '../../services/api.service';
 
 @Component({
@@ -17,10 +16,7 @@ export class AdminCategoryComponent implements OnInit {
   categories: any[] = [];
   editingCategory: any = null;
 
-  constructor(
-    private uploadService: UploadService,
-    private apiService: ApiService
-  ) {}
+  constructor(private apiService: ApiService) {} // ✅ only use ApiService
 
   ngOnInit() {
     this.loadCategories();
@@ -28,8 +24,8 @@ export class AdminCategoryComponent implements OnInit {
 
   loadCategories() {
     this.apiService.getCategories().subscribe(
-      (data) => this.categories = data,
-      (error) => console.error("Error loading categories", error)
+      (data) => (this.categories = data),
+      (error) => console.error('❌ Error loading categories:', error)
     );
   }
 
@@ -49,7 +45,7 @@ export class AdminCategoryComponent implements OnInit {
     formData.append('name', this.categoryName);
     formData.append('image', this.selectedFile);
 
-    this.uploadService.uploadCategory(formData).subscribe(
+    this.apiService.uploadCategory(formData).subscribe(
       (response) => {
         console.log('✅ Category added successfully:', response);
         alert('Category added successfully!');
@@ -79,27 +75,27 @@ export class AdminCategoryComponent implements OnInit {
 
     this.apiService.updateCategory(this.editingCategory.id, formData).subscribe(
       () => {
-        alert("✅ Category updated!");
+        alert('✅ Category updated!');
         this.resetForm();
         this.loadCategories();
       },
       (err) => {
-        console.error("🔥 Error updating category:", err);
-        alert("Error updating category");
+        console.error('🔥 Error updating category:', err);
+        alert('Error updating category');
       }
     );
   }
 
   deleteCategory(id: number) {
-    if (confirm("Are you sure you want to delete this category?")) {
+    if (confirm('Are you sure you want to delete this category?')) {
       this.apiService.deleteCategory(id).subscribe(
         () => {
-          alert("✅ Category deleted!");
+          alert('✅ Category deleted!');
           this.loadCategories();
         },
         (err) => {
-          console.error("🔥 Error deleting category:", err);
-          alert("Error deleting category");
+          console.error('🔥 Error deleting category:', err);
+          alert('Error deleting category');
         }
       );
     }

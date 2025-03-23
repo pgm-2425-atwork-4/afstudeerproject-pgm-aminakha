@@ -34,7 +34,9 @@
   <hr />
 
   <!-- Category List -->
-  <div *ngFor="let cat of categories" class="card mt-3 p-3">
+   <h2>Bestaande Categorieen</h2>
+   <ul>
+     <div *ngFor="let cat of categories" class="card mt-3 p-3">
     <div class="d-flex justify-content-between align-items-center">
       <div>
         <strong>{{ cat.name }}</strong>
@@ -46,5 +48,7 @@
       </div>
     </div>
   </div>
+   </ul>
+ 
 
 </div>
