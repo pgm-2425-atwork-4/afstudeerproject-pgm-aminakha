@@ -818,18 +818,17 @@ const uploadImage = multer({ storage: imageStorage }).single("image"); // Image 
 // POST route to add exercise
 app.post("/admin/add-exercise", uploadImage, uploadVideo, (req, res) => {
   const { name, exerciseCategory_id, pressure_id, big_description } = req.body;
+  const imageUrl = req.file ? req.file.path : null;  // Get image URL from Cloudinary
+  const videoUrl = req.file ? req.file.path : null;  // Get video URL from Cloudinary
 
-  // Get the file paths (URL) of the uploaded image and video from Cloudinary
-  const imageUrl = req.file ? req.file.path : null;
-  const videoUrl = req.video ? req.video.path : null; // Get the video URL from Cloudinary
-
-  if (!name || !exerciseCategory_id || !pressure_id || !big_description || !videoUrl) {
+  if (!name || !exerciseCategory_id || !pressure_id || !big_description || !imageUrl || !videoUrl) {
     return res.status(400).json({ error: "❌ Missing required fields" });
   }
 
-  // SQL query to insert exercise details into the database
-  const sql = `INSERT INTO exercises (name, exerciseCategory_id, pressure_id, big_description, image, video_url)
-               VALUES (?, ?, ?, ?, ?, ?)`;
+  const sql = `
+    INSERT INTO exercises (name, exerciseCategory_id, pressure_id, big_description, image, video)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
   const values = [name, exerciseCategory_id, pressure_id, big_description, imageUrl, videoUrl];
 
   db.query(sql, values, (err, result) => {
