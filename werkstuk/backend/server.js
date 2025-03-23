@@ -524,25 +524,28 @@ app.post('/comments/like', (req, res) => {
   });
 });
 app.post("/categories", verifyToken, upload.single("image"), (req, res) => {
-  const { name } = req.body;
-  const image = req.file ? req.file.path : null;
+  const { name } = req.body; // Category name
+  const image = req.file ? req.file.path : null; // Optional image
 
-  if (!name || !image) {
-    return res.status(400).json({ error: "❌ Missing category name or image" });
+  // Check for missing fields
+  if (!name) {
+    return res.status(400).json({ error: "❌ Category name is required" });
   }
 
+  // SQL query to insert category into the database
   const sql = "INSERT INTO categories (name, image) VALUES (?, ?)";
-  db.query(sql, [name, image], (err, result) => {
+  const values = [name, image];
+
+  db.query(sql, values, (err, result) => {
     if (err) {
       console.error("🔥 Error inserting category:", err);
       return res.status(500).json({ error: "Database error" });
     }
-
     res.status(201).json({
       message: "✅ Category added successfully!",
-      id: result.insertId,
-      name,
-      image
+      categoryId: result.insertId,
+      name: name,
+      image: image ? image : "No image uploaded"
     });
   });
 });
@@ -809,7 +812,51 @@ app.get("/admin/gyms/:adminId", (req, res) => {
     res.json(results);
   });
 });
+app.put("/categories/:id", verifyToken, upload.single("image"), (req, res) => {
+  const categoryId = req.params.id;
+  const { name } = req.body;
+  const image = req.file ? req.file.path : null;
 
+  if (!name) {
+    return res.status(400).json({ error: "❌ Category name required" });
+  }
+
+  let sql = "UPDATE categories SET name = ?";
+  const values = [name];
+
+  if (image) {
+    sql += ", image = ?";
+    values.push(image);
+  }
+
+  sql += " WHERE id = ?";
+  values.push(categoryId);
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("🔥 Error updating category:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ message: "✅ Category updated successfully!" });
+  });
+});
+app.delete("/categories/:id", verifyToken, (req, res) => {
+  const categoryId = req.params.id;
+
+  const sql = "DELETE FROM categories WHERE id = ?";
+  db.query(sql, [categoryId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error deleting category:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "❌ Category not found" });
+    }
+
+    res.json({ message: "✅ Category deleted successfully!" });
+  });
+});
 /* ============================================
  ✅ API: Upload Image (Profile & Categories)
 =============================================== */
