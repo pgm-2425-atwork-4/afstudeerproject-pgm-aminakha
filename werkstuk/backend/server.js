@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load environment variables
+require('dotenv').config(); 
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -12,38 +12,35 @@ const cookieParser = require("cookie-parser");
 const SECRET_KEY = process.env.SECRET_KEY;
 if (!SECRET_KEY) {
   console.error("🔥 ERROR: SECRET_KEY is missing! Add it to your .env file.");
-  process.exit(1); // Stop the server if missing
+  process.exit(1); 
 }
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const app = express();
-app.use(cookieParser()); // ✅ Enable cookie parsing
-
+app.use(cookieParser()); 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
-// ✅ Set up Cloudinary Storage for Uploads
+
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "user_uploads", // This should create the folder
-    format: async (req, file) => "png", // Convert images to PNG
-    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), // Unique filename
+    folder: "user_uploads", 
+    format: async (req, file) => "png", 
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), 
   },
 });
-// ✅ Cloudinary Storage for Gym Images
 const gymStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "gym_images", // Store in "gym_images" folder
-    format: async (req, file) => "png", // Convert images to PNG
-    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), // Unique filename
+    folder: "gym_images", 
+    format: async (req, file) => "png", 
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), 
   },
 });
 
-// ✅ Ensure "uploads" directory exists
 const uploadDir = path.join(__dirname, "uploads/");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
@@ -51,9 +48,9 @@ if (!fs.existsSync(uploadDir)) {
 const videoStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'exercise_videos',  // Store the videos in this folder
-    format: async (req, file) => 'mp4',  // You can specify other formats, such as 'mov', 'avi', etc.
-    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_") // Unique filename
+    folder: 'exercise_videos',  
+    format: async (req, file) => 'mp4', 
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_")
   },
 });
 const uploadFields = multer({
@@ -62,37 +59,34 @@ const uploadFields = multer({
 
 const upload = multer({ storage });
 app.use(cors({
-  origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io","http://localhost:4200/login"], // ✅ Allow frontend
+  origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io","http://localhost:4200/login"], 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, // ✅ Allow cookies & authentication headers
+  credentials: true, 
 }));
 
-// ✅ Manually Set CORS Headers for Every Response
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:4200");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // ✅ Handle preflight
+    return res.sendStatus(200); 
   }
   next();
 });
 app.use(express.json());
-app.use('/uploads', express.static(uploadDir)); // ✅ Serve images correctly
+app.use('/uploads', express.static(uploadDir)); 
 
-// ✅ Check if server is running
 app.get('/', (req, res) => {
   res.status(200).send("🚀 Backend is running!");
 });
 
-// ✅ Test Backend
 app.get('/ping', (req, res) => {
   res.json({ message: "✅ Backend is alive!" });
 });
 
-// ✅ Connect to MySQL Database
 const db = mysql.createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
@@ -115,21 +109,17 @@ db.getConnection((err, connection) => {
 
 
 
-/* ============================================
- ✅ API: Register User with Profile Image Upload
-=============================================== */
+
 app.post("/register", upload.single("profileImage"), async (req, res) => {
   try {
     const { username, firstname, lastname, email, password, birthday } = req.body;
     
-    // ✅ Ensure Cloudinary returns a valid URL
     const profileImage = req.file ? req.file.path : null;
 
     if (!username || !email || !password || !birthday) {
       return res.status(400).json({ error: "❌ Missing required fields" });
     }
 
-    // 🔐 Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const sql =
@@ -149,7 +139,7 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
   }
 });
 const verifyToken = (req, res, next) => {
-  let token = req.cookies.auth_token || req.headers['authorization']?.split(" ")[1]; // Check both cookies and headers
+  let token = req.cookies.auth_token || req.headers['authorization']?.split(" ")[1]; 
 
   if (!token) {
     return res.status(401).json({ error: "Unauthorized: No token provided" });
@@ -167,23 +157,20 @@ app.use(cors({
   origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, // ✅ Allow sending cookies
+  credentials: true, 
 }));
 
-// ✅ Manually set CORS Headers for Every Response
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200); // ✅ Handle preflight requests
+    return res.sendStatus(200);
   }
   next();
 });
-/* ============================================
- ✅ API: User Login (Check Hashed Password)
-=============================================== */
+
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -200,7 +187,6 @@ app.post("/login", (req, res) => {
 
     const user = results[0];
 
-    // Compare entered password with hashed password from DB
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "❌ Incorrect password" });
@@ -212,9 +198,8 @@ app.post("/login", (req, res) => {
       { expiresIn: "4h" }
     );
 
-    // Send the token in the response and store it in cookies
     res.cookie("auth_token", token, { httpOnly: true, secure: false });
-    res.json({ message: "✅ Login successful!", token }); // Send token back to the client
+    res.json({ message: "✅ Login successful!", token }); 
   });
 });
 
@@ -319,26 +304,23 @@ app.get("/users/:id", (req, res) => {
 
     const user = results[0];
 
-    // ✅ Ensure profile_image URL is correct (Cloudinary or Default)
     user.profile_image = user.profile_image
       ? user.profile_image
-      : "https://res.cloudinary.com/dwkf8avz2/image/upload/vXXXXXXXX/default-user.png"; // Default image
+      : "https://res.cloudinary.com/dwkf8avz2/image/upload/vXXXXXXXX/default-user.png";
 
     console.log("✅ Returning user data:", user);
-    res.json(user); // ✅ Send full user object
+    res.json(user); 
   });
 });
 app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, res) => {
   const userId = req.params.id;
   const { username, firstname, lastname, email, password, birthday } = req.body;
-  const formattedBirthday = new Date(birthday).toISOString().split('T')[0]; // '2000-05-16'
+  const formattedBirthday = new Date(birthday).toISOString().split('T')[0]; 
 
-  // Ensure required fields are present
   if (!username || !firstname || !lastname || !email || !birthday) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  // Hash password if provided
   let hashedPassword = password ? await bcrypt.hash(password, 10) : null;
   const profileImage = req.file ? req.file.path : null;
 
@@ -357,7 +339,6 @@ app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, re
 
   updateQuery += " WHERE id = ?";
 
-  // Update user in the database
   db.query(updateQuery, [...values, userId], (err, result) => {
     if (err) {
       console.error("🔥 Error updating user:", err);
@@ -371,7 +352,7 @@ app.put("/users/:id", verifyToken, upload.single('profileImage'), async (req, re
 const logoStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "gym_logos", // Gym logos stored here
+    folder: "gym_logos", 
     format: async () => "png",
     public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"),
   },
@@ -380,15 +361,15 @@ const logoStorage = new CloudinaryStorage({
 const imageStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "gym_images", // Gym additional images stored here
+    folder: "gym_images", 
     format: async () => "jpg",
     public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"),
   },
 });
-const uploadImage = multer({ storage: imageStorage }).single("image"); // Single image upload
+const uploadImage = multer({ storage: imageStorage }).single("image"); 
 
-const uploadLogo = multer({ storage: logoStorage }).single("logo"); // Single file
-const uploadImages = multer({ storage: imageStorage }).array("images", 5); // Multiple files (Max: 5)
+const uploadLogo = multer({ storage: logoStorage }).single("logo"); 
+const uploadImages = multer({ storage: imageStorage }).array("images", 5); 
 app.get("/pressures", (req, res) => {
   const sql = "SELECT id, name FROM pressures";
   db.query(sql, (err, results) => {
@@ -428,12 +409,11 @@ app.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
     return res.status(400).json({ error: "❌ No file uploaded!" });
   }
 
-  const imageUrl = req.file.path; // ✅ Get Cloudinary URL
+  const imageUrl = req.file.path; 
   res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl });
 });
 
-// Fetch comments for a specific gym
-// Fetch comments for a specific gym
+
 app.get("/comments/:gymId", (req, res) => {
   const gymId = req.params.gymId;
   const sql = `
@@ -455,13 +435,12 @@ app.get("/comments/:gymId", (req, res) => {
       return res.status(404).json({ message: "No comments available for this gym" });
     }
 
-    res.json(results); // Send the comments along with the user data
+    res.json(results);
   });
 });
-// POST route to add a comment
 app.post("/comments", verifyToken, (req, res) => {
   const { gymId, commentText, title } = req.body;
-  const userId = req.user.id; // Extract user ID from the token
+  const userId = req.user.id; 
 
   const sql = "INSERT INTO comments (user_id, gym_id, comment_text, title) VALUES (?, ?, ?, ?)";
   const values = [userId, gymId, commentText, title];
@@ -487,7 +466,6 @@ app.post('/comments/like', (req, res) => {
     return res.status(400).json({ error: "Missing commentId or userId" });
   }
 
-  // Check if the user already liked the comment
   const checkLikeQuery = `SELECT * FROM likes WHERE comment_id = ? AND user_id = ?`;
   db.query(checkLikeQuery, [commentId, userId], (err, results) => {
     if (err) {
@@ -499,7 +477,6 @@ app.post('/comments/like', (req, res) => {
       return res.status(400).json({ error: 'You have already liked this comment' });
     }
 
-    // Insert a new like
     const insertLikeQuery = `INSERT INTO likes (comment_id, user_id) VALUES (?, ?)`;
     db.query(insertLikeQuery, [commentId, userId], (err, result) => {
       if (err) {
@@ -507,7 +484,6 @@ app.post('/comments/like', (req, res) => {
         return res.status(500).json({ error: 'Error liking comment' });
       }
 
-      // Update the likes count and liked_by_users field in the comments table
       const updateCommentQuery = `
         UPDATE comments 
         SET likes = likes + 1, liked_by_users = CONCAT(IFNULL(liked_by_users, ''), ?, ',') 
@@ -523,7 +499,7 @@ app.post('/comments/like', (req, res) => {
     });
   });
 });
-const uploadGymLogo = multer({ storage: logoStorage }); // Define this separately
+const uploadGymLogo = multer({ storage: logoStorage }); 
 
 app.put("/gyms/:id", verifyToken, uploadGymLogo.single("logo"), (req, res) => {
   const gymId = req.params.id;
@@ -609,10 +585,8 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
   try {
       const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
 
-      // ✅ Upload Logo to Cloudinary
       const logoUrl = req.files["logo"] ? req.files["logo"][0].path : null;
 
-      // ✅ Upload Multiple Images to Cloudinary
       const imageUrls = req.files["images"] ? req.files["images"].map(file => file.path) : [];
 
       if (!name || !city || !rating || !opening_hours || !address || !category_id || !pricing_id || !province_id) {
@@ -622,7 +596,6 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
       console.log("📸 Logo URL:", logoUrl);
       console.log("📷 Gallery Image URLs:", imageUrls);
 
-      // ✅ Insert Gym Data into `gyms` Table
       const sql = `
           INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logo, email, phone, website)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -637,7 +610,6 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
 
           const gymId = result.insertId;
 
-          // ✅ Insert Image URLs into `images` Table
           if (imageUrls.length > 0) {
               const imageInsertSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
               const imageValues = imageUrls.map(url => [gymId, url]);
@@ -660,9 +632,7 @@ app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "imag
 });
 
 
-/* ============================================
- ✅ API: Fetch All Gyms
-=============================================== */
+
 app.get("/gyms", (req, res) => {
   const sql = `
     SELECT 
@@ -689,12 +659,11 @@ app.get("/gyms", (req, res) => {
       return res.status(500).json({ error: "Database error", details: err.message });
     }
 
-    // ✅ Convert images from CSV string to array
     results.forEach(gym => {
       gym.images = gym.images ? gym.images.split(",") : [];
     });
 
-    console.log("✅ Gyms Data:", results); // 🐛 Debugging
+    console.log("✅ Gyms Data:", results); 
     res.json(results);
   });
 });
@@ -711,7 +680,7 @@ app.get("/prices", (req, res) => {
 });
 
 app.get("/gyms/:id", (req, res) => {
-  const gymId = req.params.id;  // Extract gym ID from the URL
+  const gymId = req.params.id;  
 
   const sql = `
     SELECT 
@@ -742,7 +711,6 @@ app.get("/gyms/:id", (req, res) => {
       return res.status(404).json({ error: "❌ Gym not found" });
     }
 
-    // Convert image URLs from CSV string to an array
     const gym = results[0];
     gym.images = gym.images ? gym.images.split(",") : [];
     gym.pricing_bundle = gym.pricing_bundle || "No pricing available";
@@ -782,9 +750,7 @@ app.get("/saved-gyms", verifyToken, (req, res) => {
     res.json(results);
   });
 });
-// Add this route to your Express server
 
-// DELETE endpoint to remove a saved gym
 app.delete("/saved-gyms/:userId/:gymId", verifyToken, (req, res) => {
   const { userId, gymId } = req.params;
 
@@ -792,7 +758,6 @@ app.delete("/saved-gyms/:userId/:gymId", verifyToken, (req, res) => {
     return res.status(400).json({ error: "❌ Missing userId or gymId" });
   }
 
-  // SQL query to delete the saved gym
   const sql = "DELETE FROM saved_gyms WHERE user_id = ? AND gym_id = ?";
 
   db.query(sql, [userId, gymId], (err, result) => {
@@ -816,7 +781,7 @@ app.post("/admin/upload-gym-image", adminUpload.single("image"), (req, res) => {
     return res.status(400).json({ error: "❌ No file uploaded!" });
   }
 
-  const imageUrl = req.file.path; // ✅ Get Cloudinary URL
+  const imageUrl = req.file.path; 
   res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl });
 });
 app.post("/admin/add-gym", adminUpload.single("image"), (req, res) => {
@@ -826,7 +791,7 @@ app.post("/admin/add-gym", adminUpload.single("image"), (req, res) => {
     return res.status(400).json({ error: "❌ No image uploaded!" });
   }
 
-  const imageUrl = req.file.path; // ✅ Cloudinary Image URL
+  const imageUrl = req.file.path; 
 
   const sql = `
     INSERT INTO gyms (name, city, rating, category_id, opening_hours, address, personal_trainer, pricing_id, province_id, image_url, admin_id, description,email,phone,website )
@@ -871,7 +836,7 @@ app.get("/admin/gyms/:adminId", (req, res) => {
 app.put("/categories/:id", verifyToken, upload.single("image"), (req, res) => {
   const categoryId = req.params.id;
   const { name } = req.body;
-  const image = req.file ? req.file.path : null; // Get the uploaded image URL
+  const image = req.file ? req.file.path : null; 
 
   if (!name) {
     return res.status(400).json({ error: "❌ Category name required" });
@@ -881,7 +846,7 @@ app.put("/categories/:id", verifyToken, upload.single("image"), (req, res) => {
   const values = [name];
 
   if (image) {
-    sql += ", image_url = ?"; // Update the correct column `image_url`
+    sql += ", image_url = ?"; 
     values.push(image);
   }
 
@@ -913,15 +878,13 @@ app.delete("/categories/:id", verifyToken, (req, res) => {
     res.json({ message: "✅ Category deleted successfully!" });
   });
 });
-/* ============================================
- ✅ API: Upload Image (Profile & Categories)
-=============================================== */
+
 app.post("/upload/profile", upload.single("profileImage"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "❌ No file uploaded" });
   }
 
-  console.log("✅ File uploaded:", req.file); // 🐛 Debugging
+  console.log("✅ File uploaded:", req.file); 
 
   const filePath = `/uploads/${req.file.filename}`;
   res.json({ filePath });
@@ -944,14 +907,12 @@ app.post("/add-exercise-category", verifyToken, (req, res) => {
   });
 });
 
-// POST route to add exercise
-// Route to add an exercise
+
 app.post("/admin/add-exercise", uploadImage, (req, res) => {
   const { name, exerciseCategory_id, pressure_id, big_description } = req.body;
 
   const imageUrl = req.file ? req.file.path : null;
 
-  // Ensure all required fields are present
   if (!name || !exerciseCategory_id || !pressure_id || !big_description || !imageUrl) {
     return res.status(400).json({ error: "❌ Missing required fields" });
   }
@@ -1020,7 +981,7 @@ app.delete("/categories/:id", verifyToken, (req, res) => {
 
 
 app.get("/exercise-categories", verifyToken, (req, res) => {
-  const sql = "SELECT * FROM exercise_categories"; // Adjust table name if necessary
+  const sql = "SELECT * FROM exercise_categories"; 
 
   db.query(sql, (err, results) => {
     if (err) {
@@ -1028,13 +989,10 @@ app.get("/exercise-categories", verifyToken, (req, res) => {
       return res.status(500).json({ error: "Database error" });
     }
 
-    // Send the results back as JSON
     res.json(results);
   });
 });
-/* ============================================
- ✅ API: Delete All Users (TRUNCATE)
-=============================================== */
+
 app.delete("/users/truncate", (req, res) => {
   const sql = "TRUNCATE TABLE users";
   db.query(sql, (err, result) => {

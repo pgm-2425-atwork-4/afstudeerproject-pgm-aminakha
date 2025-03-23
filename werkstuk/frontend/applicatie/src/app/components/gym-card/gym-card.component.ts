@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './gym-card.component.css'
 })
 export class GymCardComponent {
-  @Input() gym: any;  // Receiving gym data from the parent component
+  @Input() gym: any;  
 
 }

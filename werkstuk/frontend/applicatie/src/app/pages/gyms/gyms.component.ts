@@ -22,28 +22,25 @@ export class GymsComponent implements OnInit {
   selectedCity: string = "";
   selectedRating: string = "";
   selectedType: string = "";
-  isFilterModalActive: boolean = false;  // Track filter modal visibility
-  selectedPersonalTrainer: string = ""; // This will store "JA" or "NEE"
+  isFilterModalActive: boolean = false;  
+  selectedPersonalTrainer: string = ""; 
   provinces: any[] = [];
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {
     this.fetchGyms();
-    this.fetchPrices(); // Fetch prices separately
+    this.fetchPrices(); 
   }
 
-  // Method to toggle filter modal visibility
   toggleFilterModal() {
-    // When closing, add the animation class for sliding out
     if (this.isFilterModalActive) {
       const modalElement = document.querySelector('.filter-modal') as HTMLElement;
       modalElement.classList.remove('active');
       setTimeout(() => {
         this.isFilterModalActive = !this.isFilterModalActive;
-      }, 300); // Wait for the slide-out animation to finish before updating the state
+      }, 300); 
     } else {
-      // When opening, add the "active" class to slide in
       this.isFilterModalActive = !this.isFilterModalActive;
       setTimeout(() => {
         const modalElement = document.querySelector('.filter-modal') as HTMLElement;
@@ -52,10 +49,9 @@ export class GymsComponent implements OnInit {
     }
   }
 
-  // Apply the selected filters
   applyFilters() {
-    this.searchGyms();  // Apply the filters when clicking "Apply Filters"
-    this.toggleFilterModal();  // Close the modal after applying filters
+    this.searchGyms();  
+    this.toggleFilterModal();  
   }
 
   fetchGyms() {
@@ -63,7 +59,7 @@ export class GymsComponent implements OnInit {
       next: (data) => {
         this.gyms = data;
         this.filteredGyms = data;
-        this.mapPricesToGyms(); // Ensure gyms have their prices
+        this.mapPricesToGyms();
         console.log("✅ Gyms loaded:", this.gyms);
       },
       error: (error) => {
@@ -74,7 +70,7 @@ export class GymsComponent implements OnInit {
     this.apiService.getCategories().subscribe({
       next: (data) => {
         console.log("✅ Categories received:", data);
-        this.categories = Array.isArray(data) ? data : Object.values(data); // ✅ Ensure correct data format
+        this.categories = Array.isArray(data) ? data : Object.values(data); 
       },
       error: (error) => {
         console.error("❌ Error fetching categories:", error);
@@ -97,7 +93,7 @@ export class GymsComponent implements OnInit {
       next: (data) => {
         this.prices = data;
         console.log("💰 Prices loaded:", this.prices);
-        this.mapPricesToGyms(); // Update gyms with price details
+        this.mapPricesToGyms();
       },
       error: (error) => {
         console.error("🔥 Error fetching prices:", error);
@@ -115,26 +111,19 @@ export class GymsComponent implements OnInit {
     }
   }
 
-  // Search and apply filters on gyms
   searchGyms() {
     this.filteredGyms = this.gyms.filter(gym => {
       return (
-        // Filter by city
         (this.selectedCity ? gym.city.toLowerCase().includes(this.selectedCity.toLowerCase()) : true) &&
         
-        // Filter by province
         (this.selectedProvince ? gym.province.toLowerCase().includes(this.selectedProvince.toLowerCase()) : true) &&
         
-        // Filter by rating (first character of rating matches the selected rating)
         (this.selectedRating ? gym.rating.toString().charAt(0) === this.selectedRating.charAt(0) : true) &&
         
-        // Filter by gym type
         (this.selectedType ? gym.category.toLowerCase().includes(this.selectedType.toLowerCase()) : true) &&
         
-        // Filter by personal trainer (based on user selection of 'JA' or 'NEE')
         (this.selectedPersonalTrainer ? gym.personal_trainer.toString() === this.selectedPersonalTrainer : true) &&
         
-        // Search query filter
         (this.searchQuery ? 
           (gym.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
           gym.city.toLowerCase().includes(this.searchQuery.toLowerCase()) || 

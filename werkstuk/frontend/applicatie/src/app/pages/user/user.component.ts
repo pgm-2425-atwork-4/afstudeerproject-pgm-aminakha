@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../services/api.service'; // ✅ Import API Service
+import { ApiService } from '../../services/api.service'; 
 import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 import { RouterLink } from '@angular/router';
 
@@ -15,22 +15,22 @@ import { RouterLink } from '@angular/router';
 export class UserProfileComponent implements OnInit {
   user: any = null;
   profileImage: File | null = null;
-  showForm: boolean = false;  // Add this line to control form visibility
-  savedGyms: any[] = []; // Array to hold saved gyms
+  showForm: boolean = false;  
+  savedGyms: any[] = [];
 
   constructor(private apiService: ApiService) {}
 
   toggleFormVisibility() {
-    this.showForm = !this.showForm;  // Toggle the form visibility
+    this.showForm = !this.showForm; 
   }
 
   ngOnInit() {
-    // Fetch user details and the saved gyms for the logged-in user
-    const token = localStorage.getItem("auth_token"); // Get the token from localStorage
-    console.log("🔍 Stored Token:", token); // Log the token for debugging
+  
+    const token = localStorage.getItem("auth_token"); 
+    console.log("🔍 Stored Token:", token);
 
     if (token) {
-      // Decode the token to extract the user ID (from the JWT token)
+     
       const decodedToken = this.decodeJWT(token);
       console.log("🔑 Decoded Token:", decodedToken);
 
@@ -38,7 +38,6 @@ export class UserProfileComponent implements OnInit {
         const userId = decodedToken.id.toString();
         console.log("🆔 User ID from Token:", userId);
 
-        // Fetch user data by userId
         this.apiService.getUserById(userId).subscribe({
           next: (user) => {
             console.log("✅ User Data:", user);
@@ -49,13 +48,11 @@ export class UserProfileComponent implements OnInit {
           }
         });
 
-        // Fetch saved gyms for the user
         this.fetchSavedGyms(userId);
       }
     }
   }
 
-  // Decode JWT Token function to extract user details
   decodeJWT(token: string): any {
     const parts = token.split('.');
     if (parts.length !== 3) {
@@ -63,17 +60,16 @@ export class UserProfileComponent implements OnInit {
       return null;
     }
 
-    const payload = parts[1]; // The payload is the second part of the token
-    const decoded = atob(payload); // Decode the Base64 string
-    return JSON.parse(decoded); // Parse it into a JSON object
+    const payload = parts[1]; 
+    const decoded = atob(payload);
+    return JSON.parse(decoded); 
   }
 
-  // Fetch saved gyms using userId
   fetchSavedGyms(userId: string) {
     this.apiService.getSavedGyms(userId).subscribe({
       next: (res) => {
         console.log("✅ Saved Gyms Loaded:", res);
-        this.savedGyms = res; // Store saved gyms
+        this.savedGyms = res; 
       },
       error: (err) => {
         console.error("🔥 Error fetching saved gyms:", err);
@@ -91,7 +87,6 @@ export class UserProfileComponent implements OnInit {
     this.apiService.deleteSavedGym(userId, gymId).subscribe({
       next: (res) => {
         console.log("✅ Saved Gym deleted:", res);
-        // Remove the deleted gym from the savedGyms array
         this.savedGyms = this.savedGyms.filter(gym => gym.id !== gymId);
         alert("Gym deleted successfully!");
       },
@@ -108,7 +103,6 @@ export class UserProfileComponent implements OnInit {
   updateUserProfile() {
     const formData = new FormData();
 
-    // Append user data to FormData
     formData.append('username', this.user.username);
     formData.append('firstname', this.user.firstname);
     formData.append('lastname', this.user.lastname);
@@ -120,7 +114,6 @@ export class UserProfileComponent implements OnInit {
       formData.append('profileImage', this.profileImage);
     }
 
-    // Make the API call using the ApiService
     this.apiService.updateUserProfile(this.user.id, formData).subscribe({
       next: (res) => {
         console.log("✅ Profile Updated:", res);

@@ -24,13 +24,12 @@ export class LoginComponent {
       (res: any) => {
         console.log("✅ Login successful:", res);
         if (res.token && res.user) {
-          localStorage.setItem('auth_token', res.token); // Store the token
+          localStorage.setItem('auth_token', res.token); 
           console.log('Stored User in LocalStorage:', res.user);
         }
-        // ✅ Fetch the logged-in user immediately after login
         this.apiService.fetchUser();
 
-        this.router.navigate(['/']); // ✅ Redirect to home
+        this.router.navigate(['/']); 
       },
       (error) => {
         console.error("🔥 Login Error:", error);

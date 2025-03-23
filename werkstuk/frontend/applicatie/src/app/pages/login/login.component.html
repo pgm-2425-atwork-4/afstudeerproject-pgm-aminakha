@@ -9,13 +9,12 @@
     </div>
 
     <form (ngSubmit)="login()">
-      <!-- ✅ Fixed: Use "email" instead of "username" -->
       <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="Email">
       <input type="password" id="password" [(ngModel)]="password" name="password" required placeholder="Wachtwoord">
       <button type="submit"><p>Login</p></button>
     </form>
 
-    <p>{{ message }}</p> <!-- ✅ Show success/fail message -->
+    <p>{{ message }}</p> 
 
     <p><span></span>of <span></span></p>
     <p><a routerLink="/register" routerLinkActive="active">Registreer</a></p>

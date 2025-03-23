@@ -16,7 +16,7 @@ export class AdminCategoryComponent implements OnInit {
   categories: any[] = [];
   editingCategory: any = null;
 
-  constructor(private apiService: ApiService) {} // ✅ only use ApiService
+  constructor(private apiService: ApiService) {} 
 
   ngOnInit() {
     this.loadCategories();

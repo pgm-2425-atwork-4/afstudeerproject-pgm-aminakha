@@ -22,11 +22,10 @@ export class ApiService {
   }
   constructor(private http: HttpClient) {
     console.log("🚀 API Base URL:", this.apiUrl);
-    this.loadUserFromStorage(); // ✅ Auto-load user on startup
+    this.loadUserFromStorage(); 
   }
   
 
-  /** ✅ Load JWT Token & User from Storage */
   private loadUserFromStorage() {
     const token = localStorage.getItem('auth_token');
     const user = localStorage.getItem('user');
@@ -35,10 +34,7 @@ export class ApiService {
       this.currentUserSubject.next(JSON.parse(user));
     }
   }
-  private getAuthToken(): string | null {
-    return this.currentUserSubject.value ? `Bearer ${this.currentUserSubject.value.token}` : null;
-  }
-  /** ✅ Auto-fetch Authenticated User */
+  
   fetchUser() {
     const token = localStorage.getItem('auth_token');
     if (!token) {
@@ -57,19 +53,18 @@ export class ApiService {
         console.error("❌ Token error:", err);
         if (err.status === 401 || err.status === 403) {
           console.warn("⏳ Token expired or invalid, logging out...");
-          this.logout().subscribe(); // ✅ Auto logout on invalid token
+          this.logout().subscribe();
         }
       }
     });
   }
   
   
-  /** ✅ Login Method - Stores JWT Token & User Data */
   loginUser(email: string, password: string,profile_image:string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { email, password,profile_image }).pipe(
       tap((response: any) => {
         if (response.token) {
-          localStorage.setItem('auth_token', response.token); // Store the token in localStorage
+          localStorage.setItem('auth_token', response.token);
         }
       })
     );
@@ -100,29 +95,23 @@ export class ApiService {
       headers: this.getAuthHeaders()
     });
   }
-  /** ✅ Logout - Clears Token & User Data */
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
         console.log("🚪 Logging out...");
         
-        // ✅ Clear session storage and local storage
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
         
-        // ✅ Remove cookies
         document.cookie = "auth_token=; Max-Age=0; path=/; domain=" + window.location.hostname;
         
-        // ✅ Update UI
         this.currentUserSubject.next(null);
         
-        // ✅ Force reload the page to clear cached user data
         setTimeout(() => window.location.reload(), 500);
       })
     );
   }
 
-  /** ✅ Secure API Request with JWT */
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
     console.log("🔒Hier Auth token:", token);
@@ -136,7 +125,6 @@ export class ApiService {
     });
   }
 
-  /** ✅ Fetch Authenticated User */
   getAuthUser(): Observable<any> {
     const headers = new HttpHeaders().set(
       'Authorization',
@@ -145,21 +133,18 @@ export class ApiService {
   
     return this.http.get(`${this.apiUrl}/auth/user`, {
       headers,
-      withCredentials: true, // ✅ Ensures cookies & credentials are sent
+      withCredentials: true,
     });
   }
 
-  /** ✅ Fetch Categories */
   getCategories(): Observable<any> {
     return this.http.get(`${this.apiUrl}/categories`, { headers: this.getAuthHeaders() });
   }
 
-  /** ✅ Fetch Users */
   getUsers(): Observable<any> {
     return this.http.get(`${this.apiUrl}/users`, { headers: this.getAuthHeaders() });
   }
 
-  /** ✅ Fetch Specific User */
   getUserById(userId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/${userId}`, { headers: this.getAuthHeaders() });
   }
@@ -175,28 +160,23 @@ export class ApiService {
       'Authorization': `Bearer ${token}` // Attach Authorization header
     });
 
-    // Make the PUT request to update the profile
     return this.http.put(`${this.apiUrl}/users/${userId}`, formData, { headers });
   }
 
-  /** ✅ Register New User */
   registerUser(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, formData);
   }
 
-  /** ✅ Fetch Gyms */
   getGyms(): Observable<any> {
     return this.http.get(`${this.apiUrl}/gyms`, { headers: this.getAuthHeaders() });
   }
 
-  /** ✅ Fetch Single Gym */
   getGymById(gymId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/gyms/${gymId}`, { headers: this.getAuthHeaders() });
   }
   getPrices(): Observable<any> {
     return this.http.get(`${this.apiUrl}/prices`, { headers: this.getAuthHeaders() });
   }
-  /** ✅ Upload Gym Image */
   uploadGymImage(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('image', file);
@@ -207,27 +187,22 @@ export class ApiService {
       headers: this.getAuthHeaders()  // Make sure the headers are being sent
     });
   }
-  /** ✅ Add New Gym */
   addGym(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/add-gym`, formData, { headers: this.getAuthHeaders() });
   }
 
-  /** ✅ Fetch Admin Gyms */
   getAdminGyms(adminId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/admin/gyms/${adminId}`, { headers: this.getAuthHeaders() });
   }
 
-  /** ✅ Fetch Pressure Types */
   getPressureTypes(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/pressures`, { headers: this.getAuthHeaders() });
   }
 
-  /** ✅ Fetch Pricing Plans */
   getPricingPlans(): Observable<any> {
     return this.http.get(`${this.apiUrl}/pricing`, { headers: this.getAuthHeaders() });
   }
 
-  /** ✅ Fetch Provinces */
   getProvinces(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/provinces`, { headers: this.getAuthHeaders() });
   }
@@ -239,7 +214,6 @@ export class ApiService {
     const headers = this.getAuthHeaders();
     return this.http.post<any>(`${this.apiUrl}/comments`, commentData, { headers: this.getAuthHeaders() });
   }
-  /** ✅ Fetch Saved Gyms */
   getSavedGyms(userId: string): Observable<any> {
     console.log(`📡 Fetching saved gyms for User ID: ${userId}`);
   
@@ -261,10 +235,9 @@ export class ApiService {
   deleteSavedGym(userId: string, gymId: string): Observable<any> {
     const token = localStorage.getItem('auth_token');
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}` // Attach Authorization header
+      'Authorization': `Bearer ${token}`
     });
   
-    // Make the DELETE request to delete the saved gym
     return this.http.delete(`${this.apiUrl}/saved-gyms/${userId}/${gymId}`, { headers });
   }
   addExercise(exercise: any): Observable<any> {

@@ -1,7 +1,6 @@
 <main>    
     <app-hero-home></app-hero-home> 
   
-    <!-- Saved Gyms Section -->
     <div class="saved-gyms-container">
       <div *ngIf="userId">
         <h2 class="title-saved-gyms">
@@ -29,13 +28,11 @@
       </div>
     </div>
   
-    <!-- For You Section -->
     <div class="for-you-container">
       <div class="for-you-container__title">
            <h2>For You</h2>
       </div>
   
-      <!-- Tags container, aligned to the bottom left -->
       <div class="tags-container">
         <div class="tags-container__title">
             <h2>TAGS</h2>
@@ -47,7 +44,6 @@
        
       </div>
   
-      <!-- Gym Cards Section -->
       <div *ngFor="let gym of filteredGyms; let i = index" class="gym-card-item" [ngClass]="{'gym-card-top-left': i === 0, 'gym-card-top-right': i === 1, 'gym-card-bottom': i === 2}">
         <gym-card [gym]="gym"></gym-card>
       </div>

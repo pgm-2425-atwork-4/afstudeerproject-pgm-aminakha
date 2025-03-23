@@ -67,7 +67,6 @@ export class AdminAddGymComponent implements OnInit {
     formData.append('pricing_id', this.gymData.pricing_id);
     formData.append('province_id', this.gymData.province_id);
     
-    // ✅ New Fields
     formData.append('email', this.gymData.email);
     formData.append('phone', this.gymData.phone);
     formData.append('website', this.gymData.website);

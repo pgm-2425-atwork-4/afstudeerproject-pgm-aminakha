@@ -1,6 +1,5 @@
 <div class="category-gym-container">
 
-  <!-- Create / Update Category Form -->
   <form (submit)="editingCategory ? updateCategory() : onSubmit()" enctype="multipart/form-data" class="container mt-3">
     <div class="mb-3">
       <label class="form-label">Category Name:</label>
@@ -33,7 +32,6 @@
 
   <hr />
 
-  <!-- Category List -->
    <h2>Bestaande Categorieen</h2>
    <ul>
      <div *ngFor="let cat of categories" class="card mt-3 p-3">

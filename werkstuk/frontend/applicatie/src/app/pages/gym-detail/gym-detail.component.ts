@@ -18,11 +18,11 @@ export class GymDetailComponent implements OnInit {
   userId: string | null = null;
   prices: any[] = [];
   gymPrices: any[] = [];
-  gymComments: any[] = []; // Use any[] to store comments
+  gymComments: any[] = []; 
   newComment: string = "";
   newCommentTitle: string = "";
-  user: any;  // Define the user property here
-  profile_image  = '';  // Define the profile_image property here
+  user: any; 
+  profile_image  = '';  
   constructor(private route: ActivatedRoute, private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -42,23 +42,21 @@ export class GymDetailComponent implements OnInit {
       });
     }
 
-    // Fetch user info from localStorage and decode JWT token
     const token = localStorage.getItem('auth_token');
     if (token) {
-      const decodedToken = this.decodeJWT(token); // Decode the JWT token
+      const decodedToken = this.decodeJWT(token); 
       console.log("🔑 Decoded Token:", decodedToken);
       
       if (decodedToken && decodedToken.id) {
-        this.userId = decodedToken.id.toString(); // Set userId from token
-        this.user = decodedToken;  // Set the user object from decoded token
-        this.profile_image = decodedToken.profile_image;  // Access the profile_image
+        this.userId = decodedToken.id.toString(); 
+        this.user = decodedToken;  
+        this.profile_image = decodedToken.profile_image;  
 
         console.log("🆔 User ID from Token:", this.userId + this.profile_image);
       }
     }
   }
 
-  // Decode JWT Token function
   decodeJWT(token: string): any {
     const parts = token.split('.');
     if (parts.length !== 3) {
@@ -66,21 +64,20 @@ export class GymDetailComponent implements OnInit {
       return null;
     }
 
-    const payload = parts[1]; // The payload is the second part of the token
-    const decoded = atob(payload); // Decode the Base64 string
-    return JSON.parse(decoded); // Parse it into a JSON object
+    const payload = parts[1]; 
+    const decoded = atob(payload); 
+    return JSON.parse(decoded); 
   }
 
-  // Fetch the comments for the gym from the backend
   fetchComments(gymId: string): void {
     this.apiService.getComments(gymId).subscribe({
       next: (data) => {
         if (data && data.length > 0) {
-          this.gym.comments = data.map((comment: Comment) => {  // Type the comment parameter
+          this.gym.comments = data.map((comment: Comment) => {  
             return {
               ...comment,
-              username: comment.username || 'Unknown User', // Ensure username is available
-              profile_image: comment.profile_image || 'path_to_default_image.jpg' // Fallback image
+              username: comment.username || 'Unknown User',
+              profile_image: comment.profile_image || 'path_to_default_image.jpg'
             };
           });
           console.log("💬 Comments for Gym:", this.gym.comments);
@@ -96,7 +93,6 @@ export class GymDetailComponent implements OnInit {
     });
   }
 
-  // Submit a new comment
   submitComment(): void {
     if (!this.userId) {
       alert("You must be logged in to submit a comment!");
@@ -112,9 +108,9 @@ export class GymDetailComponent implements OnInit {
     this.apiService.addComment(newCommentData).subscribe({
       next: (data) => {
         alert("Comment submitted successfully!");
-        this.gym.comments.push(data); // Add the new comment to the list
-        this.newComment = ""; // Reset the comment input
-        this.newCommentTitle = ""; // Reset the title input
+        this.gym.comments.push(data); 
+        this.newComment = ""; 
+        this.newCommentTitle = ""; 
       },
       error: (err) => {
         console.error("❌ Error adding comment:", err);
@@ -123,7 +119,6 @@ export class GymDetailComponent implements OnInit {
     });
   }
 
-  // Fetch pricing data for the gym
   fetchPrices(gymId: number) {
     this.apiService.getPrices().subscribe({
       next: (data) => {
@@ -138,7 +133,6 @@ export class GymDetailComponent implements OnInit {
     });
   }
 
-  // Save the gym to the user's list
   saveGym(): void {
     if (!this.userId) {
       alert("You must be logged in to save a gym!");

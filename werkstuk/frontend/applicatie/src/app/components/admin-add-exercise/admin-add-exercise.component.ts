@@ -25,13 +25,12 @@ export class AdminAddExerciseComponent implements OnInit {
     image: null
   };
 
-  categories: any[] = []; // For storing exercise categories
-  pressures: any[] = []; // For storing pressure categories
+  categories: any[] = []; 
+  pressures: any[] = []; 
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    // Fetch categories and pressures when component is initialized
     this.apiService.getExerciseCategories().subscribe({
       next: (categories) => {
         this.categories = categories;
@@ -51,11 +50,11 @@ export class AdminAddExerciseComponent implements OnInit {
     });
   }
 
-  // Method for handling image file selection
+  
   onImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.exercise.image = file;  // Set the selected file as the image
+      this.exercise.image = file; 
       console.log('Image selected:', file);
     }
   }
@@ -63,18 +62,16 @@ export class AdminAddExerciseComponent implements OnInit {
   addExercise() {
     const formData = new FormData();
   
-    // Check if the values are not null or undefined, if they are, provide a default value
     formData.append('name', this.exercise.name);
     formData.append('exerciseCategory_id', (this.exercise.exerciseCategory_id ?? 'default_value').toString());
     formData.append('pressure_id', (this.exercise.pressure_id ?? 'default_value').toString());
     formData.append('big_description', this.exercise.big_description);
   
-    // Add image file if selected
+    
     if (this.exercise.image) {
       formData.append('image', this.exercise.image);
     }
   
-    // Make the request to add exercise
     this.apiService.addExercise(formData).subscribe({
       next: (response) => {
         alert('Exercise added successfully!');

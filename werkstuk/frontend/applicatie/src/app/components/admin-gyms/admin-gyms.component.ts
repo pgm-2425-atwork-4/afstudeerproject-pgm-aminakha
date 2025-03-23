@@ -29,7 +29,6 @@ export class AdminGymsComponent implements OnInit {
     this.loadGyms();
   }
 
-  // Load gyms from the API
   loadGyms() {
     this.apiService.getGyms().subscribe({
       next: (data) => {
@@ -41,17 +40,14 @@ export class AdminGymsComponent implements OnInit {
     });
   }
 
-  // Start editing a gym
   startEdit(gym: any) {
-    this.editingGym = { ...gym }; // Create a copy of the gym to edit
+    this.editingGym = { ...gym };
   }
 
-  // Cancel editing and reset the form
   cancelEdit() {
     this.editingGym = null;
   }
 
-  // Update the gym details
   updateGym() {
     if (!this.editingGym) return;
   
@@ -86,7 +82,6 @@ export class AdminGymsComponent implements OnInit {
     });
   }
 
-  // Delete a gym
   deleteGym(id: number) {
     if (confirm('Are you sure you want to delete this gym?')) {
       this.apiService.deleteGym(id).subscribe({

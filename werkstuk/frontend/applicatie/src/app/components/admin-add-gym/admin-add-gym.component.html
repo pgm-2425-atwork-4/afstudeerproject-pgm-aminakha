@@ -8,40 +8,33 @@
   Personal Trainer Available
   <input type="checkbox" [(ngModel)]="gymData.personal_trainer" name="personal_trainer" />
 
-  <!-- ✅ New Fields: Email, Phone, Website -->
   <input type="email" [(ngModel)]="gymData.email" name="email" placeholder="Email" required />
   <input type="text" [(ngModel)]="gymData.phone" name="phone" placeholder="Phone" required />
   <input type="url" [(ngModel)]="gymData.website" name="website" placeholder="Website" required />
 
-  <!-- ✅ Select Pressure Type -->
   <label>Pressure Type:</label>
   <select [(ngModel)]="gymData.pressure_id" name="pressure_id" required>
     <option *ngFor="let pressure of pressures" [value]="pressure.id">{{ pressure.name }}</option>
   </select>
 
-  <!-- ✅ Select Category -->
   <label>Category:</label>
   <select [(ngModel)]="gymData.category_id" name="category_id" required>
     <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
   </select>
 
-  <!-- ✅ Select Pricing Plan -->
   <label>Pricing Plan:</label>
   <select [(ngModel)]="gymData.pricing_id" name="pricing_id" required>
     <option *ngFor="let pricing of pricingPlans" [value]="pricing.id">{{ pricing.bundle_name }} - €{{ pricing.price }}</option>
   </select>
 
-  <!-- ✅ Select Province -->
   <label>Province:</label>
   <select [(ngModel)]="gymData.province_id" name="province_id" required>
     <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
   </select>
 
-  <!-- ✅ Gym Logo Upload -->
   <label>Gym Logo:</label>
   <input type="file" (change)="onLogoSelected($event)" accept="image/*" name="logo" required />
 
-  <!-- ✅ Multiple Images Upload -->
   <label>Gallery Images:</label>
   <input type="file" (change)="onImagesSelected($event)" accept="image/*" name="images" multiple required />
 
