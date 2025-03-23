@@ -74,6 +74,16 @@ export class ApiService {
       })
     );
   }
+  updateGym(gymId: number, formData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/gyms/${gymId}`, formData, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+  deleteGym(gymId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/gyms/${gymId}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
   uploadCategory(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/categories`, formData, {
       headers: this.getAuthHeaders()

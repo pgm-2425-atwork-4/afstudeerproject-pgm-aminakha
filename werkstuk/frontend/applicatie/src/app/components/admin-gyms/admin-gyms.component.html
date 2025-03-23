@@ -1,10 +1,38 @@
 <h2>My Gyms</h2>
-<button routerLink="/admin/add-gym">+ Add Gym</button>
+<a routerLink="/admin/add-gym">Add Gym</a>
 
-<div *ngFor="let gym of gyms" class="gym-card">
-  <img [src]="gym.logo || 'assets/default-logo.png'" alt="{{ gym.name }}" class="gym-image">
-  <h2>{{ gym.name }}</h2>
-  <p><strong>City:</strong> {{ gym.city }}</p>
-  <p><strong>Rating:</strong> ⭐ {{ gym.rating }}</p>
-  <p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p>
+<ul>
+  <li *ngFor="let gym of gyms">
+    <div class="gym-card-descritpion">
+      <img *ngIf="gym.logo" [src]="gym.logo" alt="{{ gym.name }} Logo" class="gym-logo" />
+      <div class="small-gym-description">
+        <h2>{{ gym.name }}</h2>
+        <ul class="gym-card__list">
+          <li><p><strong>Rating:</strong> {{ gym.rating }}</p></li>
+          <li><p><strong>Opening Hours:</strong> {{ gym.opening_hours }}</p></li>
+          <li><p><strong>City:</strong> {{ gym.city }}</p></li>
+          <li *ngIf="gym.personal_trainer"><p><strong>Personal Trainer:</strong> Available</p></li>
+        </ul>
+      </div>
+
+      <div class="gym-card__actions">
+        <button (click)="startEdit(gym)">✏️ Edit</button>
+        <button (click)="deleteGym(gym.id)">🗑️ Delete</button>
+        <a [routerLink]="['/gym-detail', gym.id]" class="gym-link">View More</a>
+      </div>
+    </div>
+  </li>
+</ul>
+
+<!-- Edit Gym Form -->
+<div *ngIf="editingGym">
+  <h3>Edit Gym</h3>
+  <form (ngSubmit)="updateGym()">
+    <input type="text" [(ngModel)]="editingGym.name" name="name" placeholder="Name" required />
+    <input type="text" [(ngModel)]="editingGym.city" name="city" placeholder="City" required />
+    <input type="text" [(ngModel)]="editingGym.opening_hours" name="opening_hours" placeholder="Opening Hours" required />
+    <input type="number" [(ngModel)]="editingGym.rating" name="rating" placeholder="Rating" required />
+    <button type="submit">💾 Save</button>
+    <button type="button" (click)="cancelEdit()">Cancel</button>
+  </form>
 </div>

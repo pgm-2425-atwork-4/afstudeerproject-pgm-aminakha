@@ -523,6 +523,50 @@ app.post('/comments/like', (req, res) => {
     });
   });
 });
+app.put("/gyms/:id", verifyToken, uploadLogo.single("logo"), (req, res) => {
+  const gymId = req.params.id;
+  const { name, city, rating, opening_hours } = req.body;
+  const logoUrl = req.file ? req.file.path : null;
+
+  if (!name || !city || !rating || !opening_hours) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  let sql = `UPDATE gyms SET name = ?, city = ?, rating = ?, opening_hours = ?`;
+  const values = [name, city, rating, opening_hours];
+
+  if (logoUrl) {
+    sql += `, logo = ?`;
+    values.push(logoUrl);
+  }
+
+  sql += ` WHERE id = ?`;
+  values.push(gymId);
+
+  db.query(sql, values, (err) => {
+    if (err) {
+      console.error("🔥 Error updating gym:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ message: "✅ Gym updated successfully!" });
+  });
+});
+app.delete("/gyms/:id", verifyToken, (req, res) => {
+  const gymId = req.params.id;
+
+  db.query("DELETE FROM gyms WHERE id = ?", [gymId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error deleting gym:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Gym not found" });
+    }
+
+    res.json({ message: "✅ Gym deleted successfully!" });
+  });
+});
 app.post("/categories", verifyToken, upload.single("image"), (req, res) => {
   const { name } = req.body;
   const imageUrl = req.file ? req.file.path : null;

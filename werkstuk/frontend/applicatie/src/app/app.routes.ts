@@ -14,7 +14,7 @@ import { OverOnsComponent } from './pages/over-ons/over-ons.component';
 import { ExercisesComponent } from './pages/exercises/exercises.component';
 import { AdminAddExerciseCategoryComponent } from './components/admin-add-exercise-category/admin-add-exercise-category.component';
 import { AdminAddExerciseComponent } from './components/admin-add-exercise/admin-add-exercise.component';
-
+import { AdminGymsComponent } from './components/admin-gyms/admin-gyms.component';
 // ✅ Client-side routes (CSR)
 export const routes: Routes = [
   { path: '/afstudeerproject-pgm-aminakha', component: HomeComponent },
@@ -31,7 +31,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'categories', pathMatch: 'full' }, // Default admin route
       { path: 'categories', component: AdminCategoryComponent },
-      { path: 'gyms', component: GymsComponent },
+      { path: 'gyms', component: AdminGymsComponent },
       { path: 'add-gym', component: AdminAddGymComponent }, // ✅ Ensure this matches
       {path:"add-exercise-category",component:AdminAddExerciseCategoryComponent},
       {path:"add-exercise",component:AdminAddExerciseComponent}

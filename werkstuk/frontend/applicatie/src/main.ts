@@ -16,6 +16,7 @@ import { OverOnsComponent } from './app/pages/over-ons/over-ons.component';
 import { ExercisesComponent } from './app/pages/exercises/exercises.component';
 import { AdminAddExerciseCategoryComponent } from './app/components/admin-add-exercise-category/admin-add-exercise-category.component';
 import { AdminAddExerciseComponent } from './app/components/admin-add-exercise/admin-add-exercise.component';
+import { AdminGymsComponent } from './app/components/admin-gyms/admin-gyms.component';
 bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(), // ✅ HTTP Client
@@ -33,7 +34,7 @@ bootstrapApplication(AppComponent, {
   children: [
     { path: '', redirectTo: 'categories', pathMatch: 'full' }, // Default admin route
     { path: 'categories', component: AdminCategoryComponent },
-    { path: 'gyms', component: GymsComponent },
+    { path: 'gyms', component: AdminGymsComponent },
     { path: 'add-gym', component: AdminAddGymComponent }, // ✅ Ensure this matches
           {path:"add-exercise-category",component:AdminAddExerciseCategoryComponent}, 
                 {path:"add-exercise",component:AdminAddExerciseComponent}
