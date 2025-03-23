@@ -70,6 +70,7 @@ header {
           border-radius: 5px;
           font-size: 1.5rem;
           cursor: pointer;
+          z-index: 1000;
         }
   
         & ul.active {

@@ -2,12 +2,13 @@
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
+  padding: 1rem;
 
   & h1 {
     font-family: 'Archivo', sans-serif;
-    font-size: 7rem;
+    font-size: 6rem;
     text-align: center;
-    letter-spacing: -6px;
+    letter-spacing: -4px;
   }
 
   & form {
@@ -18,16 +19,16 @@
     & input {
       background-color: var(--primary-color);
       color: white;
-      padding: .5rem;
+      padding: 0.5rem;
       border-radius: var(--large-border-radius);
       padding-left: 1rem;
-      width: 37rem;
+      width: 30rem;
     }
 
     & button {
       border-radius: 50%;
       background-color: var(--primary-color);
-      padding: .5rem;
+      padding: 0.5rem;
       margin-left: 1rem;
 
       & img {
@@ -37,34 +38,53 @@
   }
 
   /* Responsive adjustments */
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
+    /* Laptop screens */
     & h1 {
-      font-size: 4rem; /* Reduce font size for smaller screens */
-      letter-spacing: -2px;  /* Adjust letter spacing */
+      font-size: 5rem;
+      letter-spacing: -3px;
+    }
+
+    & input {
+      width: 28rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    /* Tablet screens */
+    & h1 {
+      font-size: 4rem;
+      letter-spacing: -2px;
     }
 
     & form {
-      flex-direction: column;  /* Stack form elements vertically */
+      flex-direction: column;
       gap: 1rem;
     }
 
     & input {
-      width: 80%;  /* Make input field responsive */
+      width: 80%;
     }
 
     & button {
-      padding: .7rem;  /* Increase button padding for better touch */
-      margin-left: 0;  /* Remove margin for a centered layout */
+      padding: 0.7rem;
+      margin-left: 0;
     }
   }
 
   @media (max-width: 480px) {
+    /* Phone screens */
     & h1 {
-      font-size: 3rem; /* Further reduce font size on very small screens */
+      font-size: 3rem;
+      letter-spacing: -1px;
     }
 
     & input {
-      width: 90%;  /* Make the input even more responsive on small devices */
+      width: 90%;
+    }
+
+    & button {
+      padding: 0.6rem;
     }
   }
 }
