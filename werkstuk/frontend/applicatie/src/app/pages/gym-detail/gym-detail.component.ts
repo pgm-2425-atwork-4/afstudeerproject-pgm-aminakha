@@ -22,7 +22,7 @@ export class GymDetailComponent implements OnInit {
   newComment: string = "";
   newCommentTitle: string = "";
   user: any;  // Define the user property here
-
+  profile_image  = '';  // Define the profile_image property here
   constructor(private route: ActivatedRoute, private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -51,7 +51,9 @@ export class GymDetailComponent implements OnInit {
       if (decodedToken && decodedToken.id) {
         this.userId = decodedToken.id.toString(); // Set userId from token
         this.user = decodedToken;  // Set the user object from decoded token
-        console.log("🆔 User ID from Token:", this.userId);
+        this.profile_image = decodedToken.profile_image;  // Access the profile_image
+
+        console.log("🆔 User ID from Token:", this.userId + this.profile_image);
       }
     }
   }

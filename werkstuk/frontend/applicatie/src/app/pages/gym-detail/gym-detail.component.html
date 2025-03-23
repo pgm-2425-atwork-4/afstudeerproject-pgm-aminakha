@@ -68,7 +68,7 @@
       <div class="comments-content">
         <h2>Reviews</h2>
 <div *ngIf="userId" class="add-comment-form">
-  <p class="user-information"><img src="{{user.profile_image}}" alt="Avatar"><strong>{{ user.username }}</strong></p>
+  <p class="user-information"><img *ngIf="profile_image" [src]="profile_image" alt="Avatar"><strong>{{ user.username }}</strong></p>
   <div class="comment-content">
       <div class="title-container">
           <label for="commentTitle">Title</label>

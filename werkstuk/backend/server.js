@@ -187,7 +187,7 @@ app.use((req, res, next) => {
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  const sql = "SELECT id, username, firstname, lastname, email, password FROM users WHERE email = ?";
+  const sql = "SELECT id, username, firstname, lastname, email, password, profile_image, role FROM users WHERE email = ?";
   db.query(sql, [email], async (err, results) => {
     if (err) {
       console.error("🔥 Error fetching user:", err);
@@ -206,8 +206,14 @@ app.post("/login", (req, res) => {
       return res.status(401).json({ error: "❌ Incorrect password" });
     }
 
+    // Include profile_image in the token payload
     const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role,profile_image:user.profile_image },
+      { 
+        id: user.id, 
+        username: user.username, 
+        role: user.role, 
+        profile_image: user.profile_image || 'default_image_path.jpg' // Include profile image or default
+      },
       process.env.SECRET_KEY,
       { expiresIn: "4h" }
     );
