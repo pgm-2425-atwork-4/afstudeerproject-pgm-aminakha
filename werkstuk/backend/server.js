@@ -524,31 +524,29 @@ app.post('/comments/like', (req, res) => {
   });
 });
 app.post("/categories", verifyToken, upload.single("image"), (req, res) => {
-  const { name } = req.body; // Category name
-  const image = req.file ? req.file.path : null; // Optional image
+  const { name } = req.body;
+  const imageUrl = req.file ? req.file.path : null;
 
-  // Check for missing fields
-  if (!name) {
-    return res.status(400).json({ error: "❌ Category name is required" });
+  if (!name || !imageUrl) {
+    return res.status(400).json({ error: "❌ Missing category name or image" });
   }
 
-  // SQL query to insert category into the database
-  const sql = "INSERT INTO categories (name, image) VALUES (?, ?)";
-  const values = [name, image];
-
-  db.query(sql, values, (err, result) => {
+  const sql = "INSERT INTO categories (name, image_url) VALUES (?, ?)";
+  db.query(sql, [name, imageUrl], (err, result) => {
     if (err) {
       console.error("🔥 Error inserting category:", err);
       return res.status(500).json({ error: "Database error" });
     }
+
     res.status(201).json({
       message: "✅ Category added successfully!",
-      categoryId: result.insertId,
-      name: name,
-      image: image ? image : "No image uploaded"
+      id: result.insertId,
+      name,
+      imageUrl
     });
   });
 });
+
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), async (req, res) => {
   try {
       const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
@@ -815,7 +813,7 @@ app.get("/admin/gyms/:adminId", (req, res) => {
 app.put("/categories/:id", verifyToken, upload.single("image"), (req, res) => {
   const categoryId = req.params.id;
   const { name } = req.body;
-  const image = req.file ? req.file.path : null;
+  const image = req.file ? req.file.path : null; // Get the uploaded image URL
 
   if (!name) {
     return res.status(400).json({ error: "❌ Category name required" });
@@ -825,7 +823,7 @@ app.put("/categories/:id", verifyToken, upload.single("image"), (req, res) => {
   const values = [name];
 
   if (image) {
-    sql += ", image = ?";
+    sql += ", image_url = ?"; // Update the correct column `image_url`
     values.push(image);
   }
 
