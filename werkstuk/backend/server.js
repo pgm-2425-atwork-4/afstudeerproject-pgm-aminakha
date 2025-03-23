@@ -836,11 +836,12 @@ app.post("/admin/add-exercise", uploadFields, (req, res) => {
   const values = [name, exerciseCategory_id, pressure_id, big_description, imageUrl, videoUrl];
 
   // Log the request for debugging
-  console.log("Adding exercise with values:", values);
+  console.log("Adding exercise with values:", JSON.stringify(values));
 
   db.query(sql, values, (err, result) => {
     if (err) {
-      console.error("🔥 Error adding exercise:", err); // Log the exact error
+      // Proper error logging
+      console.error("🔥 Error adding exercise:", JSON.stringify(err, null, 2)); // Detailed error log
       return res.status(500).json({ error: "Database error", details: err });
     }
     res.status(201).json({ message: "✅ Exercise added successfully!" });
