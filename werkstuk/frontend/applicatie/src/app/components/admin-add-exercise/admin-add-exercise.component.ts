@@ -73,33 +73,33 @@ export class AdminAddExerciseComponent implements OnInit {
 
   addExercise() {
     const formData = new FormData();
-
+  
     if (this.exercise.exerciseCategory_id !== null && this.exercise.exerciseCategory_id !== undefined) {
       formData.append('exerciseCategory_id', this.exercise.exerciseCategory_id.toString());
     } else {
       console.error("Exercise category ID is missing");
     }
-
+  
     if (this.exercise.pressure_id !== null && this.exercise.pressure_id !== undefined) {
       formData.append('pressure_id', this.exercise.pressure_id.toString());
     } else {
       console.error("Pressure ID is missing");
     }
-
+  
     formData.append('name', this.exercise.name);
     formData.append('big_description', this.exercise.big_description);
-
-    // Check if the image exists before appending
+  
+    // Append image if exists
     if (this.exercise.image) {
-      formData.append('image', this.exercise.image);
+      formData.append('image', this.exercise.image);  // Field name should match
     }
-
-    // Check if the video exists before appending
+  
+    // Append video if exists
     if (this.exercise.video) {
-      formData.append('video', this.exercise.video);
+      formData.append('video', this.exercise.video);  // Field name should match
     }
-
-    // Call the API to add exercise
+  
+    // Call the API
     this.apiService.addExercise(formData).subscribe({
       next: (response) => {
         alert('Exercise added successfully!');
@@ -110,4 +110,5 @@ export class AdminAddExerciseComponent implements OnInit {
       }
     });
   }
+  
 }

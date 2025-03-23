@@ -42,7 +42,9 @@ const gymStorage = new CloudinaryStorage({
     public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), // Unique filename
   },
 });
-
+const uploadFields = multer({
+  storage: videoStorage
+}).fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]);
 // ✅ Ensure "uploads" directory exists
 const uploadDir = path.join(__dirname, "uploads/");
 if (!fs.existsSync(uploadDir)) {
@@ -58,7 +60,8 @@ const videoStorage = new CloudinaryStorage({
 });
 
 const uploadVideo = multer({ storage: videoStorage }).single('video');
-
+const uploadImage = multer({ storage: imageStorage }).single("image"); // Image upload
+const upload = multer({ storage });
 app.use(cors({
   origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io","http://localhost:4200/login"], // ✅ Allow frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -111,7 +114,7 @@ db.getConnection((err, connection) => {
   }
 });
 
-const upload = multer({ storage });
+
 
 /* ============================================
  ✅ API: Register User with Profile Image Upload
@@ -814,14 +817,14 @@ app.post("/add-exercise-category", verifyToken, (req, res) => {
     res.status(201).json({ message: "✅ Category added successfully!" });
   });
 });
-const uploadImage = multer({ storage: imageStorage }).single("image"); // Image upload
 
 // POST route to add exercise
-app.post("/admin/add-exercise", uploadImage, uploadVideo, (req, res) => {
+app.post("/admin/add-exercise", uploadFields, (req, res) => {
   const { name, exerciseCategory_id, pressure_id, big_description } = req.body;
-  
-  const imageUrl = req.file ? req.file.path : null;  // Get image URL from Cloudinary
-  const videoUrl = req.file ? req.file.path : null;  // Get video URL from Cloudinary
+
+  // Ensure that the fields are available
+  const imageUrl = req.files['image'] ? req.files['image'][0].path : null;
+  const videoUrl = req.files['video'] ? req.files['video'][0].path : null;
 
   if (!name || !exerciseCategory_id || !pressure_id || !big_description || !imageUrl || !videoUrl) {
     return res.status(400).json({ error: "❌ Missing required fields" });
@@ -841,6 +844,7 @@ app.post("/admin/add-exercise", uploadImage, uploadVideo, (req, res) => {
     res.status(201).json({ message: "✅ Exercise added successfully!" });
   });
 });
+
 
 
 app.get("/exercise-categories", verifyToken, (req, res) => {
