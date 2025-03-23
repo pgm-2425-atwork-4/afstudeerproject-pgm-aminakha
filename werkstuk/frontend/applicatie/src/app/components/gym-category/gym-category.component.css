@@ -28,4 +28,19 @@
       color: var(--secondary-color);
       border-radius: var(--large-border-radius);
     }
+
+  }
+
+  @media (max-width: 480px) {
+    .category-container {
+      & h2 {
+        font-size: .9rem;
+        letter-spacing: -2px;
+      }
+      & .category-card {
+        padding:.4688rem;
+        font-size: .9rem;
+      }
+    }
+   
   }

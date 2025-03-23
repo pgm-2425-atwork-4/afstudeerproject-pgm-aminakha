@@ -2,34 +2,69 @@
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
+
+  & h1 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 7rem;
+    text-align: center;
+    letter-spacing: -6px;
+  }
+
+  & form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & input {
+      background-color: var(--primary-color);
+      color: white;
+      padding: .5rem;
+      border-radius: var(--large-border-radius);
+      padding-left: 1rem;
+      width: 37rem;
+    }
+
+    & button {
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      padding: .5rem;
+      margin-left: 1rem;
+
+      & img {
+        width: 1.5rem;
+      }
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
     & h1 {
-       font-family: 'Archivo', sans-serif;
-         font-size: 7rem;
-         text-align: center;
-         letter-spacing: -6px;   
-         
+      font-size: 4rem; /* Reduce font size for smaller screens */
+      letter-spacing: -2px;  /* Adjust letter spacing */
     }
 
     & form {
-      display:flex;
-      align-items: center;
-      justify-content: center;
-      & input {
-        background-color: var(--primary-color);
-        color:white;
-        padding: .5rem;
-        border-radius: var(--large-border-radius);
-        padding-left: 1rem;
-        width: 37rem;
-      }
-      & button {
-        border-radius: 50%;
-        background-color: var(--primary-color);
-        padding: .5rem;
-        margin-left: 1rem;
-        & img {
-          width: 1.5rem;
-        }
-      }
+      flex-direction: column;  /* Stack form elements vertically */
+      gap: 1rem;
     }
+
+    & input {
+      width: 80%;  /* Make input field responsive */
+    }
+
+    & button {
+      padding: .7rem;  /* Increase button padding for better touch */
+      margin-left: 0;  /* Remove margin for a centered layout */
+    }
+  }
+
+  @media (max-width: 480px) {
+    & h1 {
+      font-size: 3rem; /* Further reduce font size on very small screens */
+    }
+
+    & input {
+      width: 90%;  /* Make the input even more responsive on small devices */
+    }
+  }
 }

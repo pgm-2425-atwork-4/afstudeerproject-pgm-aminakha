@@ -9,11 +9,11 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-gym-detail',
   templateUrl: './gym-detail.component.html',
   styleUrls: ['./gym-detail.component.css'],
-  imports: [CommonModule,FormsModule]
+  imports: [CommonModule, FormsModule]
 })
 
 export class GymDetailComponent implements OnInit {
-  
+
   gym: any;
   userId: string | null = null;
   prices: any[] = [];
@@ -22,6 +22,7 @@ export class GymDetailComponent implements OnInit {
   newComment: string = "";
   newCommentTitle: string = "";
   user: any;  // Define the user property here
+
   constructor(private route: ActivatedRoute, private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -30,6 +31,8 @@ export class GymDetailComponent implements OnInit {
     if (gymId) {
       this.apiService.getGymById(gymId).subscribe({
         next: (data) => {
+        
+          
           this.gym = data;
           console.log("🏋️‍♂️ Gym Details:", this.gym);
           this.fetchComments(this.gym.id);
@@ -38,13 +41,32 @@ export class GymDetailComponent implements OnInit {
         error: (err) => console.error("❌ Error fetching gym:", err)
       });
     }
-  
-    // Fetching logged-in user info from localStorage
-    const user = localStorage.getItem('user');
-    if (user) {
-      this.userId = JSON.parse(user).id;
-      this.user = JSON.parse(user);  // Set user object
+
+    // Fetch user info from localStorage and decode JWT token
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      const decodedToken = this.decodeJWT(token); // Decode the JWT token
+      console.log("🔑 Decoded Token:", decodedToken);
+      
+      if (decodedToken && decodedToken.id) {
+        this.userId = decodedToken.id.toString(); // Set userId from token
+        this.user = decodedToken;  // Set the user object from decoded token
+        console.log("🆔 User ID from Token:", this.userId);
+      }
     }
+  }
+
+  // Decode JWT Token function
+  decodeJWT(token: string): any {
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      console.error("❌ Invalid token structure");
+      return null;
+    }
+
+    const payload = parts[1]; // The payload is the second part of the token
+    const decoded = atob(payload); // Decode the Base64 string
+    return JSON.parse(decoded); // Parse it into a JSON object
   }
 
   // Fetch the comments for the gym from the backend
@@ -71,7 +93,6 @@ export class GymDetailComponent implements OnInit {
       },
     });
   }
-  
 
   // Submit a new comment
   submitComment(): void {
@@ -79,13 +100,13 @@ export class GymDetailComponent implements OnInit {
       alert("You must be logged in to submit a comment!");
       return;
     }
-  
+
     const newCommentData = {
       gymId: this.gym.id,
       commentText: this.newComment,
       title: this.newCommentTitle,
     };
-  
+
     this.apiService.addComment(newCommentData).subscribe({
       next: (data) => {
         alert("Comment submitted successfully!");
@@ -99,60 +120,7 @@ export class GymDetailComponent implements OnInit {
       },
     });
   }
-  likeComment(commentId: number): void {
-    const userId = this.userId; // Ensure this is a number, or handle it if it's null/undefined
-    
-    if (!userId) {
-      console.error('User ID is not valid');
-      return;
-    }
-  
-    // Ensure the userId is a number before sending the request
-    const userIdNumber = Number(userId); // Convert to number
-    
-    // Check if the userId is still not a valid number after conversion
-    if (isNaN(userIdNumber)) {
-      console.error('User ID is invalid after conversion');
-      return;
-    }
-  
-    // Find the comment
-    const comment = this.gym.comments.find((c: { id: number, liked_by_users: Array<string | number> }) => c.id === commentId);
-  
-    if (!comment) {
-      console.error('Comment not found');
-      return;
-    }
-  
-    // Check if the user has already liked the comment
-    const likedUsers = comment.liked_by_users;
-  
-    if (likedUsers && likedUsers.includes(userIdNumber)) {
-      console.log("You have already liked this comment");
-      alert("You have already liked this comment");
-      return;
-    }
-  
-    // Proceed to like the comment (send the request)
-    this.apiService.likeComment(commentId, userIdNumber).subscribe({
-      next: (response) => {
-        console.log("Comment liked successfully!");
-  
-        // Update the UI locally
-        comment.likes++; // Increment the like count
-        comment.liked_by_users.push(userIdNumber); // Add userId to the liked_by_users array
-      },
-      error: (err) => {
-        console.error("Error liking comment:", err);
-        if (err.error && err.error.error) {
-          alert(err.error.error); // Show error message
-        } else {
-          alert("Failed to like the comment. Please try again later.");
-        }
-      }
-    });
-  }
-  
+
   // Fetch pricing data for the gym
   fetchPrices(gymId: number) {
     this.apiService.getPrices().subscribe({
@@ -181,6 +149,7 @@ export class GymDetailComponent implements OnInit {
     });
   }
 }
+
 interface Comment {
   id: number;
   user_id: number;

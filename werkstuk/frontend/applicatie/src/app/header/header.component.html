@@ -1,27 +1,29 @@
 <header>
-    <nav>
-        <p class="logo"><a routerLink="/" routerActive="active">gymly</a></p>
-        <ul>
-            <li><a routerLink="/" routerActive="active">Home</a></li>
-            <li><a routerLink="/gyms" routerActive="active">Gyms</a></li>
-            <li><a routerLink="/oefeningen" routerActive="active" >Oefeningen</a></li>
-            <li><a a routerLink="/over-ons"  routerActive="active">Over ons</a></li>
-            <li *ngIf="user?.role === 'admin'">
-                <p><a routerLink="/admin">Admin Dashboard</a></p>
-              </li>
-              <li *ngIf="user">
-                <div class="user-info-container">
-                  <p><a [routerLink]="['/user-profile', user.id]">Welkom, {{ user.username }}</a></p>
-                  <img *ngIf="user?.profile_image" [src]="user.profile_image" alt="Profile Image" class="profile-img">
+  <nav>
+    <p class="logo"><a routerLink="/" routerActive="active">gymly</a></p>
+    
+    <!-- Mobile Menu Button -->
+    <button *ngIf="isBrowser" class="menu-button" (click)="toggleNav()">☰</button>
 
-                  <button (click)="logout()">Logout</button>
-                </div>
-                
-              </li>
-              <li *ngIf="!user">
-                <p><a routerLink="/login" routerActive="active">Login</a></p>
-              </li>
-
-        </ul>
-    </nav>
+    <!-- Main Navigation Menu -->
+    <ul [class.active]="isNavVisible">
+      <li><a routerLink="/" routerActive="active">Home</a></li>
+      <li><a routerLink="/gyms" routerActive="active">Gyms</a></li>
+      <li><a routerLink="/oefeningen" routerActive="active">Oefeningen</a></li>
+      <li><a routerLink="/over-ons" routerActive="active">Over ons</a></li>
+      <li *ngIf="user?.role === 'admin'">
+          <p><a routerLink="/admin">Admin Dashboard</a></p>
+      </li>
+      <li *ngIf="user">
+          <div class="user-info-container">
+            <p><a [routerLink]="['/user-profile', user.id]">Welkom, {{ user.username }}</a></p>
+            <img *ngIf="user?.profile_image" [src]="user.profile_image" alt="Profile Image" class="profile-img">
+            <button (click)="logout()">Logout</button>
+          </div>
+      </li>
+      <li *ngIf="!user">
+          <p><a routerLink="/login" routerActive="active">Login</a></p>
+      </li>
+    </ul>
+  </nav>
 </header>

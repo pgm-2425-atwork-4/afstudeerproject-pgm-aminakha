@@ -16,11 +16,11 @@ export class LoginComponent {
   email: string = ''; 
   password: string = '';
   message: string = ''; 
-
+  profile_image: string = '';
   constructor(private apiService: ApiService, private router: Router) {}
 
   login() {
-    this.apiService.loginUser(this.email, this.password).subscribe(
+    this.apiService.loginUser(this.email, this.password,this.profile_image).subscribe(
       (res: any) => {
         console.log("✅ Login successful:", res);
         if (res.token && res.user) {

@@ -65,8 +65,8 @@ export class ApiService {
   
   
   /** ✅ Login Method - Stores JWT Token & User Data */
-  loginUser(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { email, password }).pipe(
+  loginUser(email: string, password: string,profile_image:string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, { email, password,profile_image }).pipe(
       tap((response: any) => {
         if (response.token) {
           localStorage.setItem('auth_token', response.token); // Store the token in localStorage

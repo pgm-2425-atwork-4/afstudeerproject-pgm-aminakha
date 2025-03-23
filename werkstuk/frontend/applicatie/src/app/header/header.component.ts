@@ -13,6 +13,7 @@ import { ApiService } from '../services/api.service';
 export class HeaderComponent implements OnInit {
   user: any = null;
   isBrowser: boolean = false;
+  isNavVisible: boolean = false; // This controls the visibility of the navigation menu
 
   constructor(
     private router: Router,
@@ -28,22 +29,21 @@ export class HeaderComponent implements OnInit {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
-      // ✅ Fetch user on initialization
+      // Fetch user on initialization
       this.apiService.fetchUser();
-
-      // ✅ Subscribe to user changes
-      this.apiService.currentUser$.subscribe(user => {
-        this.user = user;
-
-      });
     }
+  }
+
+  // Toggle the navigation menu visibility on mobile
+  toggleNav() {
+    this.isNavVisible = !this.isNavVisible; // Toggle the navigation visibility
   }
 
   logout() {
     this.apiService.logout().subscribe(() => {
       console.log("🚪 User logged out!");
-      this.user = null;  // ✅ Remove user from UI
-      this.router.navigate(['/login']); // ✅ Redirect to login page
+      this.user = null;  // Remove user from UI
+      this.router.navigate(['/login']); // Redirect to login page
     });
   }
 }
