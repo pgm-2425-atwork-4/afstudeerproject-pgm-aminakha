@@ -59,8 +59,7 @@ const videoStorage = new CloudinaryStorage({
 const uploadFields = multer({
   storage: videoStorage
 }).fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]);
-const uploadVideo = multer({ storage: videoStorage }).single('video');
-const uploadImage = multer({ storage: imageStorage }).single("image"); // Image upload
+
 const upload = multer({ storage });
 app.use(cors({
   origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io","http://localhost:4200/login"], // ✅ Allow frontend
