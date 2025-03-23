@@ -42,9 +42,7 @@ const gymStorage = new CloudinaryStorage({
     public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"), // Unique filename
   },
 });
-const uploadFields = multer({
-  storage: videoStorage
-}).fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]);
+
 // ✅ Ensure "uploads" directory exists
 const uploadDir = path.join(__dirname, "uploads/");
 if (!fs.existsSync(uploadDir)) {
@@ -58,7 +56,9 @@ const videoStorage = new CloudinaryStorage({
     public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_") // Unique filename
   },
 });
-
+const uploadFields = multer({
+  storage: videoStorage
+}).fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }]);
 const uploadVideo = multer({ storage: videoStorage }).single('video');
 const uploadImage = multer({ storage: imageStorage }).single("image"); // Image upload
 const upload = multer({ storage });
