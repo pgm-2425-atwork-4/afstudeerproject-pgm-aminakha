@@ -1,5 +1,14 @@
 .gym-detail-container {
     & .gym-detail-content {
+        & .login-message {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 1rem;
+            font-family: "Archivo", sans-serif;
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
         & .comments-section-container {
             margin-bottom: 4rem;
             & .comments-content {
