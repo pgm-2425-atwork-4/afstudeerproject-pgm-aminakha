@@ -84,7 +84,7 @@
           gap: 0rem;
         }
 
-        & h1 {
+        & h2 {
           font-family: 'Archivo', sans-serif;
           font-size: 3.5rem;
           letter-spacing: 2px;
@@ -108,7 +108,7 @@
 
       & li {
         & img {
-          width: 30rem;
+          width: 21rem;
           height: 15rem;
           object-fit: cover;
           border-radius: var(--standard-border-radius);
@@ -265,4 +265,72 @@
       }
     }
   }
+}
+@media (max-width: 1024px) {
+  
+ .gyms-container {
+  & .gyms-content {
+    & ul {
+      & li {
+        & .gym-card-descritpion {
+          & .gym-logo {
+            width:15rem
+          }
+          & .gym-card__link {
+            bottom: 1rem;
+          }
+          & .small-gym-description {
+            & .gym-card__list {
+              grid-template-columns: 13rem 23rem;
+              & li {
+                & p {
+                  font-size: 1.4rem;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+ }
+}
+
+@media (max-width: 480px) {
+  .gyms-container {
+    & .gyms-content {
+      & ul {
+        & li {
+          & .gym-card-descritpion {
+            flex-direction: column;
+            & .gym-logo {
+              width:4rem;
+              height: 4rem;
+            }
+            & .gym-card__link {
+             bottom:63%;  
+            }
+            & .small-gym-description {
+              & h2 {
+                font-size: 2rem;
+              }
+              & .gym-card__list {
+                display: flex;
+
+                & li {
+                  & p {
+                    font-size: 1rem;
+                    & svg {
+                      width: 1.5rem;
+                      height: 1.5rem;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+   }
 }

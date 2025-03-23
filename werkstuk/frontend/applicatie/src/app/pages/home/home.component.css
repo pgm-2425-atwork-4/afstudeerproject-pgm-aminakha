@@ -78,6 +78,10 @@
         border: 2px solid var(--primary-color);
         border-radius: var(--standard-border-radius);
         width: 100%;
+        & .tags {
+            display: flex;
+            gap: 1rem;
+        }
         & .tags-container__title {
             & h2 {
                 position:absolute;

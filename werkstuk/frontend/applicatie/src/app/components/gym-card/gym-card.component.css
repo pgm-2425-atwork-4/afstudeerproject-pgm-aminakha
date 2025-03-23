@@ -5,6 +5,7 @@
     list-style: none;
     border:solid 2px var(--primary-color);
     border-radius: var(--standard-border-radius);
+    border-radius: 1.2rem;
     & img {
         width: 100%;
         object-fit: cover;  
