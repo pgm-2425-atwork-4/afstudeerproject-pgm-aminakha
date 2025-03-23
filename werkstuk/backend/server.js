@@ -818,31 +818,33 @@ app.post("/add-exercise-category", verifyToken, (req, res) => {
 });
 
 // POST route to add exercise
-app.post('/admin/add-exercise', uploadFields, (req, res) => {
+// Route to add an exercise
+app.post("/admin/add-exercise", uploadImage, (req, res) => {
   const { name, exerciseCategory_id, pressure_id, big_description } = req.body;
 
-  const imageUrl = req.files['image'] ? req.files['image'][0].path : null;
-  const videoUrl = req.files['video'] ? req.files['video'][0].path : null;
+  const imageUrl = req.file ? req.file.path : null;
 
-  // Check for required fields
-  if (!name || !exerciseCategory_id || !pressure_id || !big_description || !imageUrl || !videoUrl) {
-    return res.status(400).json({ error: '❌ Missing required fields' });
+  // Ensure all required fields are present
+  if (!name || !exerciseCategory_id || !pressure_id || !big_description || !imageUrl) {
+    return res.status(400).json({ error: "❌ Missing required fields" });
   }
 
   const sql = `
-    INSERT INTO exercises (name, exerciseCategory_id, pressure_id, big_description, image, video)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO exercises (name, exerciseCategory_id, pressure_id, big_description, image)
+    VALUES (?, ?, ?, ?, ?)
   `;
-  const values = [name, exerciseCategory_id, pressure_id, big_description, imageUrl, videoUrl];
 
-  // Insert into the database
+  const values = [name, exerciseCategory_id, pressure_id, big_description, imageUrl];
+
   db.query(sql, values, (err, result) => {
     if (err) {
-      return res.status(500).json({ error: 'Database error', details: err });
+      console.error("🔥 Error adding exercise:", err);
+      return res.status(500).json({ error: "Database error" });
     }
-    res.status(201).json({ message: '✅ Exercise added successfully!' });
+    res.status(201).json({ message: "✅ Exercise added successfully!" });
   });
 });
+
 
 
 

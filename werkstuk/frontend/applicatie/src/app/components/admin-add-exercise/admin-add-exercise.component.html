@@ -12,13 +12,15 @@
     </div>
   
     <div>
-      <label for="image">Exercise Image</label>
-      <input type="file" id="image" (change)="onImageSelected($event)" name="image" />
+      <label for="pressure">Exercise Pressure</label>
+      <select [(ngModel)]="exercise.pressure_id" name="pressure" required>
+        <option *ngFor="let pressure of pressures" [value]="pressure.id">{{ pressure.name }}</option>
+      </select>
     </div>
   
     <div>
-      <label for="video">Exercise Video</label>
-      <input type="file" id="video" (change)="onVideoSelected($event)" name="video" />
+      <label for="image">Exercise Image</label>
+      <input type="file" id="image" (change)="onImageSelected($event)" name="image" required />
     </div>
   
     <div>

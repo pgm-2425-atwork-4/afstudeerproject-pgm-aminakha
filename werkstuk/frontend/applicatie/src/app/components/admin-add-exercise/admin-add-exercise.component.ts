@@ -17,14 +17,12 @@ export class AdminAddExerciseComponent implements OnInit {
     pressure_id: string | number | null;
     big_description: string;
     image: File | null;
-    video: File | null;
   } = {
     name: '',
     exerciseCategory_id: null,
     pressure_id: null,
     big_description: '',
-    image: null,
-    video: null
+    image: null
   };
 
   categories: any[] = []; // For storing exercise categories
@@ -62,15 +60,6 @@ export class AdminAddExerciseComponent implements OnInit {
     }
   }
 
-  // Method for handling video file selection
-  onVideoSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.exercise.video = file;  // Set the selected file as the video
-      console.log('Video selected:', file);
-    }
-  }
-
   addExercise() {
     const formData = new FormData();
   
@@ -80,13 +69,9 @@ export class AdminAddExerciseComponent implements OnInit {
     formData.append('pressure_id', (this.exercise.pressure_id ?? 'default_value').toString());
     formData.append('big_description', this.exercise.big_description);
   
-    // Add files if selected
+    // Add image file if selected
     if (this.exercise.image) {
       formData.append('image', this.exercise.image);
-    }
-  
-    if (this.exercise.video) {
-      formData.append('video', this.exercise.video);
     }
   
     // Make the request to add exercise
@@ -100,5 +85,4 @@ export class AdminAddExerciseComponent implements OnInit {
       }
     });
   }
-  
 }
