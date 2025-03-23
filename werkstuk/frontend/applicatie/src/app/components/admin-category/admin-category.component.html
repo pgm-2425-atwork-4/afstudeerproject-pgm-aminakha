@@ -1,19 +1,50 @@
-
 <div class="category-gym-container">
-  <form (submit)="onSubmit()" enctype="multipart/form-data" class="container mt-3">
+
+  <!-- Create / Update Category Form -->
+  <form (submit)="editingCategory ? updateCategory() : onSubmit()" enctype="multipart/form-data" class="container mt-3">
     <div class="mb-3">
       <label class="form-label">Category Name:</label>
-      <input type="text" class="form-control" [(ngModel)]="categoryName" name="categoryName" required />
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="categoryName"
+        name="categoryName"
+        required
+      />
     </div>
-  
+
     <div class="mb-3">
       <label class="form-label">Upload Image:</label>
-      <input type="file" class="form-control" (change)="onFileSelected($event)" required />
+      <input
+        type="file"
+        class="form-control"
+        (change)="onFileSelected($event)"
+        [required]="!editingCategory" 
+      />
     </div>
-  
-    <button type="submit" class="btn btn-primary">
-      Add Category
+
+    <button type="submit" class="btn btn-success me-2">
+      {{ editingCategory ? 'Update Category' : 'Add Category' }}
+    </button>
+    <button *ngIf="editingCategory" type="button" (click)="resetForm()" class="btn btn-secondary">
+      Cancel
     </button>
   </form>
-  
+
+  <hr />
+
+  <!-- Category List -->
+  <div *ngFor="let cat of categories" class="card mt-3 p-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <strong>{{ cat.name }}</strong>
+        <img *ngIf="cat.image" [src]="cat.image" alt="Category Image" style="height: 40px; margin-left: 10px;" />
+      </div>
+      <div>
+        <button class="btn btn-warning btn-sm me-2" (click)="editCategory(cat)">Edit</button>
+        <button class="btn btn-danger btn-sm" (click)="deleteCategory(cat.id)">Delete</button>
+      </div>
+    </div>
+  </div>
+
 </div>

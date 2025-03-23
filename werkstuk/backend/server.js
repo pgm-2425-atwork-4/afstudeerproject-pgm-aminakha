@@ -845,8 +845,52 @@ app.post("/admin/add-exercise", uploadImage, (req, res) => {
     res.status(201).json({ message: "✅ Exercise added successfully!" });
   });
 });
+app.put("/categories/:id", verifyToken, upload.single("image"), (req, res) => {
+  const categoryId = req.params.id;
+  const { name } = req.body;
+  const image = req.file ? req.file.path : null;
 
+  if (!name) {
+    return res.status(400).json({ error: "❌ Category name required" });
+  }
 
+  let sql = "UPDATE categories SET name = ?";
+  const values = [name];
+
+  if (image) {
+    sql += ", image = ?";
+    values.push(image);
+  }
+
+  sql += " WHERE id = ?";
+  values.push(categoryId);
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("🔥 Error updating category:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ message: "✅ Category updated successfully!" });
+  });
+});
+
+app.delete("/categories/:id", verifyToken, (req, res) => {
+  const categoryId = req.params.id;
+
+  const sql = "DELETE FROM categories WHERE id = ?";
+  db.query(sql, [categoryId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error deleting category:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "❌ Category not found" });
+    }
+
+    res.json({ message: "✅ Category deleted successfully!" });
+  });
+});
 
 
 app.get("/exercise-categories", verifyToken, (req, res) => {

@@ -74,7 +74,16 @@ export class ApiService {
       })
     );
   }
-
+  updateCategory(categoryId: number, formData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/categories/${categoryId}`, formData, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  deleteCategory(categoryId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/categories/${categoryId}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
   /** ✅ Logout - Clears Token & User Data */
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).pipe(
