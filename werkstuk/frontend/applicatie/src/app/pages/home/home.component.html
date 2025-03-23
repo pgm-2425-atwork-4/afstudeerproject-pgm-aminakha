@@ -6,7 +6,9 @@
       <div *ngIf="userId">
         <h2 class="title-saved-gyms">
           OPGESLAGEN GYM’S 
-          <img src="/images/heart.svg" alt="Heart">
+          <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" fill="white">
+            <path d="M1.24264 8.24264L8 15L14.7574 8.24264C15.553 7.44699 16 6.36786 16 5.24264V5.05234C16 2.8143 14.1857 1 11.9477 1C10.7166 1 9.55233 1.55959 8.78331 2.52086L8 3.5L7.21669 2.52086C6.44767 1.55959 5.28338 1 4.05234 1C1.8143 1 0 2.8143 0 5.05234V5.24264C0 6.36786 0.44699 7.44699 1.24264 8.24264Z" fill="white"/>
+            </svg>
         </h2>
         <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
         <div *ngFor="let gym of savedGyms" class="gym-card-item">
@@ -16,8 +18,10 @@
   
       <div class="no-user-container" *ngIf="!userId">
         <h2> 
-          <img src="/images/user-solid (1).svg" alt="Avatar">
-          Inloggen om je opgeslagen gyms te bekijken
+          <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 16 16" fill="none">
+            <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="white"/>
+            <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="white"/>
+            </svg>          Inloggen om je opgeslagen gyms te bekijken
         </h2>
         <p><a routerLink="/login">Log u in</a></p>
         <p><span></span>OF <span></span></p>
