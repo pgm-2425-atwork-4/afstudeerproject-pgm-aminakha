@@ -820,11 +820,11 @@ app.post("/add-exercise-category", verifyToken, (req, res) => {
 // POST route to add exercise
 app.post("/admin/add-exercise", uploadFields, (req, res) => {
   const { name, exerciseCategory_id, pressure_id, big_description } = req.body;
-
-  // Ensure that the fields are available
+  
   const imageUrl = req.files['image'] ? req.files['image'][0].path : null;
   const videoUrl = req.files['video'] ? req.files['video'][0].path : null;
 
+  // Check if all required fields are present
   if (!name || !exerciseCategory_id || !pressure_id || !big_description || !imageUrl || !videoUrl) {
     return res.status(400).json({ error: "❌ Missing required fields" });
   }
@@ -835,10 +835,13 @@ app.post("/admin/add-exercise", uploadFields, (req, res) => {
   `;
   const values = [name, exerciseCategory_id, pressure_id, big_description, imageUrl, videoUrl];
 
+  // Log the request for debugging
+  console.log("Adding exercise with values:", values);
+
   db.query(sql, values, (err, result) => {
     if (err) {
-      console.error("🔥 Error adding exercise:", err);
-      return res.status(500).json({ error: "Database error" });
+      console.error("🔥 Error adding exercise:", err); // Log the exact error
+      return res.status(500).json({ error: "Database error", details: err });
     }
     res.status(201).json({ message: "✅ Exercise added successfully!" });
   });
