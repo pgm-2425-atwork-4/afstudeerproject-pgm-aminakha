@@ -819,17 +819,14 @@ const uploadImage = multer({ storage: imageStorage }).single("image"); // Image 
 // POST route to add exercise
 app.post("/admin/add-exercise", uploadImage, uploadVideo, (req, res) => {
   const { name, exerciseCategory_id, pressure_id, big_description } = req.body;
-
-  // Get the uploaded files' paths
+  
   const imageUrl = req.file ? req.file.path : null;  // Get image URL from Cloudinary
   const videoUrl = req.file ? req.file.path : null;  // Get video URL from Cloudinary
 
-  // Check if the required fields are present
   if (!name || !exerciseCategory_id || !pressure_id || !big_description || !imageUrl || !videoUrl) {
     return res.status(400).json({ error: "❌ Missing required fields" });
   }
 
-  // SQL query to insert the exercise into the database
   const sql = `
     INSERT INTO exercises (name, exerciseCategory_id, pressure_id, big_description, image, video)
     VALUES (?, ?, ?, ?, ?, ?)
@@ -844,6 +841,8 @@ app.post("/admin/add-exercise", uploadImage, uploadVideo, (req, res) => {
     res.status(201).json({ message: "✅ Exercise added successfully!" });
   });
 });
+
+
 app.get("/exercise-categories", verifyToken, (req, res) => {
   const sql = "SELECT * FROM exercise_categories"; // Adjust table name if necessary
 
