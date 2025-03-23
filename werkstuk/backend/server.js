@@ -385,6 +385,7 @@ const imageStorage = new CloudinaryStorage({
     public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_"),
   },
 });
+const uploadImage = multer({ storage: imageStorage }).single("image"); // Single image upload
 
 const uploadLogo = multer({ storage: logoStorage }).single("logo"); // Single file
 const uploadImages = multer({ storage: imageStorage }).array("images", 5); // Multiple files (Max: 5)
