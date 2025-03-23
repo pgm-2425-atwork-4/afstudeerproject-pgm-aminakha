@@ -523,6 +523,29 @@ app.post('/comments/like', (req, res) => {
     });
   });
 });
+app.post("/categories", verifyToken, upload.single("image"), (req, res) => {
+  const { name } = req.body;
+  const image = req.file ? req.file.path : null;
+
+  if (!name || !image) {
+    return res.status(400).json({ error: "❌ Missing category name or image" });
+  }
+
+  const sql = "INSERT INTO categories (name, image) VALUES (?, ?)";
+  db.query(sql, [name, image], (err, result) => {
+    if (err) {
+      console.error("🔥 Error inserting category:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    res.status(201).json({
+      message: "✅ Category added successfully!",
+      id: result.insertId,
+      name,
+      image
+    });
+  });
+});
 app.post("/add-gym", upload.fields([{ name: "logo", maxCount: 1 }, { name: "images", maxCount: 5 }]), async (req, res) => {
   try {
       const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
