@@ -78,7 +78,7 @@
 <div class="saved-gyms-container">
   <h2 >Your Saved Gyms</h2>
       <div class="no-gyms-container" *ngIf="savedGyms.length === 0"><p>Je hebt nog niks zoek een gym op : <a routerLink="/gyms" routerActive="active">Gyms</a></p></div>
-      <div *ngFor="let gym of savedGyms">
+      <div class="saved-gyms-list" *ngFor="let gym of savedGyms">
         <!-- Add gym card component to display gym details -->
         <gym-card [gym]="gym"></gym-card>
         <button (click)="deleteSavedGym(gym.id)">Delete</button> <!-- Delete button -->

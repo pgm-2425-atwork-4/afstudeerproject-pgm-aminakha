@@ -3,8 +3,13 @@
     <p class="logo"><a routerLink="/" routerActive="active">gymly</a></p>
     
     <!-- Mobile Menu Button -->
-    <button *ngIf="isBrowser" class="menu-button" (click)="toggleNav()">☰</button>
-
+    <button 
+    *ngIf="isBrowser" 
+    class="menu-button" 
+    (click)="toggleNav()" 
+    aria-label="Toggle navigation menu">
+    {{ isNavVisible ? '✕' : '☰' }}
+  </button>
     <!-- Main Navigation Menu -->
     <ul [class.active]="isNavVisible">
       <li><a routerLink="/" routerActive="active">Home</a></li>

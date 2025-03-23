@@ -1,10 +1,12 @@
-<form (ngSubmit)="addGym()" enctype="multipart/form-data">
+<div class="add-gym-container">
+  <form (ngSubmit)="addGym()" enctype="multipart/form-data">
   <input type="text" [(ngModel)]="gymData.name" name="name" placeholder="Gym Name" required />
   <input type="text" [(ngModel)]="gymData.city" name="city" placeholder="City" required />
   <input type="number" [(ngModel)]="gymData.rating" name="rating" placeholder="Rating (1-5)" required />
   <input type="text" [(ngModel)]="gymData.opening_hours" name="opening_hours" placeholder="Opening Hours" required />
-  <input type="text" [(ngModel)]="gymData.address" name="address" placeholder="Address" required />
-  <input type="checkbox" [(ngModel)]="gymData.personal_trainer" name="personal_trainer" /> Personal Trainer Available
+  <input type="text" [(ngModel)]="gymData.address" name="address" placeholder="Address" required /> 
+  Personal Trainer Available
+  <input type="checkbox" [(ngModel)]="gymData.personal_trainer" name="personal_trainer" />
 
   <!-- ✅ New Fields: Email, Phone, Website -->
   <input type="email" [(ngModel)]="gymData.email" name="email" placeholder="Email" required />
@@ -45,3 +47,5 @@
 
   <button type="submit">Add Gym</button>
 </form>
+</div>
+

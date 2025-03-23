@@ -15,3 +15,20 @@ form {
     margin: 0 auto;
     
 }
+.add-gym-container {
+    & form {
+        & input {
+            display: flex;
+        }
+        margin-bottom: 1.25rem;
+        border-radius: 0.3125rem;
+        & button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            font-family: "Archivo", sans-serif;
+            font-size: 1rem;
+            padding: 0.5rem;
+            border-radius: 0.3125rem;
+        }
+    }
+}

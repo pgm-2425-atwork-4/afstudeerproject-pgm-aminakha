@@ -160,3 +160,49 @@ max-width:var(--max-width);
         }
        }
 } 
+@media (max-width: 480px) {
+   .user-profile-container {
+    & .personal-info-container{
+         & .edit-container {
+            & form {
+                flex-direction: column;
+            }
+            }
+            
+        & .user-description {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            & p {
+                line-height: 3rem;
+                font-size: 2rem;
+                text-align: center;
+            }
+           
+        }
+    }
+     & .saved-gyms-container {
+        & h2 {
+            font-size: 2.4rem;
+            line-height: 3rem;
+            margin-bottom: 1rem;
+        }
+        & button {
+            font-size: 1.5rem;
+            font-family: 'Archivo', sans-serif;
+            padding: .5rem;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border-radius: var(--large-border-radius);
+            border: 1px solid var(--primary-color);
+            transition: all .3s ease;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        & .saved-gyms-list {
+            width:90%;
+            margin: 0 auto;
+        }
+     }
+   }
+  }
