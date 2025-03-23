@@ -295,6 +295,34 @@
   }
  }
 }
+@media (max-width: 1700px) {
+  .gyms-container {
+    & .gyms-content {
+      & ul {
+        & li {
+          & .gym-card-descritpion {
+            & .gym-logo {
+              width:15rem
+            }
+            & .gym-card__link {
+              bottom: 4rem;
+            }
+            & .small-gym-description {
+              & .gym-card__list {
+                grid-template-columns: 13rem 23rem;
+                & li {
+                  & p {
+                    font-size: 1.4rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 @media (max-width: 480px) {
   .gyms-container {
