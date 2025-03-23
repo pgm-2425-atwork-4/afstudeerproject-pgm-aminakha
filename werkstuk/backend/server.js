@@ -523,17 +523,29 @@ app.post('/comments/like', (req, res) => {
     });
   });
 });
-app.put("/gyms/:id", verifyToken, uploadLogo.single("logo"), (req, res) => {
+const uploadGymLogo = multer({ storage: logoStorage }); // Define this separately
+
+app.put("/gyms/:id", verifyToken, uploadGymLogo.single("logo"), (req, res) => {
   const gymId = req.params.id;
-  const { name, city, rating, opening_hours } = req.body;
+  const { name, city, rating, opening_hours, address, email, phone, website } = req.body;
   const logoUrl = req.file ? req.file.path : null;
 
-  if (!name || !city || !rating || !opening_hours) {
+  if (!name || !city || !rating || !opening_hours || !address) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  let sql = `UPDATE gyms SET name = ?, city = ?, rating = ?, opening_hours = ?`;
-  const values = [name, city, rating, opening_hours];
+  let sql = `
+    UPDATE gyms SET 
+      name = ?, 
+      city = ?, 
+      rating = ?, 
+      opening_hours = ?, 
+      address = ?, 
+      email = ?, 
+      phone = ?, 
+      website = ?
+  `;
+  const values = [name, city, rating, opening_hours, address, email, phone, website];
 
   if (logoUrl) {
     sql += `, logo = ?`;
@@ -548,9 +560,11 @@ app.put("/gyms/:id", verifyToken, uploadLogo.single("logo"), (req, res) => {
       console.error("🔥 Error updating gym:", err);
       return res.status(500).json({ error: "Database error" });
     }
+
     res.json({ message: "✅ Gym updated successfully!" });
   });
 });
+
 app.delete("/gyms/:id", verifyToken, (req, res) => {
   const gymId = req.params.id;
 
