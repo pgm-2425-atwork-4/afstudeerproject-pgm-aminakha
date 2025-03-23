@@ -21,7 +21,7 @@
     padding: 1rem;
     font-size: 1.5rem;
     border-radius: 0 0 var(--standard-border-radius) var(--standard-border-radius);
-    & img {
+    & svg {
         width: 2rem;
         height: 2rem;
 
