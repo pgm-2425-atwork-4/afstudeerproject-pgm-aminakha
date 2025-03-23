@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
 export class AdminDashboardComponent {
   sections = [
     { title: "Manage Gyms", route: "/admin/gyms" },
-    { title: "Add Gym", route: "/admin/add-gym" }
+    { title: "Add Gym", route: "/admin/add-gym" },
+    {title:"Add Exercise Category",route:"/admin/add-exercise-category"},
+    {title:"Add Exercise",route:"/admin/add-exercise"}
   ];
 }

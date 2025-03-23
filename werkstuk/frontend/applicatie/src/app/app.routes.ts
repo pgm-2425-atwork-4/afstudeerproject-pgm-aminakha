@@ -12,6 +12,8 @@ import { AdminAddGymComponent } from './components/admin-add-gym/admin-add-gym.c
 import { GymDetailComponent } from './pages/gym-detail/gym-detail.component';
 import { OverOnsComponent } from './pages/over-ons/over-ons.component';
 import { ExercisesComponent } from './pages/exercises/exercises.component';
+import { AdminAddExerciseCategoryComponent } from './components/admin-add-exercise-category/admin-add-exercise-category.component';
+import { AdminAddExerciseComponent } from './components/admin-add-exercise/admin-add-exercise.component';
 
 // ✅ Client-side routes (CSR)
 export const routes: Routes = [
@@ -30,7 +32,9 @@ export const routes: Routes = [
       { path: '', redirectTo: 'categories', pathMatch: 'full' }, // Default admin route
       { path: 'categories', component: AdminCategoryComponent },
       { path: 'gyms', component: GymsComponent },
-      { path: 'add-gym', component: AdminAddGymComponent } // ✅ Ensure this matches
+      { path: 'add-gym', component: AdminAddGymComponent }, // ✅ Ensure this matches
+      {path:"add-exercise-category",component:AdminAddExerciseCategoryComponent},
+      {path:"add-exercise",component:AdminAddExerciseComponent}
     ]
   },  
   { path: '**', redirectTo: '' }

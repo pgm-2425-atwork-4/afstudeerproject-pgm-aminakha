@@ -242,5 +242,15 @@ export class ApiService {
     // Make the DELETE request to delete the saved gym
     return this.http.delete(`${this.apiUrl}/saved-gyms/${userId}/${gymId}`, { headers });
   }
+  addExercise(exercise: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/add-exercise`, exercise, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  getExerciseCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/exercise-categories`, {
+      headers: this.getAuthHeaders()
+    });
+  }
   
 }

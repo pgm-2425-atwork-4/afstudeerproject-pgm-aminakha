@@ -47,6 +47,16 @@ const uploadDir = path.join(__dirname, "uploads/");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
+const videoStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'exercise_videos',  // Store the videos in this folder
+    format: async (req, file) => 'mp4',  // You can specify other formats, such as 'mov', 'avi', etc.
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\s/g, "_") // Unique filename
+  },
+});
+
+const uploadVideo = multer({ storage: videoStorage }).single('video');
 
 app.use(cors({
   origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io","http://localhost:4200/login"], // ✅ Allow frontend
@@ -787,6 +797,47 @@ app.post("/upload/profile", upload.single("profileImage"), (req, res) => {
   res.json({ filePath });
 });
 
+app.post("/add-exercise-category", verifyToken, (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ error: "❌ Missing category name" });
+  }
+
+  const sql = "INSERT INTO exercise_categories (name) VALUES (?)";
+  db.query(sql, [name], (err, result) => {
+    if (err) {
+      console.error("🔥 Error adding category:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.status(201).json({ message: "✅ Category added successfully!" });
+  });
+});
+// POST route to add exercise
+app.post("/admin/add-exercise", uploadImage, uploadVideo, (req, res) => {
+  const { name, exerciseCategory_id, pressure_id, big_description } = req.body;
+
+  // Get the file paths (URL) of the uploaded image and video from Cloudinary
+  const imageUrl = req.file ? req.file.path : null;
+  const videoUrl = req.video ? req.video.path : null; // Get the video URL from Cloudinary
+
+  if (!name || !exerciseCategory_id || !pressure_id || !big_description || !videoUrl) {
+    return res.status(400).json({ error: "❌ Missing required fields" });
+  }
+
+  // SQL query to insert exercise details into the database
+  const sql = `INSERT INTO exercises (name, exerciseCategory_id, pressure_id, big_description, image, video_url)
+               VALUES (?, ?, ?, ?, ?, ?)`;
+  const values = [name, exerciseCategory_id, pressure_id, big_description, imageUrl, videoUrl];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("🔥 Error adding exercise:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.status(201).json({ message: "✅ Exercise added successfully!" });
+  });
+});
 /* ============================================
  ✅ API: Delete All Users (TRUNCATE)
 =============================================== */
