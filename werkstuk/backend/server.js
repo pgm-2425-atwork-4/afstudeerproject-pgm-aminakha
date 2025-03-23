@@ -813,6 +813,8 @@ app.post("/add-exercise-category", verifyToken, (req, res) => {
     res.status(201).json({ message: "✅ Category added successfully!" });
   });
 });
+const uploadImage = multer({ storage: imageStorage }).single("image"); // Image upload
+
 // POST route to add exercise
 app.post("/admin/add-exercise", uploadImage, uploadVideo, (req, res) => {
   const { name, exerciseCategory_id, pressure_id, big_description } = req.body;
@@ -836,6 +838,19 @@ app.post("/admin/add-exercise", uploadImage, uploadVideo, (req, res) => {
       return res.status(500).json({ error: "Database error" });
     }
     res.status(201).json({ message: "✅ Exercise added successfully!" });
+  });
+});
+app.get("/exercise-categories", verifyToken, (req, res) => {
+  const sql = "SELECT * FROM exercise_categories"; // Adjust table name if necessary
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("🔥 Error fetching exercise categories:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    // Send the results back as JSON
+    res.json(results);
   });
 });
 /* ============================================
