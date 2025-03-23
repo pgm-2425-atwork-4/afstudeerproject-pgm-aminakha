@@ -86,13 +86,18 @@
 
   @media (max-width: 480px) {
    & h1 {
-      font-size: 3rem;
+      font-size: 1.3rem;
       letter-spacing: -1px;
     }
-
-    & form input {
-      width: 100%;
+    & form {
+      flex-direction: row;
+      gap: 1rem;
+      & input {
+        width:80%
+      }
     }
+
+    
 
    & form button {
       padding: 0.6rem;

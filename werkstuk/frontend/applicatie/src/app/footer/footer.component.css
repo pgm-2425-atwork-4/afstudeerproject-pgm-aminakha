@@ -132,30 +132,28 @@
 @media (max-width: 480px) {
     .footer {
         padding: 1.5rem 0;
+        & .footer-container {
+            & .information-container {
+                & .footer-social {
+                    width: 100%;
+                }
+                 & .footer-quote {
+                & p{
+                    font-size: 1.5rem;
+                    width: 20rem;
+                    padding-bottom: 1rem;
+                }
+            }
+            }
+            & .footer-logo {
+                & p{
+                    font-size: 1rem;
+                }
+            }
+           
+
+        }
     }
 
-    .footer .footer-container .information-container {
-        gap: 1rem;
-    }
-
-    .footer .footer-container .footer-logo h2 {
-        font-size: 2.5rem;
-    }
-
-    .footer .footer-container .footer-logo p {
-        font-size: 2rem;
-    }
-
-    .footer .footer-container .footer-links h2 {
-        font-size: 1.6rem;
-    }
-
-    .footer .footer-container .footer-links a {
-        font-size: 1.2rem;
-    }
-
-    .footer .footer-container .footer-social svg {
-        width: 3.5rem;
-        height: 3.5rem;
-    }
+   
 }
