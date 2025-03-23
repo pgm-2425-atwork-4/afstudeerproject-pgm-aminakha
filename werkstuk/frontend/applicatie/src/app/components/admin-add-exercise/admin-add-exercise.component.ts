@@ -74,32 +74,22 @@ export class AdminAddExerciseComponent implements OnInit {
   addExercise() {
     const formData = new FormData();
   
-    if (this.exercise.exerciseCategory_id !== null && this.exercise.exerciseCategory_id !== undefined) {
-      formData.append('exerciseCategory_id', this.exercise.exerciseCategory_id.toString());
-    } else {
-      console.error("Exercise category ID is missing");
-    }
-  
-    if (this.exercise.pressure_id !== null && this.exercise.pressure_id !== undefined) {
-      formData.append('pressure_id', this.exercise.pressure_id.toString());
-    } else {
-      console.error("Pressure ID is missing");
-    }
-  
+    // Check if the values are not null or undefined, if they are, provide a default value
     formData.append('name', this.exercise.name);
+    formData.append('exerciseCategory_id', (this.exercise.exerciseCategory_id ?? 'default_value').toString());
+    formData.append('pressure_id', (this.exercise.pressure_id ?? 'default_value').toString());
     formData.append('big_description', this.exercise.big_description);
   
-    // Append image if exists
+    // Add files if selected
     if (this.exercise.image) {
-      formData.append('image', this.exercise.image);  // Field name should match
+      formData.append('image', this.exercise.image);
     }
   
-    // Append video if exists
     if (this.exercise.video) {
-      formData.append('video', this.exercise.video);  // Field name should match
+      formData.append('video', this.exercise.video);
     }
   
-    // Call the API
+    // Make the request to add exercise
     this.apiService.addExercise(formData).subscribe({
       next: (response) => {
         alert('Exercise added successfully!');
