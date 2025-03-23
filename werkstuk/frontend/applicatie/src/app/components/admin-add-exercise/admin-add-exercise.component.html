@@ -1,31 +1,31 @@
-<h2>Add New Exercise</h2>
 <form (ngSubmit)="addExercise()">
-  <div>
-    <label for="name">Exercise Name</label>
-    <input type="text" id="name" [(ngModel)]="exercise.name" name="name" required />
-  </div>
-
-  <div>
-    <label for="exerciseCategory">Exercise Category</label>
-    <select [(ngModel)]="exercise.exerciseCategory_id" name="exerciseCategory" required>
-      <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-    </select>
-  </div>
-
-  <div>
-    <label for="image">Exercise Image</label>
-    <input type="file" id="image" (change)="onImageSelected($event)" />
-</div>
+    <div>
+      <label for="name">Exercise Name</label>
+      <input type="text" id="name" [(ngModel)]="exercise.name" name="name" required />
+    </div>
   
-  <div>
-    <label for="video">Exercise Video</label>
-    <input type="file" id="video" (change)="onVideoSelected($event)" />
-  </div>
-
-  <div>
-    <label for="big_description">Big Description</label>
-    <textarea id="big_description" [(ngModel)]="exercise.big_description" name="big_description" required></textarea>
-  </div>
-
-  <button type="submit">Add Exercise</button>
-</form>
+    <div>
+      <label for="exerciseCategory">Exercise Category</label>
+      <select [(ngModel)]="exercise.exerciseCategory_id" name="exerciseCategory" required>
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+      </select>
+    </div>
+  
+    <div>
+      <label for="image">Exercise Image</label>
+      <input type="file" id="image" (change)="onImageSelected($event)" name="image" />
+    </div>
+  
+    <div>
+      <label for="video">Exercise Video</label>
+      <input type="file" id="video" (change)="onVideoSelected($event)" name="video" />
+    </div>
+  
+    <div>
+      <label for="big_description">Big Description</label>
+      <textarea id="big_description" [(ngModel)]="exercise.big_description" name="big_description" required></textarea>
+    </div>
+  
+    <button type="submit">Add Exercise</button>
+  </form>
+  

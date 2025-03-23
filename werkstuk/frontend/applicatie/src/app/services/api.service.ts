@@ -252,5 +252,8 @@ export class ApiService {
       headers: this.getAuthHeaders()
     });
   }
+  getPressures(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/pressures`, { headers: this.getAuthHeaders() });
+  }
   
 }

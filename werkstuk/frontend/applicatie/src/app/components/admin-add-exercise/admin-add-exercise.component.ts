@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./admin-add-exercise.component.css'],
   imports: [CommonModule, FormsModule]
 })
-export class AdminAddExerciseComponent {
+export class AdminAddExerciseComponent implements OnInit {
   exercise: {
     name: string;
     exerciseCategory_id: string | number | null;
@@ -28,17 +28,27 @@ export class AdminAddExerciseComponent {
   };
 
   categories: any[] = []; // For storing exercise categories
+  pressures: any[] = []; // For storing pressure categories
 
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    // Fetch categories when component is initialized
+    // Fetch categories and pressures when component is initialized
     this.apiService.getExerciseCategories().subscribe({
       next: (categories) => {
         this.categories = categories;
       },
       error: (err) => {
         console.error("🔥 Error fetching categories:", err);
+      }
+    });
+
+    this.apiService.getPressures().subscribe({
+      next: (pressures) => {
+        this.pressures = pressures;
+      },
+      error: (err) => {
+        console.error("🔥 Error fetching pressures:", err);
       }
     });
   }
