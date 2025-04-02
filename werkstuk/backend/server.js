@@ -164,23 +164,7 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
-app.use(cors({
-  origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, 
-}));
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
 
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
