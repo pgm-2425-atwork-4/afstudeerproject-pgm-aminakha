@@ -16,6 +16,12 @@ const __dirname = path.dirname(__filename);
 
 // ✅ Middleware
 app.use(cors({ origin: "*" }));
+app.use(cors({
+  origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io","http://localhost:4200/login"], 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true, 
+}));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
