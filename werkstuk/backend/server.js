@@ -59,10 +59,21 @@ const uploadFields = multer({
 
 const upload = multer({ storage });
 app.use(cors({
-  origin: ["http://localhost:4200", "https://pgm-2425-atwork-4.github.io","http://localhost:4200/login"], 
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:4200",
+      "https://pgm-2425-atwork-4.github.io",
+      "http://localhost:4200/login"
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("❌ Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, 
+  credentials: true,
 }));
 
 
