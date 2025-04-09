@@ -61,7 +61,7 @@ export class ApiService {
   
   
   loginUser(email: string, password: string,profile_image:string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { email, password,profile_image }).pipe(
+    return this.http.post(`${this.apiUrl}/auth/login`, { email, password,profile_image }).pipe(
       tap((response: any) => {
         if (response.token) {
           localStorage.setItem('auth_token', response.token);
@@ -96,7 +96,7 @@ export class ApiService {
     });
   }
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).pipe(
+    return this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
         console.log("🚪 Logging out...");
         
@@ -164,7 +164,7 @@ export class ApiService {
   }
 
   registerUser(formData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, formData);
+    return this.http.post(`${this.apiUrl}/auth/register`, formData);
   }
 
   getGyms(): Observable<any> {
@@ -217,10 +217,19 @@ export class ApiService {
   getSavedGyms(userId: string): Observable<any> {
     console.log(`📡 Fetching saved gyms for User ID: ${userId}`);
   
-    return this.http.get(`${this.apiUrl}/saved-gyms/${userId}`, {
-      headers: this.getAuthHeaders(),  // ✅ Add Authorization Header
+    return this.http.get(`${this.apiUrl}/users/saved-gyms/${userId}`, {
+      headers: this.getAuthHeaders(),
       withCredentials: true
     }).pipe(
+      catchError(err => {
+        if (err.status === 404) {
+          console.warn("📭 No saved gyms found for user:", userId);
+          return of([]); // Return empty array instead of throwing
+        } else {
+          console.error("🔥 Error fetching saved gyms:", err);
+          return of([]);
+        }
+      }),
       tap({
         next: (res) => console.log("✅ Saved Gyms Loaded:", res),
         error: (err) => console.error("🔥 Error fetching saved gyms:", err)

@@ -72,15 +72,26 @@ export class HomeComponent implements OnInit {
       console.warn("⚠️ No user ID provided. Skipping saved gyms fetch.");
       return;
     }
-  
+
     this.apiService.getSavedGyms(userId).subscribe({
       next: (res) => {
-        console.log("✅ Saved Gyms Loaded:", res);
-        this.savedGyms = res;
+        if (Array.isArray(res)) {
+          console.log("✅ Saved Gyms Loaded:", res);
+          this.savedGyms = res;
+        } else {
+          console.warn("📭 No saved gyms returned, defaulting to empty list.");
+          this.savedGyms = [];
+        }
         this.filterGyms();  
       },
       error: (err) => {
         console.error("🔥 Error fetching saved gyms:", err);
+
+        if (err.status === 404) {
+          console.log("📭 No saved gyms found. Treating as empty.");
+          this.savedGyms = [];
+          this.filterGyms();
+        }
       }
     });
   }
