@@ -11,6 +11,7 @@ const gymRoutes = require("./routes/gyms");
 const userRoutes = require("./routes/users");
 const categoryRoutes = require("./routes/categories");
 const commentRoutes = require("./routes/comments");
+const priceRoutes = require("./routes/prices");
 
 // Init upload dir (if using local uploads too)
 const { initUploadDir } = require("./utils/initUploadDir");
@@ -38,6 +39,7 @@ app.use("/gyms", gymRoutes);
 app.use("/users", userRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/comments", commentRoutes);
+app.use("/prices", priceRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
