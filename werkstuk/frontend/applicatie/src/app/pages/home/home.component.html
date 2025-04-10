@@ -28,25 +28,29 @@
       </div>
     </div>
   
-    <div class="for-you-container">
-      <div class="for-you-container__title">
-           <h2>For You</h2>
-      </div>
-  
-      <div class="tags-container">
-        <div class="tags-container__title">
+    <div *ngIf="userId; else notLoggedIn">
+      <div class="for-you-container">
+        <div class="for-you-container__title">
+          <h2>For You</h2>
+        </div>
+
+        <div class="tags-container">
+          <div class="tags-container__title">
             <h2>TAGS</h2>
+          </div>
+          <div class="tags">
+            <p *ngIf="selectedCity" class="tag">{{ selectedCity }} <img src="/images/compass.svg" alt=""></p>
+            <p *ngIf="selectedCategory" class="tag"><span>{{ selectedCategory }}</span></p>
+          </div>
         </div>
-        <div class="tags">
-           <p *ngIf="selectedCity" class="tag">{{ selectedCity }} <img src="/images/compass.svg" alt=""></p>
-        <p *ngIf="selectedCategory" class="tag"><span >{{ selectedCategory }}</span></p>
+
+        <div *ngFor="let gym of filteredGyms; let i = index" class="gym-card-item" [ngClass]="{'gym-card-top-left': i === 0, 'gym-card-top-right': i === 1, 'gym-card-bottom': i === 2}">
+          <gym-card [gym]="gym"></gym-card>
         </div>
-       
       </div>
-  
-      <div *ngFor="let gym of filteredGyms; let i = index" class="gym-card-item" [ngClass]="{'gym-card-top-left': i === 0, 'gym-card-top-right': i === 1, 'gym-card-bottom': i === 2}">
-        <gym-card [gym]="gym"></gym-card>
-      </div>
-    </div>  
+    </div>
+    <ng-template #notLoggedIn>
+      <h2>Log in to see personalized recommendations.</h2>
+    </ng-template>
   </main>
   
