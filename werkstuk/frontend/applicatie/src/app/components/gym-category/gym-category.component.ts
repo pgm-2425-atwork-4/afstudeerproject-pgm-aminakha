@@ -17,8 +17,6 @@ export class GymCategoryComponent implements OnInit {
   constructor(private apiService: ApiService) {} 
 
   ngOnInit() {
-    console.log("📡 Fetching gym categories...");
-    
     this.apiService.getCategories().subscribe({
       next: (data) => {
         console.log("✅ Categories received:", data);

@@ -13,6 +13,7 @@ const categoryRoutes = require("./routes/categories");
 const commentRoutes = require("./routes/comments");
 const priceRoutes = require("./routes/prices");
 const savedGymsRoutes = require("./routes/savedGyms");
+const pressureRoutes = require("./routes/pressures");
 
 // Init upload dir (if using local uploads too)
 const { initUploadDir } = require("./utils/initUploadDir");
