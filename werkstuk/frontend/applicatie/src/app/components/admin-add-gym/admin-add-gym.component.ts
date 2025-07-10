@@ -30,7 +30,6 @@ export class AdminAddGymComponent implements OnInit {
   selectedLogo: File | null = null;
   selectedImages: File[] = [];
 
-  // ✅ Dropdown Data
   pressures: any[] = [];
   categories: any[] = [];
   pricingPlans: any[] = [];

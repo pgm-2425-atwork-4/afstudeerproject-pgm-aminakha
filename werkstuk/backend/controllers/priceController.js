@@ -1,7 +1,7 @@
 const { db } = require("../config/db");
 
 exports.getPrices = (req, res) => {
-  const sql = "SELECT id, bundle_name,price, description,gym_id FROM prices";
+  const sql = "SELECT * FROM prices";
 
   console.log("📥 Executing SQL:", sql); // ✅ log before
 
