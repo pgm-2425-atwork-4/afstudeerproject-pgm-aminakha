@@ -42,6 +42,7 @@ app.use("/users", userRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/comments", commentRoutes);
 app.use("/prices", priceRoutes);
+app.use("/pressures", pressureRoutes);
 app.use("/saved-gyms", savedGymsRoutes);
 
 // Start server

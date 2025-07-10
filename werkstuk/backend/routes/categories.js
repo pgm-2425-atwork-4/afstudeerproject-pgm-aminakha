@@ -10,7 +10,6 @@ router.post("/", verifyToken, upload.single("image"), categoryController.addCate
 router.put("/:id", verifyToken, upload.single("image"), categoryController.updateCategory);
 router.delete("/:id", verifyToken, categoryController.deleteCategory);
 
-router.get("/pressures", categoryController.getPressures);
 router.get("/pricing", categoryController.getPricing);
 router.get("/provinces", categoryController.getProvinces);
 
