@@ -1,3 +1,5 @@
+const { db } = require("../config/db");
+
 // GET pressures
 exports.getPressures = (req, res) => {
   const sql = "SELECT id, name FROM pressures";

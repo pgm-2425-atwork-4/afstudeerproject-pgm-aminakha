@@ -13,7 +13,6 @@ export class ApiService {
   private currentUserSubject = new BehaviorSubject<any>(null);
   currentUser$ = this.currentUserSubject.asObservable();
   wakeUpBackend() {
-    console.log("🔥 Trying to wake up backend at:", `${this.apiUrl}/ping`);
     
     this.http.get<{ message: string }>(`${this.apiUrl}/ping`).subscribe({
       next: (response) => console.log("✅ Backend response:", response.message),
@@ -21,7 +20,6 @@ export class ApiService {
     });
   }
   constructor(private http: HttpClient) {
-    console.log("🚀 API Base URL:", this.apiUrl);
     this.loadUserFromStorage(); 
   }
   
@@ -38,7 +36,6 @@ export class ApiService {
   fetchUser() {
     const token = localStorage.getItem('auth_token');
     if (!token) {
-      console.warn("❌ No auth token found, skipping fetchUser()");
       return;
     }
   
@@ -98,7 +95,6 @@ export class ApiService {
   logout(): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true }).pipe(
       tap(() => {
-        console.log("🚪 Logging out...");
         
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
@@ -114,7 +110,6 @@ export class ApiService {
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
-    console.log("🔒Hier Auth token:", token);
     
     if (!token) {
       console.warn("❌ No auth token found in localStorage!");
@@ -215,7 +210,6 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/comments`, commentData, { headers: this.getAuthHeaders() });
   }
   getSavedGyms(userId: string): Observable<any> {
-    console.log(`📡 Fetching saved gyms for User ID: ${userId}`);
   
     return this.http.get(`${this.apiUrl}/users/saved-gyms/${userId}`, {
       headers: this.getAuthHeaders(),
