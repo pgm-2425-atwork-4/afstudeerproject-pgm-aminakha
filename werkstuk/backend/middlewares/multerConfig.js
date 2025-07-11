@@ -24,7 +24,7 @@ const gymStorage = new CloudinaryStorage({
   }
 });
 
-// 📁 Video's (optioneel, mag blijven)
+// 📁 Video's (optioneel)
 const videoStorage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -46,17 +46,24 @@ const logoStorage = new CloudinaryStorage({
   }
 });
 
-// ✅ Multer-instances
+// ✅ Losse uploaders
 const upload = multer({ storage: uploadStorage });               // User profiel
 const gymUpload = multer({ storage: gymStorage });               // Algemeen
-const uploadLogo = multer({ storage: logoStorage }).single("logo");   // 1x logo
-const uploadImages = multer({ storage: gymStorage }).array("images", 5); // max 5 images
-const uploadImage = multer({ storage: gymStorage }).single("image");    // losse image
+const uploadLogo = multer({ storage: logoStorage }).single("logo");
+const uploadImages = multer({ storage: gymStorage }).array("images", 5);
+const uploadImage = multer({ storage: gymStorage }).single("image");
+
+// ✅ COMBINATIE: Logo + Images in één formulier
+const uploadGymFields = multer().fields([
+  { name: "logo", maxCount: 1 },
+  { name: "images", maxCount: 5 }
+]);
 
 module.exports = {
-  upload,          // voor user-profiel
-  gymUpload,       // algemeen
-  uploadLogo,      // 1x logo
-  uploadImage,     // losse image
-  uploadImages     // max 5 images
+  upload,            // user profiel
+  gymUpload,
+  uploadLogo,
+  uploadImage,
+  uploadImages,
+  uploadGymFields    // 👈 gebruik deze in je gym route
 };
