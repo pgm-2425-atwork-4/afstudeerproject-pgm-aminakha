@@ -79,8 +79,10 @@ export class AdminAddGymComponent implements OnInit {
       formData.append('images', file);
     });
 
+    console.log('📦 Form Data:', formData);
+    
     this.apiService.addGym(formData).subscribe({
-      next: (res) => {
+      next: (res) => {        
         console.log('✅ Gym Added:', res);
         alert('Gym added successfully!');
       },

@@ -183,7 +183,7 @@ export class ApiService {
     });
   }
   addGym(formData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add-gym`, formData, { headers: this.getAuthHeaders() });
+    return this.http.post(`${this.apiUrl}/gyms/add-gym`, formData, { headers: this.getAuthHeaders() });
   }
 
   getAdminGyms(adminId: string): Observable<any> {

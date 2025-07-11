@@ -42,22 +42,39 @@ exports.getGymById = (req, res) => {
 };
 
 exports.addGym = (req, res) => {
+
   const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
   const logoUrl = req.files["logo"]?.[0].path || null;
   const imageUrls = req.files["images"]?.map(file => file.path) || [];
 
-  if (!name || !city || !rating || !opening_hours || !address || !category_id || !pricing_id || !province_id) {
+  if (!name || !city || !rating || !opening_hours || !address || !category_id || !province_id) {
     return res.status(400).json({ error: "❌ Missing required fields" });
   }
 
   const sql = `
-    INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id,
-                      category_id, pricing_id, province_id, logo, email, phone, website)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id,
+                    category_id, province_id, logo, email, phone, website)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
-  const values = [name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, logoUrl, email, phone, website];
+  const values = [name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, province_id, logoUrl, email, phone, website];
 
   db.query(sql, values, (err, result) => {
+    const priceValues = prices.map((price, index) => [
+    gymId,
+    price,
+    descriptions[index]
+    ]);
+    const insertPrices = (callback) => {
+  if (priceValues.length > 0) {
+    const priceSql = "INSERT INTO prices (gym_id, price, description) VALUES ?";
+    db.query(priceSql, [priceValues], (err) => {
+      if (err) return res.status(500).json({ error: "Price insert error" });
+      callback();
+    });
+  } else {
+    callback();
+  }
+};
     if (err) return res.status(500).json({ error: "Database error" });
     const gymId = result.insertId;
     if (imageUrls.length) {
