@@ -42,55 +42,125 @@ exports.getGymById = (req, res) => {
 };
 
 exports.addGym = (req, res) => {
-console.log("✅ files:", req.files);
-console.log("✅ body:", req.body);
-  const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
-  const logoUrl = req.files["logo"]?.[0].path || null;
-  const imageUrls = req.files["images"]?.map(file => file.path) || [];
+  console.log("✅ files:", req.files);
+  console.log("✅ body:", req.body);
 
+  const {
+    name,
+    city,
+    rating,
+    opening_hours,
+    address,
+    personal_trainer,
+    pressure_id,
+    category_id,
+    province_id,
+    email,
+    phone,
+    website,
+    priceOne,
+    descriptionOne,
+    planTypeOne,
+    priceTwo,
+    descriptionTwo,
+    planTypeTwo,
+    priceThree,
+    descriptionThree,
+    planTypeThree
+  } = req.body;
+
+  const logoUrl = req.files["logo"]?.[0]?.path || null;
+  const imageUrls = req.files["images"]?.map((file) => file.path) || [];
+
+  // ✅ Validatie op basisgegevens
   if (!name || !city || !rating || !opening_hours || !address || !category_id || !province_id) {
     return res.status(400).json({ error: "❌ Missing required fields" });
   }
 
   const sql = `
-  INSERT INTO gyms (name, city, rating, opening_hours, address, personal_trainer, pressure_id,
-                    category_id, province_id, logo, email, phone, website)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO gyms (
+      name, city, rating, opening_hours, address, personal_trainer,
+      pressure_id, category_id, province_id, logo, email, phone, website
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
-  const values = [name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, province_id, logoUrl, email, phone, website];
+  const values = [
+    name,
+    city,
+    rating,
+    opening_hours,
+    address,
+    personal_trainer,
+    pressure_id,
+    category_id,
+    province_id,
+    logoUrl,
+    email,
+    phone,
+    website
+  ];
 
   db.query(sql, values, (err, result) => {
-    const priceValues = prices.map((price, index) => [
-    gymId,
-    price,
-    descriptions[index]
-    ]);
-    const insertPrices = (callback) => {
-  if (priceValues.length > 0) {
-    const priceSql = "INSERT INTO prices (gym_id, price, description) VALUES ?";
-    db.query(priceSql, [priceValues], (err) => {
-      if (err) return res.status(500).json({ error: "Price insert error" });
-      callback();
-    });
-  } else {
-    callback();
-  }
-};
-    if (err) return res.status(500).json({ error: "Database error" });
-    const gymId = result.insertId;
-    if (imageUrls.length) {
-      const imgSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
-      const imgValues = imageUrls.map(url => [gymId, url]);
-      db.query(imgSql, [imgValues], (err) => {
-        if (err) return res.status(500).json({ error: "Image insert error" });
-        res.status(201).json({ message: "✅ Gym Added!", gymId, logo: logoUrl, images: imageUrls });
-      });
-    } else {
-      res.status(201).json({ message: "✅ Gym Added!", gymId, logo: logoUrl });
+    if (err) {
+      console.error("❌ DB insert error:", err);
+      return res.status(500).json({ error: "Database error" });
     }
+
+    const gymId = result.insertId;
+
+    // 💰 Insert prices
+    const pricePlans = [
+      [priceOne, descriptionOne, planTypeOne],
+      [priceTwo, descriptionTwo, planTypeTwo],
+      [priceThree, descriptionThree, planTypeThree]
+    ].filter(([price, desc, plan]) => price && desc && plan);
+
+    const insertPrices = (cb) => {
+      if (pricePlans.length > 0) {
+        const enriched = pricePlans.map(([price, desc, plan]) => [price, desc, plan, gymId]);
+        const priceSql = "INSERT INTO prices (price, description, plan_type, gym_id) VALUES ?";
+        db.query(priceSql, [enriched], (err2) => {
+          if (err2) {
+            console.error("❌ Price insert error:", err2);
+            return res.status(500).json({ error: "Price insert error" });
+          }
+          cb();
+        });
+      } else {
+        cb();
+      }
+    };
+
+    // 🖼️ Insert gallery images
+    const insertImages = () => {
+      if (imageUrls.length > 0) {
+        const imgSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
+        const imgValues = imageUrls.map((url) => [gymId, url]);
+        db.query(imgSql, [imgValues], (imgErr) => {
+          if (imgErr) {
+            console.error("❌ Image insert error:", imgErr);
+            return res.status(500).json({ error: "Image insert error" });
+          }
+          return res.status(201).json({
+            message: "✅ Gym Added!",
+            gymId,
+            logo: logoUrl,
+            images: imageUrls
+          });
+        });
+      } else {
+        return res.status(201).json({
+          message: "✅ Gym Added!",
+          gymId,
+          logo: logoUrl
+        });
+      }
+    };
+
+    // 🔁 Eerst prices → dan images → dan response
+    insertPrices(insertImages);
   });
 };
-
 exports.updateGym = (req, res) => {
   const { name, city, rating, opening_hours, address, email, phone, website } = req.body;
   const gymId = req.params.id;

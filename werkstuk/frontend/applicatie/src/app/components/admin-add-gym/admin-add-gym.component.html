@@ -25,34 +25,23 @@
   <label>Pricing Plans:</label>
 
  <div style="margin-bottom: 10px;">
-  <input type="number"
-         placeholder="Price"
-         name="price[]"
-         required />
-  <input type="text"
-         placeholder="Description"
-         name="description[]"
-         required />
+  <input type="number" name="priceOne" placeholder="Price" required />
+  <input type="text" name="descriptionOne" placeholder="Description" required />
+  <input type="text" name="planTypeOne" placeholder="Plan Type" required />
 </div>
 
 <div style="margin-bottom: 10px;">
-  <input type="number"
-         placeholder="Price"
-         name="price[]" />
-  <input type="text"
-         placeholder="Description"
-         name="description[]" />
+  <input type="number" name="priceTwo" placeholder="Price" required />
+  <input type="text" name="descriptionTwo" placeholder="Description" required />
+  <input type="text" name="planTypeTwo" placeholder="Plan Type" required />
 </div>
 
 <div style="margin-bottom: 10px;">
-  <input type="number"
-         placeholder="Price"
-         name="price[]" />
-  <input type="text"
-         placeholder="Description"
-         name="description[]" />
+  <input type="number" name="priceThree" placeholder="Price" required />
+  <input type="text" name="descriptionThree" placeholder="Description" required />
+  <input type="text" name="planTypeThree" placeholder="Plan Type" required />
 </div>
-  <p class="btn" (click)="addPricing()">+ Add Another Pricing Plan</p>
+
 
   <label>Gym Logo:</label>
   <input type="file" (change)="onLogoSelected($event)" accept="image/*" name="logo" required />

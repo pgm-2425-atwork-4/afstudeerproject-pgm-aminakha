@@ -25,7 +25,16 @@ export class AdminAddGymComponent implements OnInit {
     province_id: '',
     email: '',
     phone: '',
-    website: ''
+    website: '',
+    priceOne: '',
+    descriptionOne: '',
+    priceTwo: '',
+    descriptionTwo: '',
+    priceThree: '',
+    descriptionThree: '',
+    planTypeOne: '',
+    planTypeTwo: '',
+    planTypeThree: ''
   };
 
   selectedLogo: File | null = null;
@@ -66,7 +75,16 @@ export class AdminAddGymComponent implements OnInit {
     formData.append('category_id', this.gymData.category_id);
     formData.append('pricing_id', this.gymData.pricing_id);
     formData.append('province_id', this.gymData.province_id);
-    
+    formData.append("priceOne", this.gymData.priceOne);
+    formData.append("descriptionOne", this.gymData.descriptionOne);
+    formData.append("priceTwo", this.gymData.priceTwo);
+    formData.append("descriptionTwo", this.gymData.descriptionTwo);
+    formData.append("priceThree", this.gymData.priceThree);
+    formData.append("descriptionThree", this.gymData.descriptionThree);
+    formData.append("planTypeOne", this.gymData.planTypeOne);
+    formData.append("planTypeTwo", this.gymData.planTypeTwo);
+    formData.append("planTypeThree", this.gymData.planTypeThree);
+
     formData.append('email', this.gymData.email);
     formData.append('phone', this.gymData.phone);
     formData.append('website', this.gymData.website);
