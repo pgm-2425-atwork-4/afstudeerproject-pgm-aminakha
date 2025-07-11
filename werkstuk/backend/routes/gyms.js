@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/", gymController.getAllGyms);
 router.get("/:id", gymController.getGymById);
-router.post("/add-gym", uploadFields, gymController.addGym);
+router.post("/add-gym", uploadLogo, uploadImages, gymController.addGym);
 router.put("/:id", verifyToken, uploadLogo.single("logo"), gymController.updateGym);
 router.delete("/:id", verifyToken, gymController.deleteGym);
 
