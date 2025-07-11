@@ -42,7 +42,8 @@ exports.getGymById = (req, res) => {
 };
 
 exports.addGym = (req, res) => {
-
+console.log("✅ files:", req.files);
+console.log("✅ body:", req.body);
   const { name, city, rating, opening_hours, address, personal_trainer, pressure_id, category_id, pricing_id, province_id, email, phone, website } = req.body;
   const logoUrl = req.files["logo"]?.[0].path || null;
   const imageUrls = req.files["images"]?.map(file => file.path) || [];

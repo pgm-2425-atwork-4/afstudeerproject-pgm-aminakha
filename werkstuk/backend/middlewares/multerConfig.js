@@ -2,7 +2,7 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
 
-// 📁 User profiel upload (bijv. avatar)
+// 👤 User uploads
 const uploadStorage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -13,7 +13,7 @@ const uploadStorage = new CloudinaryStorage({
   }
 });
 
-// 📁 Gym-afbeeldingen
+// 🖼️ Gym images
 const gymStorage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -24,7 +24,7 @@ const gymStorage = new CloudinaryStorage({
   }
 });
 
-// 📁 Logo's van gyms
+// 🏷️ Gym logos
 const logoStorage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -35,35 +35,26 @@ const logoStorage = new CloudinaryStorage({
   }
 });
 
-// 📁 Video's (indien later nodig)
-const videoStorage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "exercise_videos",
-    format: async () => "mp4",
-    public_id: (req, file) =>
-      Date.now() + "-video-" + file.originalname.replace(/\s/g, "_")
-  }
-});
+// ✅ Losse uploaders
+const upload = multer({ storage: uploadStorage });               // user profiel
+const gymUpload = multer({ storage: gymStorage });
+const uploadLogo = multer({ storage: logoStorage }).single("logo");
+const uploadImage = multer({ storage: gymStorage }).single("image");
+const uploadImages = multer({ storage: gymStorage }).array("images", 5);
 
-// ✅ Multer middleware instances
-const upload = multer({ storage: uploadStorage });               // Voor gebruikersprofiel
-const gymUpload = multer({ storage: gymStorage });               // Algemene gym-afbeelding
-const uploadLogo = multer({ storage: logoStorage }).single("logo");  // Één logo uploaden
-const uploadImages = multer({ storage: gymStorage }).array("images", 5); // Max 5 afbeeldingen
-const uploadImage = multer({ storage: gymStorage }).single("image");    // Eén afbeelding
-
-// ✅ Gebruik dit voor upload van zowel logo als images in één formulier
-const uploadGymFields = multer({ storage: gymStorage }).fields([
+// ✅ COMBINATIE: logo + images (via .fields)
+const uploadGymFields = multer({
+  storage: gymStorage,
+}).fields([
   { name: "logo", maxCount: 1 },
   { name: "images", maxCount: 5 }
 ]);
 
 module.exports = {
-  upload,             // voor gebruikersprofiel
-  gymUpload,          // algemene gym uploads
-  uploadLogo,         // logo upload
-  uploadImage,        // enkele image upload
-  uploadImages,       // meerdere images
-  uploadGymFields     // voor formulier met zowel 'logo' als 'images'
+  upload,           // voor users
+  gymUpload,        // voor algemene gym uploads
+  uploadLogo,       // enkele logo upload
+  uploadImage,      // 1 image
+  uploadImages,     // max 5 images
+  uploadGymFields   // ✅ combinatie logo + images
 };
