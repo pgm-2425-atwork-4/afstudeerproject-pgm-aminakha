@@ -11,6 +11,7 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./admin-add-gym.component.css']
 })
 export class AdminAddGymComponent implements OnInit {
+  
   gymData: any = {
     name: '',
     city: '',
@@ -89,4 +90,10 @@ export class AdminAddGymComponent implements OnInit {
       }
     });
   }
+  addPricing() {
+  this.pricingPlans.push({});
+  console.log("✅ New pricing plan added:", this.pricingPlans);
+  
+  
+}
 }

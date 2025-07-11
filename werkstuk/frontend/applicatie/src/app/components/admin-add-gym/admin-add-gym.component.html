@@ -22,15 +22,37 @@
     <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
   </select>
 
-  <label>Pricing Plan:</label>
-  <select [(ngModel)]="gymData.pricing_id" name="pricing_id" required>
-    <option *ngFor="let pricing of pricingPlans" [value]="pricing.id">{{ pricing.bundle_name }} - €{{ pricing.price }}</option>
-  </select>
+  <label>Pricing Plans:</label>
 
-  <label>Province:</label>
-  <select [(ngModel)]="gymData.province_id" name="province_id" required>
-    <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
-  </select>
+ <div style="margin-bottom: 10px;">
+  <input type="number"
+         placeholder="Price"
+         name="price[]"
+         required />
+  <input type="text"
+         placeholder="Description"
+         name="description[]"
+         required />
+</div>
+
+<div style="margin-bottom: 10px;">
+  <input type="number"
+         placeholder="Price"
+         name="price[]" />
+  <input type="text"
+         placeholder="Description"
+         name="description[]" />
+</div>
+
+<div style="margin-bottom: 10px;">
+  <input type="number"
+         placeholder="Price"
+         name="price[]" />
+  <input type="text"
+         placeholder="Description"
+         name="description[]" />
+</div>
+  <p class="btn" (click)="addPricing()">+ Add Another Pricing Plan</p>
 
   <label>Gym Logo:</label>
   <input type="file" (change)="onLogoSelected($event)" accept="image/*" name="logo" required />

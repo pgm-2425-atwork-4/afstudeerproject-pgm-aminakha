@@ -195,7 +195,7 @@ export class ApiService {
   }
 
   getPricingPlans(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/pricing`, { headers: this.getAuthHeaders() });
+    return this.http.get(`${this.apiUrl}/prices`, { headers: this.getAuthHeaders() });
   }
 
   getProvinces(): Observable<any[]> {

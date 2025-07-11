@@ -14,6 +14,7 @@ const commentRoutes = require("./routes/comments");
 const priceRoutes = require("./routes/prices");
 const savedGymsRoutes = require("./routes/savedGyms");
 const pressureRoutes = require("./routes/pressures");
+const provinceRoutes = require("./routes/provinces");
 
 // Init upload dir (if using local uploads too)
 const { initUploadDir } = require("./utils/initUploadDir");
@@ -44,6 +45,7 @@ app.use("/comments", commentRoutes);
 app.use("/prices", priceRoutes);
 app.use("/pressures", pressureRoutes);
 app.use("/saved-gyms", savedGymsRoutes);
+app.use('/provinces', provinceRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
