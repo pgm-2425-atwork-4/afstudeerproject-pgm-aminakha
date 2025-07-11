@@ -1,13 +1,13 @@
 const express = require("express");
 const { verifyToken } = require("../middlewares/auth");
-const { upload, uploadFields, gymUpload, uploadImages, uploadLogo } = require("../middlewares/multerConfig");
+const { upload, uploadFields, gymUpload, uploadImages, uploadLogo, uploadGymFields } = require("../middlewares/multerConfig");
 const gymController = require("../controllers/gymController");
 
 const router = express.Router();
 
 router.get("/", gymController.getAllGyms);
 router.get("/:id", gymController.getGymById);
-router.post("/add-gym", uploadLogo, uploadImages, gymController.addGym);
+router.post("/add-gym", uploadGymFields, gymController.addGym);
 router.put("/:id", verifyToken, uploadLogo, gymController.updateGym); // ✅ correct
 router.delete("/:id", verifyToken, gymController.deleteGym);
 
