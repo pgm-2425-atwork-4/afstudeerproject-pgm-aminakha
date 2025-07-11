@@ -42,6 +42,9 @@
   <input type="text" name="planTypeThree" placeholder="Plan Type" required />
 </div>
 
+  <div *ngFor="let province of provinces">
+    {{ provinces | json }}
+  </div>
 
   <label>Gym Logo:</label>
   <input type="file" (change)="onLogoSelected($event)" accept="image/*" name="logo" required />

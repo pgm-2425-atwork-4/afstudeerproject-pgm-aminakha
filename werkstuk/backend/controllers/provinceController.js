@@ -1,3 +1,5 @@
+const { db } = require("../config/db");
+
 // GET provinces
 exports.getProvinces = (req, res) => {
   const sql = "SELECT id, name FROM provinces";

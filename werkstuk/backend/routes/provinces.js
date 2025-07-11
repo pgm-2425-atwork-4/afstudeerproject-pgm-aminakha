@@ -1,9 +1,8 @@
 const express = require("express");
-const { getPressures } = require("../controllers/pressuresController");
-
+const  {getProvinces}  = require("../controllers/provinceController");
 const router = express.Router();
-console.log("Loading pressures routes...");
+console.log("Loading provinces routes...");
 
-router.get("/", getPressures);
+router.get("/", getProvinces);
 
 module.exports = router;
