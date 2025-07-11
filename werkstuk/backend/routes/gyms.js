@@ -7,19 +7,7 @@ const router = express.Router();
 
 router.get("/", gymController.getAllGyms);
 router.get("/:id", gymController.getGymById);
-router.post(
-  "/add-gym",
-  uploadLogo.single("logo"), // eerst logo uploaden
-  (req, res, next) => {
-    uploadImages(req, res, function (err) {
-      if (err) {
-        return res.status(400).json({ error: "Image upload failed", details: err.message });
-      }
-      next();
-    });
-  },
-  gymController.addGym
-);
+router.post("/add-gym", uploadFields, gymController.addGym);
 router.put("/:id", verifyToken, uploadLogo.single("logo"), gymController.updateGym);
 router.delete("/:id", verifyToken, gymController.deleteGym);
 
