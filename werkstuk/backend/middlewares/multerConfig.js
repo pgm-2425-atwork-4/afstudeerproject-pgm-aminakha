@@ -42,11 +42,19 @@ const upload = multer({ storage: uploadStorage });
 const gymUpload = multer({ storage: gymStorage });
 const uploadLogo = multer({ storage: logoStorage });
 const uploadImage = multer({ storage: gymStorage }).single("image");
-const uploadFields = multer({ storage: videoStorage }).fields([
-  { name: "image", maxCount: 1 },
-  { name: "video", maxCount: 1 }
-]);
 const uploadImages = multer({ storage: gymStorage }).array("images", 5);
+
+// ✅ AANGEPASTE: correcte uploadFields voor logo + images
+const uploadFields = multer({
+  storage: function (req, file, cb) {
+    if (file.fieldname === "logo") return cb(null, logoStorage);
+    if (file.fieldname === "images") return cb(null, gymStorage);
+    return cb(new multer.MulterError("LIMIT_UNEXPECTED_FILE", file.fieldname));
+  }
+}).fields([
+  { name: "logo", maxCount: 1 },
+  { name: "images", maxCount: 5 }
+]);
 
 module.exports = {
   upload,
@@ -54,5 +62,5 @@ module.exports = {
   uploadLogo,
   uploadImage,
   uploadImages,
-  uploadFields
+  uploadFields // 👈 gebruik deze in je route
 };
