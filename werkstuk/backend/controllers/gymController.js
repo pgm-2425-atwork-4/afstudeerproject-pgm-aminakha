@@ -44,9 +44,8 @@ exports.getGymById = (req, res) => {
 exports.addGym = (req, res) => {
   console.log("✅ files:", req.files);
   console.log("✅ body:", req.body);
-console.log("✅ PRICE FIELDS:", priceOne, descriptionOne, planTypeOne);
-console.log("✅ PRICE FIELDS:", priceTwo, descriptionTwo, planTypeTwo);
-console.log("✅ PRICE FIELDS:", priceThree, descriptionThree, planTypeThree);
+
+  // ✅ Alle velden destructureren
   const {
     name,
     city,
@@ -71,13 +70,21 @@ console.log("✅ PRICE FIELDS:", priceThree, descriptionThree, planTypeThree);
     planTypeThree
   } = req.body;
 
-  const logoUrl = req.files["logo"]?.[0]?.path || null;
-  const imageUrls = req.files["images"]?.map((file) => file.path) || [];
+  // ✅ Extra logging
+  console.log("✅ PRICE FIELDS:", priceOne, descriptionOne, planTypeOne);
+  console.log("✅ PRICE FIELDS:", priceTwo, descriptionTwo, planTypeTwo);
+  console.log("✅ PRICE FIELDS:", priceThree, descriptionThree, planTypeThree);
 
+  // ✅ Cloudinary URL's
+  const logoUrl = req.files["logo"]?.[0]?.path || null;
+  const imageUrls = req.files["images"]?.map(file => file.path) || [];
+
+  // ✅ Validatie
   if (!name || !city || !rating || !opening_hours || !address || !category_id || !province_id) {
     return res.status(400).json({ error: "❌ Missing required fields" });
   }
 
+  // ✅ Gym invoegen
   const sql = `
     INSERT INTO gyms (
       name, city, rating, opening_hours, address, personal_trainer,
@@ -87,9 +94,19 @@ console.log("✅ PRICE FIELDS:", priceThree, descriptionThree, planTypeThree);
   `;
 
   const values = [
-    name, city, rating, opening_hours, address,
-    personal_trainer, pressure_id, category_id,
-    province_id, logoUrl, email, phone, website
+    name,
+    city,
+    rating,
+    opening_hours,
+    address,
+    personal_trainer,
+    pressure_id,
+    category_id,
+    province_id,
+    logoUrl,
+    email,
+    phone,
+    website
   ];
 
   db.query(sql, values, (err, result) => {
@@ -100,7 +117,7 @@ console.log("✅ PRICE FIELDS:", priceThree, descriptionThree, planTypeThree);
 
     const gymId = result.insertId;
 
-    // 💰 Insert price plans
+    // 💰 Prijzen voorbereiden
     const pricePlans = [
       [priceOne, descriptionOne, planTypeOne],
       [priceTwo, descriptionTwo, planTypeTwo],
@@ -121,7 +138,7 @@ console.log("✅ PRICE FIELDS:", priceThree, descriptionThree, planTypeThree);
       });
     };
 
-    // 🖼️ Insert gallery images
+    // 🖼️ Afbeeldingen toevoegen
     const insertImages = () => {
       if (imageUrls.length === 0) {
         return res.status(201).json({ message: "✅ Gym Added!", gymId });
@@ -145,10 +162,11 @@ console.log("✅ PRICE FIELDS:", priceThree, descriptionThree, planTypeThree);
       });
     };
 
-    // 🔁 Insert prices → then images → then respond
+    // 🔁 Eerst prijzen, dan afbeeldingen
     insertPrices(insertImages);
   });
 };
+
 
 exports.updateGym = (req, res) => {
   const { name, city, rating, opening_hours, address, email, phone, website } = req.body;
