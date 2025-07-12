@@ -84,6 +84,7 @@ exports.addGym = (req, res) => {
     )
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
+
   const values = [
     name,
     city,
@@ -108,30 +109,30 @@ exports.addGym = (req, res) => {
 
     const gymId = result.insertId;
 
-    // 💰 Insert prices
+    // 💰 Insert prijzen
     const pricePlans = [
       [priceOne, descriptionOne, planTypeOne],
       [priceTwo, descriptionTwo, planTypeTwo],
       [priceThree, descriptionThree, planTypeThree]
     ].filter(([price, desc, plan]) => price && desc && plan);
 
-    const insertPrices = (cb) => {
+    const insertPrices = (callback) => {
       if (pricePlans.length > 0) {
         const enriched = pricePlans.map(([price, desc, plan]) => [price, desc, plan, gymId]);
         const priceSql = "INSERT INTO prices (price, description, plan_type, gym_id) VALUES ?";
-        db.query(priceSql, [enriched], (err2) => {
-          if (err2) {
-            console.error("❌ Price insert error:", err2);
+        db.query(priceSql, [enriched], (priceErr) => {
+          if (priceErr) {
+            console.error("❌ Price insert error:", priceErr);
             return res.status(500).json({ error: "Price insert error" });
           }
-          cb();
+          callback();
         });
       } else {
-        cb();
+        callback();
       }
     };
 
-    // 🖼️ Insert gallery images
+    // 🖼️ Insert images
     const insertImages = () => {
       if (imageUrls.length > 0) {
         const imgSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
@@ -142,7 +143,7 @@ exports.addGym = (req, res) => {
             return res.status(500).json({ error: "Image insert error" });
           }
           return res.status(201).json({
-            message: "✅ Gym Added!",
+            message: "✅ Gym & Prices Added!",
             gymId,
             logo: logoUrl,
             images: imageUrls
@@ -150,17 +151,18 @@ exports.addGym = (req, res) => {
         });
       } else {
         return res.status(201).json({
-          message: "✅ Gym Added!",
+          message: "✅ Gym & Prices Added!",
           gymId,
           logo: logoUrl
         });
       }
     };
 
-    // 🔁 Eerst prices → dan images → dan response
+    // 🔁 Eerst prijzen → dan images
     insertPrices(insertImages);
   });
 };
+
 exports.updateGym = (req, res) => {
   const { name, city, rating, opening_hours, address, email, phone, website } = req.body;
   const gymId = req.params.id;

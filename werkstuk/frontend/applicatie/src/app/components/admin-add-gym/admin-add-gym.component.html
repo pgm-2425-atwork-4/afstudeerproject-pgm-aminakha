@@ -42,9 +42,12 @@
   <input type="text" name="planTypeThree" placeholder="Plan Type" required />
 </div>
 
-  <div *ngFor="let province of provinces">
-    {{ provinces | json }}
-  </div>
+  <label for="province">Select Province:</label>
+<select [(ngModel)]="gymData.province_id" name="province_id" required>
+  <option *ngFor="let province of provinces" [value]="province.id">
+    {{ province.name }}
+  </option>
+</select>
 
   <label>Gym Logo:</label>
   <input type="file" (change)="onLogoSelected($event)" accept="image/*" name="logo" required />
