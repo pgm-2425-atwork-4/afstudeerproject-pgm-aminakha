@@ -72,7 +72,6 @@ exports.addGym = (req, res) => {
   const logoUrl = req.files["logo"]?.[0]?.path || null;
   const imageUrls = req.files["images"]?.map((file) => file.path) || [];
 
-  // ✅ Validatie op basisgegevens
   if (!name || !city || !rating || !opening_hours || !address || !category_id || !province_id) {
     return res.status(400).json({ error: "❌ Missing required fields" });
   }
@@ -86,19 +85,9 @@ exports.addGym = (req, res) => {
   `;
 
   const values = [
-    name,
-    city,
-    rating,
-    opening_hours,
-    address,
-    personal_trainer,
-    pressure_id,
-    category_id,
-    province_id,
-    logoUrl,
-    email,
-    phone,
-    website
+    name, city, rating, opening_hours, address,
+    personal_trainer, pressure_id, category_id,
+    province_id, logoUrl, email, phone, website
   ];
 
   db.query(sql, values, (err, result) => {
@@ -109,7 +98,7 @@ exports.addGym = (req, res) => {
 
     const gymId = result.insertId;
 
-    // 💰 Insert prijzen
+    // 💰 Insert price plans
     const pricePlans = [
       [priceOne, descriptionOne, planTypeOne],
       [priceTwo, descriptionTwo, planTypeTwo],
@@ -117,48 +106,44 @@ exports.addGym = (req, res) => {
     ].filter(([price, desc, plan]) => price && desc && plan);
 
     const insertPrices = (callback) => {
-      if (pricePlans.length > 0) {
-        const enriched = pricePlans.map(([price, desc, plan]) => [price, desc, plan, gymId]);
-        const priceSql = "INSERT INTO prices (price, description, plan_type, gym_id) VALUES ?";
-        db.query(priceSql, [enriched], (priceErr) => {
-          if (priceErr) {
-            console.error("❌ Price insert error:", priceErr);
-            return res.status(500).json({ error: "Price insert error" });
-          }
-          callback();
-        });
-      } else {
+      if (pricePlans.length === 0) return callback();
+
+      const enriched = pricePlans.map(([price, desc, plan]) => [price, desc, plan, gymId]);
+      const priceSql = "INSERT INTO prices (price, description, plan_type, gym_id) VALUES ?";
+      db.query(priceSql, [enriched], (priceErr) => {
+        if (priceErr) {
+          console.error("❌ Price insert error:", priceErr);
+          return res.status(500).json({ error: "Price insert error" });
+        }
         callback();
-      }
+      });
     };
 
-    // 🖼️ Insert images
+    // 🖼️ Insert gallery images
     const insertImages = () => {
-      if (imageUrls.length > 0) {
-        const imgSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
-        const imgValues = imageUrls.map((url) => [gymId, url]);
-        db.query(imgSql, [imgValues], (imgErr) => {
-          if (imgErr) {
-            console.error("❌ Image insert error:", imgErr);
-            return res.status(500).json({ error: "Image insert error" });
-          }
-          return res.status(201).json({
-            message: "✅ Gym & Prices Added!",
-            gymId,
-            logo: logoUrl,
-            images: imageUrls
-          });
-        });
-      } else {
-        return res.status(201).json({
+      if (imageUrls.length === 0) {
+        return res.status(201).json({ message: "✅ Gym Added!", gymId });
+      }
+
+      const imgSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
+      const imgValues = imageUrls.map((url) => [gymId, url]);
+
+      db.query(imgSql, [imgValues], (imgErr) => {
+        if (imgErr) {
+          console.error("❌ Image insert error:", imgErr);
+          return res.status(500).json({ error: "Image insert error" });
+        }
+
+        res.status(201).json({
           message: "✅ Gym & Prices Added!",
           gymId,
-          logo: logoUrl
+          logo: logoUrl,
+          images: imageUrls
         });
-      }
+      });
     };
 
-    // 🔁 Eerst prijzen → dan images
+    // 🔁 Insert prices → then images → then respond
     insertPrices(insertImages);
   });
 };
