@@ -2,20 +2,40 @@ const { db } = require("../config/db");
 
 exports.getAllGyms = (req, res) => {
   const sql = `
-    SELECT g.*, p.name AS province, c.name AS category, pr.bundle_name AS pricing_bundle, pr.price,
-           pres.name AS pressure, GROUP_CONCAT(i.image_url) AS images
+    SELECT g.*, 
+           p.name AS province, 
+           c.name AS category, 
+           pres.name AS pressure, 
+           GROUP_CONCAT(i.image_url) AS images
     FROM gyms g
     LEFT JOIN provinces p ON g.province_id = p.id
     LEFT JOIN categories c ON g.category_id = c.id
-    LEFT JOIN prices pr ON g.pricing_id = pr.id
     LEFT JOIN images i ON g.id = i.gym_id
     LEFT JOIN pressures pres ON g.pressure_id = pres.id
-    GROUP BY g.id;
+    GROUP BY g.id
   `;
-  db.query(sql, (err, results) => {
-    if (err) return res.status(500).json({ error: "Database error" });
-    results.forEach(gym => gym.images = gym.images ? gym.images.split(",") : []);
-    res.json(results);
+
+  db.query(sql, (err, gyms) => {
+    if (err) return res.status(500).json({ error: "❌ Failed to fetch gyms" });
+
+    // Voor elke gym: prijzen ophalen
+    const gymIds = gyms.map(g => g.id);
+    if (gymIds.length === 0) return res.json([]);
+
+    const priceSql = `
+      SELECT * FROM prices WHERE gym_id IN (?)
+    `;
+    db.query(priceSql, [gymIds], (err2, prices) => {
+      if (err2) return res.status(500).json({ error: "❌ Failed to fetch prices" });
+
+      // Koppel prijzen aan gyms
+      gyms.forEach(gym => {
+        gym.images = gym.images ? gym.images.split(",") : [];
+        gym.prices = prices.filter(p => p.gym_id === gym.id);
+      });
+
+      res.json(gyms);
+    });
   });
 };
 
