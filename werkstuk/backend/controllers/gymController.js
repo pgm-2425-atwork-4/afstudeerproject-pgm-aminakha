@@ -44,7 +44,9 @@ exports.getGymById = (req, res) => {
 exports.addGym = (req, res) => {
   console.log("✅ files:", req.files);
   console.log("✅ body:", req.body);
-
+console.log("✅ PRICE FIELDS:", priceOne, descriptionOne, planTypeOne);
+console.log("✅ PRICE FIELDS:", priceTwo, descriptionTwo, planTypeTwo);
+console.log("✅ PRICE FIELDS:", priceThree, descriptionThree, planTypeThree);
   const {
     name,
     city,

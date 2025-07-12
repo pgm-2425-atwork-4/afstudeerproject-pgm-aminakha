@@ -24,22 +24,22 @@
 
   <label>Pricing Plans:</label>
 
- <div style="margin-bottom: 10px;">
-  <input type="number" name="priceOne" placeholder="Price" required />
-  <input type="text" name="descriptionOne" placeholder="Description" required />
-  <input type="text" name="planTypeOne" placeholder="Plan Type" required />
+<div style="margin-bottom: 10px;">
+  <input type="number" name="priceOne" placeholder="Price" [(ngModel)]="gymData.priceOne" required />
+  <input type="text" name="descriptionOne" placeholder="Description" [(ngModel)]="gymData.descriptionOne" required />
+  <input type="text" name="planTypeOne" placeholder="Plan Type" [(ngModel)]="gymData.planTypeOne" required />
 </div>
 
 <div style="margin-bottom: 10px;">
-  <input type="number" name="priceTwo" placeholder="Price" required />
-  <input type="text" name="descriptionTwo" placeholder="Description" required />
-  <input type="text" name="planTypeTwo" placeholder="Plan Type" required />
+  <input type="number" name="priceTwo" placeholder="Price" [(ngModel)]="gymData.priceTwo" required />
+  <input type="text" name="descriptionTwo" placeholder="Description" [(ngModel)]="gymData.descriptionTwo" required />
+  <input type="text" name="planTypeTwo" placeholder="Plan Type" [(ngModel)]="gymData.planTypeTwo" required />
 </div>
 
 <div style="margin-bottom: 10px;">
-  <input type="number" name="priceThree" placeholder="Price" required />
-  <input type="text" name="descriptionThree" placeholder="Description" required />
-  <input type="text" name="planTypeThree" placeholder="Plan Type" required />
+  <input type="number" name="priceThree" placeholder="Price" [(ngModel)]="gymData.priceThree" required />
+  <input type="text" name="descriptionThree" placeholder="Description" [(ngModel)]="gymData.descriptionThree" required />
+  <input type="text" name="planTypeThree" placeholder="Plan Type" [(ngModel)]="gymData.planTypeThree" required />
 </div>
 
   <label for="province">Select Province:</label>
