@@ -41,25 +41,37 @@ exports.getAllGyms = (req, res) => {
 
 exports.getGymById = (req, res) => {
   const sql = `
-    SELECT g.*, p.name AS province, c.name AS category, pr.description AS pricing_bundle, pr.price,
-           pres.name AS pressure, GROUP_CONCAT(i.image_url) AS images
+    SELECT g.*, 
+           p.name AS province, 
+           c.name AS category, 
+           pres.name AS pressure, 
+           GROUP_CONCAT(i.image_url) AS images
     FROM gyms g
     LEFT JOIN provinces p ON g.province_id = p.id
     LEFT JOIN categories c ON g.category_id = c.id
-    LEFT JOIN prices pr ON g.pricing_id = pr.id
-    LEFT JOIN images i ON g.id = i.gym_id
     LEFT JOIN pressures pres ON g.pressure_id = pres.id
+    LEFT JOIN images i ON g.id = i.gym_id
     WHERE g.id = ?
     GROUP BY g.id;
   `;
+
   db.query(sql, [req.params.id], (err, results) => {
     if (err) return res.status(500).json({ error: "Database error" });
     if (results.length === 0) return res.status(404).json({ error: "Gym not found" });
+
     const gym = results[0];
     gym.images = gym.images ? gym.images.split(",") : [];
-    res.json(gym);
+
+    const priceSql = `SELECT id, price, description, plan_type FROM prices WHERE gym_id = ?`;
+    db.query(priceSql, [gym.id], (priceErr, priceResults) => {
+      if (priceErr) return res.status(500).json({ error: "Price fetch error" });
+
+      gym.prices = priceResults;
+      res.json(gym);
+    });
   });
 };
+
 
 exports.addGym = (req, res) => {
   console.log("✅ files:", req.files);
