@@ -15,7 +15,7 @@ import { ExercisesComponent } from './pages/exercises/exercises.component';
 import { AdminAddExerciseCategoryComponent } from './components/admin-add-exercise-category/admin-add-exercise-category.component';
 import { AdminAddExerciseComponent } from './components/admin-add-exercise/admin-add-exercise.component';
 import { AdminGymsComponent } from './components/admin-gyms/admin-gyms.component';
-// ✅ Client-side routes (CSR)
+
 export const routes: Routes = [
   { path: '/afstudeerproject-pgm-aminakha', component: HomeComponent },
   { path: 'login', component: LoginComponent },
@@ -29,10 +29,10 @@ export const routes: Routes = [
     path: 'admin', 
     component: AdminDashboardComponent, 
     children: [
-      { path: '', redirectTo: 'categories', pathMatch: 'full' }, // Default admin route
+      { path: '', redirectTo: 'categories', pathMatch: 'full' },
       { path: 'categories', component: AdminCategoryComponent },
       { path: 'gyms', component: AdminGymsComponent },
-      { path: 'add-gym', component: AdminAddGymComponent }, // ✅ Ensure this matches
+      { path: 'add-gym', component: AdminAddGymComponent },
       {path:"add-exercise-category",component:AdminAddExerciseCategoryComponent},
       {path:"add-exercise",component:AdminAddExerciseComponent}
     ]
@@ -41,11 +41,10 @@ export const routes: Routes = [
   
 ];
 
-// ✅ Server-side routes (SSR) with Prerendering
 export const serverRoutes: ServerRoute[] = [
   {
-    path: 'user-profile/:id', // ✅ Must match main.ts
+    path: 'user-profile/:id', 
     renderMode: RenderMode.Prerender,
-    getPrerenderParams: fetchUserIds  // ✅ Fetch user IDs dynamically
+    getPrerenderParams: fetchUserIds 
   }
 ];

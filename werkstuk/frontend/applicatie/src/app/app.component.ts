@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
 import {HeaderComponent} from './header/header.component';
-import { RouterModule } from '@angular/router'; // ✅ Import RouterModule
+import { RouterModule } from '@angular/router'; 
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ApiService } from './services/api.service'; // ✅ Import the API Service
+import { ApiService } from './services/api.service'; 
 import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ HeaderComponent,FooterComponent,CommonModule,RouterOutlet], // ✅ Ensure RouterModule is included
+  imports: [ HeaderComponent,FooterComponent,CommonModule,RouterOutlet], 
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ApiService] // ✅ Add the API Service to the providers array
+  providers: [ApiService] 
 })
 export class AppComponent {
-  constructor(private apiService: ApiService) {} // ✅ Inject service
+  constructor(private apiService: ApiService) {}
   ngOnInit() {
-    console.log("🌍 App started, waking up backend..."); // ✅ Check if this appears
-    this.apiService.wakeUpBackend(); // ✅ Call the backend
+    console.log("🌍 App started, waking up backend..."); 
+    this.apiService.wakeUpBackend(); 
   }
 }

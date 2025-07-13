@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service'; // Use ApiService
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { GymService } from '../../services/gym.service';
 
 @Component({
   standalone: true,
@@ -22,13 +23,21 @@ export class GymDetailComponent implements OnInit {
   newComment: string = "";
   newCommentTitle: string = "";
   user: any; 
-  profile_image  = '';  
-  constructor(private route: ActivatedRoute, private apiService: ApiService) {}
+  profile_image  = ''; 
+  gymImages: any = []; 
+  constructor(private route: ActivatedRoute, private apiService: ApiService, private gymService: GymService) {}
 
   ngOnInit(): void {
     const gymId = this.route.snapshot.paramMap.get('id');
   
     if (gymId) {
+      this.gymService.getGymImages(gymId).subscribe({
+        next: (images) => {
+          this.gymImages = images;
+          console.log("🏋️‍♂️ Gym Images:", this.gymImages);
+        },
+        error: (err) => console.error("❌ Error fetching gym images:", err)
+      });
       this.apiService.getGymById(gymId).subscribe({
         next: (data) => {
         
