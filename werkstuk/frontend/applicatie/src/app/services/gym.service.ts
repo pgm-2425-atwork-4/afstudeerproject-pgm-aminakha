@@ -1,8 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../environments/environment";
-
+import { Injectable } from "@angular/core";
+@Injectable({
+  providedIn: 'root'
+})
 export class GymService { 
-  private apiUrl = environment.apiUrl + '/gyms';
+  private apiUrl = environment.apiUrl + '/sporthallen';
 
   constructor(private http: HttpClient) {}
 

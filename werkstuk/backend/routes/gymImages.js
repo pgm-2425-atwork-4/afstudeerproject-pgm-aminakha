@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/:gymId/images', async (req, res) => {
     try {
         const { gymId } = req.params;
-        const data = await db.query(
+        const data =  db.query(
             'SELECT * FROM gym_images WHERE gym_id = $1',
             [gymId]
         );
