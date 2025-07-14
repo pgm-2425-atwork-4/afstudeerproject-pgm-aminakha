@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { deleteSavedGym } = require("../controllers/userController"); // or your savedGymsController
 const { verifyToken } = require("../middlewares/auth");
+const db = require("../config/db"); // Assuming you have a db config file   $
 
 router.delete("/:userId/:gymId", verifyToken, deleteSavedGym);
 router.get("/:userId", verifyToken, (req, res) => {
