@@ -84,9 +84,22 @@ exports.deleteSavedGym = (req, res) => {
 
 exports.saveGym = (req, res) => {
   const { userId, gymId } = req.body;
-  const sql = "INSERT INTO saved_gyms (user_id, gym_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE gym_id = gym_id";
+
+  if (!userId || !gymId) {
+    return res.status(400).json({ error: "Missing userId or gymId" });
+  }
+
+  const sql = `
+    INSERT INTO saved_gyms (user_id, gym_id)
+    VALUES (?, ?)
+    ON DUPLICATE KEY UPDATE gym_id = gym_id
+  `;
+
   db.query(sql, [userId, gymId], (err) => {
-    if (err) return res.status(500).json({ error: "Database error" });
+    if (err) {
+      console.error("❌ MySQL error:", err); // 👈 log detail
+      return res.status(500).json({ error: "Database error", details: err });
+    }
     res.json({ message: "✅ Gym saved successfully!" });
   });
 };

@@ -233,7 +233,7 @@ export class ApiService {
 
   
   saveGym(userId: string, gymId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/save-gym`, { userId, gymId }, { headers: this.getAuthHeaders() });
+    return this.http.post(`${this.apiUrl}/users/save-gym`, { userId, gymId }, { headers: this.getAuthHeaders() });
   }
   deleteSavedGym(userId: string, gymId: string): Observable<any> {
     const token = localStorage.getItem('auth_token');
