@@ -15,10 +15,27 @@ exports.getCommentsByGymId = (req, res) => {
 
 exports.addComment = (req, res) => {
   const { gymId, commentText, title } = req.body;
+
+  if (!req.user || !req.user.id) {
+    return res.status(401).json({ error: "Unauthorized – missing user" });
+  }
+
+  if (!gymId || !commentText || !title) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
   const userId = req.user.id;
-  const sql = "INSERT INTO comments (user_id, gym_id, comment_text, title) VALUES (?, ?, ?, ?)";
+  const sql = `
+    INSERT INTO comments (user_id, gym_id, comment_text, title)
+    VALUES (?, ?, ?, ?)
+  `;
+
   db.query(sql, [userId, gymId, commentText, title], (err, result) => {
-    if (err) return res.status(500).json({ error: "Database error" });
+    if (err) {
+      console.error("❌ MySQL error:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
     res.status(201).json({
       id: result.insertId,
       user_id: userId,
@@ -28,6 +45,7 @@ exports.addComment = (req, res) => {
     });
   });
 };
+
 
 exports.likeComment = (req, res) => {
   const { commentId, userId } = req.body;
