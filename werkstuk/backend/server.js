@@ -49,6 +49,7 @@ app.use("/comments", commentRoutes);
 app.use("/prices", priceRoutes);
 app.use("/pressures", pressureRoutes);
 app.use("/saved-gyms", savedGymsRoutes);
+
 app.use('/provinces', provinceRoutes);
 app.use('/sporthallen', gymImagesRoutes);
 
