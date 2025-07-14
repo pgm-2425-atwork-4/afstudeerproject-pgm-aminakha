@@ -211,7 +211,7 @@ export class ApiService {
   }
   getSavedGyms(userId: string): Observable<any> {
   
-    return this.http.get(`${this.apiUrl}/users/saved-gyms/${userId}`, {
+    return this.http.get(`${this.apiUrl}/saved-gyms/${userId}`, {
       headers: this.getAuthHeaders(),
       withCredentials: true
     }).pipe(
