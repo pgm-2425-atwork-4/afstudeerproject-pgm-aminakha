@@ -53,7 +53,7 @@ app.use("/saved-gyms", savedGymsRoutes);
 
 app.use('/provinces', provinceRoutes);
 app.use('/sporthallen', gymImagesRoutes);
-app.use('exercises', exerciseCategories)
+app.use('/exercises', exerciseCategories)
 
 // Start server
 const PORT = process.env.PORT || 5000;
