@@ -3,6 +3,7 @@ import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ExerciseService } from '../../services/exercise.service';
 
 @Component({
   selector: 'app-admin-add-exercise',
@@ -28,12 +29,13 @@ export class AdminAddExerciseComponent implements OnInit {
   categories: any[] = []; 
   pressures: any[] = []; 
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private exerciseService: ExerciseService) {}
 
   ngOnInit(): void {
-    this.apiService.getExerciseCategories().subscribe({
+
+    this.exerciseService.getExerciseCategories().subscribe({
       next: (categories) => {
-        this.categories = categories;
+        categories = categories;
       },
       error: (err) => {
         console.error("🔥 Error fetching categories:", err);
