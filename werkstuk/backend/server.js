@@ -18,6 +18,7 @@ const provinceRoutes = require("./routes/provinces");
 const gymImagesRoutes = require("./routes/gymImages");
 const exerciseCategories = require("./routes/exercises");
 // Init upload dir (if using local uploads too)
+const adminRoutes = require("./routes/admin");  
 const { initUploadDir } = require("./utils/initUploadDir");
 initUploadDir();
 
@@ -54,6 +55,7 @@ app.use("/saved-gyms", savedGymsRoutes);
 app.use('/provinces', provinceRoutes);
 app.use('/sporthallen', gymImagesRoutes);
 app.use('/exercises', exerciseCategories)
+app.use('/admin', adminRoutes)
 
 // Start server
 const PORT = process.env.PORT || 5000;
