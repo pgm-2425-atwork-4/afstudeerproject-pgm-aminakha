@@ -88,27 +88,3 @@ exports.deleteCategory = (req, res) => {
   });
 };
 
-
-// GET pricing
-exports.getPricing = (req, res) => {
-  const sql = "SELECT id, bundle_name, price FROM prices";
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error("🔥 Error fetching pricing:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
-    res.json(results);
-  });
-};
-
-// GET provinces
-exports.getProvinces = (req, res) => {
-  const sql = "SELECT id, name FROM provinces";
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error("🔥 Error fetching provinces:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
-    res.json(results);
-  });
-};
