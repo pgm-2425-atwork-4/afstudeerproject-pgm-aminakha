@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ExerciseService } from '../../services/exercise.service';
 
@@ -9,22 +9,17 @@ import { ExerciseService } from '../../services/exercise.service';
   selector: 'app-admin-add-exercise',
   templateUrl: './admin-add-exercise.component.html',
   styleUrls: ['./admin-add-exercise.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class AdminAddExerciseComponent implements OnInit {
-  exercise: {
-    name: string;
-    exerciseCategory_id: string | number | null;
-    pressure_id: string | number | null;
-    big_description: string;
-    image: File | null;
-  } = {
-    name: '',
-    exerciseCategory_id: null,
-    pressure_id: null,
-    big_description: '',
-    image: null
-  };
+   form = new FormGroup({
+    name: new FormControl('', Validators.required),
+    exercise_category_id: new FormControl(null, Validators.required),
+    pressure_id: new FormControl(null, Validators.required),
+    big_description: new FormControl('', Validators.required),
+    image: new FormControl<File | null>(null)
+  });
+  image : any = null;
 
   categories: any[] = []; 
   pressures: any[] = []; 
@@ -34,13 +29,14 @@ export class AdminAddExerciseComponent implements OnInit {
   ngOnInit(): void {
 
     this.exerciseService.getExerciseCategories().subscribe({
-      next: (categories) => {
-        categories = categories;
-      },
-      error: (err) => {
-        console.error("🔥 Error fetching categories:", err);
-      }
-    });
+    next: (data) => {
+      this.categories =  data as any[];
+      console.log("✅ Exercise Categories:", this.categories);
+    },
+    error: (err) => {
+      console.error("🔥 Error fetching categories:", err);
+    }
+  });
 
     this.apiService.getPressures().subscribe({
       next: (pressures) => {
@@ -52,36 +48,44 @@ export class AdminAddExerciseComponent implements OnInit {
     });
   }
 
-  
+  onFileChange(event: Event): void {
+  const input = event.target as HTMLInputElement;
+
+  if (input.files && input.files.length > 0) {
+    const file = input.files[0];
+    this.form.patchValue({ image: file });
+  }
+}
   onImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.exercise.image = file; 
+      this.form.patchValue({ image: file });
       console.log('Image selected:', file);
     }
   }
 
   addExercise() {
-    const formData = new FormData();
-  
-    formData.append('name', this.exercise.name);
-    formData.append('exerciseCategory_id', (this.exercise.exerciseCategory_id ?? 'default_value').toString());
-    formData.append('pressure_id', (this.exercise.pressure_id ?? 'default_value').toString());
-    formData.append('big_description', this.exercise.big_description);
-  
-    
-    if (this.exercise.image) {
-      formData.append('image', this.exercise.image);
-    }
-  
-    this.apiService.addExercise(formData).subscribe({
-      next: (response) => {
-        alert('Exercise added successfully!');
-      },
-      error: (err) => {
-        console.error("🔥 Error adding exercise:", err);
-        alert('Failed to add exercise');
-      }
-    });
+  const formData = new FormData();
+
+  formData.append('name', this.form.value.name ?? '');
+  formData.append('exercise_category_id', (this.form.value.exercise_category_id ?? '').toString());
+  formData.append('pressure_id', (this.form.value.pressure_id ?? '').toString());
+  formData.append('big_description', this.form.value.big_description ?? '');
+
+  const imageFile = this.form.value.image;
+  if (imageFile) {
+    formData.append('image', imageFile);
   }
+
+  this.apiService.addExercise(formData).subscribe({
+    next: () => {
+      alert('✅ Exercise added successfully!');
+      this.form.reset();
+    },
+    error: (err) => {
+      console.error("🔥 Error adding exercise:", err);
+      alert('❌ Failed to add exercise');
+    }
+  });
+}
 }

@@ -1,33 +1,40 @@
-<form (ngSubmit)="addExercise()">
-    <div>
-      <label for="name">Exercise Name</label>
-      <input type="text" id="name" [(ngModel)]="exercise.name" name="name" required />
-    </div>
-  
-    <div>
-      <label for="exerciseCategory">Exercise Category</label>
-      <select [(ngModel)]="exercise.exerciseCategory_id" name="exerciseCategory" required>
-        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-      </select>
-    </div>
-  
-    <div>
-      <label for="pressure">Exercise Pressure</label>
-      <select [(ngModel)]="exercise.pressure_id" name="pressure" required>
-        <option *ngFor="let pressure of pressures" [value]="pressure.id">{{ pressure.name }}</option>
-      </select>
-    </div>
-  
-    <div>
-      <label for="image">Exercise Image</label>
-      <input type="file" id="image" (change)="onImageSelected($event)" name="image" required />
-    </div>
-  
-    <div>
-      <label for="big_description">Big Description</label>
-      <textarea id="big_description" [(ngModel)]="exercise.big_description" name="big_description" required></textarea>
-    </div>
-  
-    <button type="submit">Add Exercise</button>
-  </form>
-  
+
+  <form [formGroup]="form" (ngSubmit)="addExercise()">
+
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input formControlName="name" id="name" class="form-control" required>
+  </div>
+
+  <div class="form-group">
+    <label for="exercise_category_id">Category</label>
+    <select formControlName="exercise_category_id" class="form-control">
+      <option *ngFor="let category of categories" [value]="category.id">
+        {{ category.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="pressure_id">Pressure</label>
+    <select formControlName="pressure_id" class="form-control">
+      <option *ngFor="let pressure of pressures" [value]="pressure.id">
+        {{ pressure.name }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="big_description">Description</label>
+    <textarea formControlName="big_description" id="big_description" class="form-control"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="image">Upload Image</label>
+    <input type="file" (change)="onFileChange($event)" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Submit</button>
+
+</form>
+
