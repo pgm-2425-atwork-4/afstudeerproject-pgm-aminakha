@@ -244,7 +244,7 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}/saved-gyms/${userId}/${gymId}`, { headers });
   }
   addExercise(exercise: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/admin/add-exercise`, exercise, {
+    return this.http.post(`${this.apiUrl}/exercises/admin/add-exercise`, exercise, {
       headers: this.getAuthHeaders()
     });
   }

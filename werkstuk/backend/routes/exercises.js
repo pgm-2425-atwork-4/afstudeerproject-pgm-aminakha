@@ -12,23 +12,38 @@ router.get("/categories", (req, res) => {
         res.json(results);
     });
 });
+
 router.post("/admin/add-exercise", uploadImage, (req, res) => {
   const { name, exercise_category_id, pressure_id, big_description } = req.body;
   const imageUrl = req.file?.path;
 
-  const query = `
-    INSERT INTO exercises (name, image, exercise_category_id, pressure_id, big_description)
-    VALUES (?, ?, ?, ?, ?)
+  const insertExercise = `
+    INSERT INTO exercises (name, exercise_category_id, pressure_id, big_description)
+    VALUES (?, ?, ?, ?)
   `;
+  const exerciseValues = [name, exercise_category_id, pressure_id, big_description];
 
-  const values = [name, imageUrl, exercise_category_id, pressure_id, big_description];
-
-  db.query(query, values, (err, result) => {
+  db.query(insertExercise, exerciseValues, (err, result) => {
     if (err) {
-      console.error("❌ DB Insert Error:", err);
-      return res.status(500).json({ error: "Failed to add exercise" });
+      console.error("❌ Error inserting exercise:", err);
+      return res.status(500).json({ error: "Failed to insert exercise" });
     }
-    res.json({ message: "Exercise added successfully", id: result.insertId });
+
+    const exerciseId = result.insertId;
+
+    // Now insert image
+    const insertImage = `
+      INSERT INTO exercise_images (exercise_id, image_url)
+      VALUES (?, ?)
+    `;
+    db.query(insertImage, [exerciseId, imageUrl], (err2) => {
+      if (err2) {
+        console.error("❌ Error inserting exercise image:", err2);
+        return res.status(500).json({ error: "Failed to insert exercise image" });
+      }
+
+      res.json({ message: "✅ Exercise and image inserted", id: exerciseId });
+    });
   });
 });
 
