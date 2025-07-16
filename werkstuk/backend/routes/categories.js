@@ -2,6 +2,7 @@ const express = require("express");
 const { verifyToken } = require("../middlewares/auth");
 const { upload } = require("../middlewares/multerConfig");
 const categoryController = require("../controllers/categoryController");
+const { db } = require("../config/db");
 
 const router = express.Router();
 
