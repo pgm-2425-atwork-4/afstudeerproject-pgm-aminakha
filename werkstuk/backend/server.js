@@ -15,7 +15,6 @@ const priceRoutes = require("./routes/prices");
 const savedGymsRoutes = require("./routes/savedGyms");
 const pressureRoutes = require("./routes/pressures");
 const provinceRoutes = require("./routes/provinces");
-const gymImagesRoutes = require("./routes/gymImages");
 const exerciseCategories = require("./routes/exercises");
 // Init upload dir (if using local uploads too)
 const adminRoutes = require("./routes/admin");  
@@ -53,7 +52,6 @@ app.use("/pressures", pressureRoutes);
 app.use("/saved-gyms", savedGymsRoutes);
 
 app.use('/provinces', provinceRoutes);
-app.use('/sporthallen', gymImagesRoutes);
 app.use('/exercises', exerciseCategories)
 app.use('/admin', adminRoutes)
 

@@ -213,6 +213,21 @@ router.delete("/:id", verifyToken, (req, res) => {
     });
 });
 
+router.get('/:gymId/images', async (req, res) => {
+    try {
+        const { gymId } = req.params;
+        const data =  db.query(
+            'SELECT * FROM gym_images WHERE gym_id = $1',
+            [gymId]
+        );
+        res.status(200).json(data.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
 router.post("/upload-gym-image", gymUpload.single("image"), (req, res) => {
     if (!req.file) return res.status(400).json({ error: "❌ No file uploaded!" });
     res.status(201).json({ message: "✅ Gym Image Uploaded!", imageUrl: req.file.path });

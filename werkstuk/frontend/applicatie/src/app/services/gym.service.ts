@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
   providedIn: 'root'
 })
 export class GymService { 
-  private apiUrl = environment.apiUrl + '/sporthallen';
+  private apiUrl = environment.apiUrl + '/gyms';
 
   constructor(private http: HttpClient) {}
 
