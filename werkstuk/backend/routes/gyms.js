@@ -1,7 +1,6 @@
 const express = require("express");
 const { verifyToken } = require("../middlewares/auth");
 const { upload, uploadFields, gymUpload, uploadImages, uploadLogo, uploadGymFields } = require("../middlewares/multerConfig");
-const gymController = require("../controllers/gymController");
 const { db } = require("../config/db");
 const router = express.Router();
 
