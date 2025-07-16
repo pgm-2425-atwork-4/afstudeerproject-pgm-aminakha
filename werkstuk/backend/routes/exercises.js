@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require('../config/db');  
+const { uploadImage } = require("../middlewares/multerConfig");
 
 router.get("/categories", (req, res) => {
     db.query("SELECT * FROM exercise_categories", (err, results) => {
