@@ -31,7 +31,6 @@ router.post("/admin/add-exercise", uploadImage, (req, res) => {
 
     const exerciseId = result.insertId;
 
-    // Now insert image
     const insertImage = `
       INSERT INTO exercise_images (exercise_id, image_url)
       VALUES (?, ?)
