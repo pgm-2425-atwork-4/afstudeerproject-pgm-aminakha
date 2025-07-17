@@ -4,7 +4,6 @@ import { HomeComponent } from './pages/home/home.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { UserProfileComponent } from './pages/user/user.component';
 import { RenderMode, ServerRoute } from '@angular/ssr';
-import { fetchUserIds } from '../server';
 import { GymsComponent } from './pages/gyms/gyms.component';
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
 import { AdminCategoryComponent } from './components/admin-category/admin-category.component';
@@ -41,10 +40,4 @@ export const routes: Routes = [
   
 ];
 
-export const serverRoutes: ServerRoute[] = [
-  {
-    path: 'user-profile/:id', 
-    renderMode: RenderMode.Prerender,
-    getPrerenderParams: fetchUserIds 
-  }
-];
+
