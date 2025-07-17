@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service'; 
 import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { GymService } from '../../services/gym.service';
 
 @Component({
   selector: 'app-user',
@@ -18,7 +20,7 @@ export class UserProfileComponent implements OnInit {
   showForm: boolean = false;  
   savedGyms: any[] = [];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private authService: AuthService, private apiService: ApiService, private gymService: GymService) {}
 
   toggleFormVisibility() {
     this.showForm = !this.showForm; 
@@ -38,7 +40,7 @@ export class UserProfileComponent implements OnInit {
         const userId = decodedToken.id.toString();
         console.log("🆔 User ID from Token:", userId);
 
-        this.apiService.getUserById(userId).subscribe({
+        this.authService.getUserById(userId).subscribe({
           next: (user) => {
             console.log("✅ User Data:", user);
             this.user = user;
@@ -66,8 +68,8 @@ export class UserProfileComponent implements OnInit {
   }
 
   fetchSavedGyms(userId: string) {
-    this.apiService.getSavedGyms(userId).subscribe({
-      next: (res) => {
+    this.gymService.getSavedGyms(userId).subscribe({
+      next: (res: any) => {
         console.log("✅ Saved Gyms Loaded:", res);
         this.savedGyms = res; 
       },
@@ -84,7 +86,7 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
-    this.apiService.deleteSavedGym(userId, gymId).subscribe({
+    this.gymService.deleteSavedGym(userId, gymId).subscribe({
       next: (res) => {
         console.log("✅ Saved Gym deleted:", res);
         this.savedGyms = this.savedGyms.filter(gym => gym.id !== gymId);
@@ -114,7 +116,7 @@ export class UserProfileComponent implements OnInit {
       formData.append('profileImage', this.profileImage);
     }
 
-    this.apiService.updateUserProfile(this.user.id, formData).subscribe({
+    this.authService.updateUserProfile(this.user.id, formData).subscribe({
       next: (res) => {
         console.log("✅ Profile Updated:", res);
         alert("Profile updated successfully!");

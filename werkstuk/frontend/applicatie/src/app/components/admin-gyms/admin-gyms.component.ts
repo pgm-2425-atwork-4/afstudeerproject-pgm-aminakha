@@ -3,6 +3,7 @@ import { ApiService } from '../../services/api.service';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { GymService } from '../../services/gym.service';
 
 @Component({
   selector: 'app-admin-gyms',
@@ -23,15 +24,15 @@ export class AdminGymsComponent implements OnInit {
   phone: string = ''; 
   website: string = '';
   selectedLogoFile: File | null = null;
-  constructor(private apiService: ApiService) {}
+  constructor(private gymService: GymService) {}
 
   ngOnInit() {
     this.loadGyms();
   }
 
   loadGyms() {
-    this.apiService.getGyms().subscribe({
-      next: (data) => {
+    this.gymService.getGyms().subscribe({
+      next: (data: any) => {
         this.gyms = data;
       },
       error: (error) => {
@@ -69,7 +70,7 @@ export class AdminGymsComponent implements OnInit {
       console.log(`📝 ${key}:`, value);
     });
   
-    this.apiService.updateGym(this.editingGym.id, formData).subscribe({
+    this.gymService.updateGym(this.editingGym.id, formData).subscribe({
       next: () => {
         alert('✅ Gym updated!');
         this.editingGym = null;
@@ -84,7 +85,7 @@ export class AdminGymsComponent implements OnInit {
 
   deleteGym(id: number) {
     if (confirm('Are you sure you want to delete this gym?')) {
-      this.apiService.deleteGym(id).subscribe({
+      this.gymService.deleteGym(id).subscribe({
         next: () => {
           alert('✅ Gym deleted!');
           this.loadGyms();

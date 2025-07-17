@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -17,10 +17,10 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private apiService: ApiService, 
+    private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: object
   ) {
-    this.apiService.currentUser$.subscribe(user => {
+    this.authService.currentUser$.subscribe(user => {
       this.user = user;
     });
   }
@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
 
     if (this.isBrowser) {
       // Fetch user on initialization
-      this.apiService.fetchUser();
+      this.authService.fetchUser();
     }
   }
 
@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.apiService.logout().subscribe(() => {
+    this.authService.logout().subscribe(() => {
       console.log("🚪 User logged out!");
       this.user = null;  
       this.router.navigate(['/login']); 

@@ -4,6 +4,8 @@ import { ApiService } from '../../services/api.service'; // Use ApiService
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GymService } from '../../services/gym.service';
+import { CommentService } from '../../services/comment.service';
+import { MetaDataService } from '../../services/meta-data.service';
 
 @Component({
   standalone: true,
@@ -25,7 +27,7 @@ export class GymDetailComponent implements OnInit {
   user: any; 
   profile_image  = ''; 
   gymImages: any = []; 
-  constructor(private route: ActivatedRoute, private apiService: ApiService, private gymService: GymService) {}
+  constructor(private route: ActivatedRoute, private commentService: CommentService, private gymService: GymService, private metaDataService: MetaDataService) {}
 
   ngOnInit(): void {
     const gymId = this.route.snapshot.paramMap.get('id');
@@ -38,7 +40,7 @@ export class GymDetailComponent implements OnInit {
         },
         error: (err) => console.error("❌ Error fetching gym images:", err)
       });
-      this.apiService.getGymById(gymId).subscribe({
+      this.gymService.getGymById(gymId).subscribe({
         next: (data) => {
         
           
@@ -79,7 +81,7 @@ export class GymDetailComponent implements OnInit {
   }
 
   fetchComments(gymId: string): void {
-    this.apiService.getComments(gymId).subscribe({
+    this.commentService.getComments(gymId).subscribe({
       next: (data) => {
         if (data && data.length > 0) {
           this.gym.comments = data.map((comment: Comment) => {  
@@ -114,7 +116,7 @@ export class GymDetailComponent implements OnInit {
       title: this.newCommentTitle,
     };
 
-    this.apiService.addComment(newCommentData).subscribe({
+    this.commentService.addComment(newCommentData).subscribe({
       next: (data) => {
         alert("Comment submitted successfully!");
         this.gym.comments.push(data); 
@@ -129,8 +131,8 @@ export class GymDetailComponent implements OnInit {
   }
 
   fetchPrices(gymId: number) {
-    this.apiService.getPrices().subscribe({
-      next: (data) => {
+    this.metaDataService.getPrices().subscribe({
+      next: (data: any) => {
         this.prices = data;
         console.log("💰 Prices loaded:", this.prices);
         this.gymPrices = this.prices.filter(price => price.gym_id === gymId);
@@ -148,7 +150,7 @@ export class GymDetailComponent implements OnInit {
       return;
     }
 
-    this.apiService.saveGym(this.userId, this.gym.id).subscribe({
+    this.gymService.saveGym(this.userId, this.gym.id).subscribe({
       next: () => alert("Gym saved successfully!"),
       error: (err) => console.error("❌ Error saving gym:", err)
     });

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ExerciseService } from '../../services/exercise.service';
 
 @Component({
   selector: 'app-admin-add-exercise-category',
@@ -13,9 +14,9 @@ export class AdminAddExerciseCategoryComponent {
   category = {
     name: ''
   };
-  constructor(private apiService: ApiService) {}
+  constructor(private exerciseService: ExerciseService) {}
   addCategory() {
-    this.apiService.getExerciseCategories().subscribe({
+    this.exerciseService.getExerciseCategories().subscribe({
       next: (response) => {
         alert('Category added successfully');
       },

@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { log } from 'console';
+import { GymService } from '../../services/gym.service';
+import { MetaDataService } from '../../services/meta-data.service';
 
 @Component({
   selector: 'app-gyms',
@@ -26,7 +28,7 @@ export class GymsComponent implements OnInit {
   selectedPersonalTrainer: string = ""; 
   provinces: any[] = [];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private gymService: GymService, private metaDataService: MetaDataService) {}
 
   ngOnInit() {
     this.fetchGyms();
@@ -55,8 +57,8 @@ export class GymsComponent implements OnInit {
   }
 
   fetchGyms() {
-    this.apiService.getGyms().subscribe({
-      next: (data) => {
+    this.gymService.getGyms().subscribe({
+      next: (data: any) => {
         this.gyms = data;
         this.filteredGyms = data;
         this.mapPricesToGyms();
@@ -67,7 +69,7 @@ export class GymsComponent implements OnInit {
       }
     });
 
-    this.apiService.getCategories().subscribe({
+    this.metaDataService.getCategories().subscribe({
       next: (data) => {
         console.log("✅ Categories received:", data);
         this.categories = Array.isArray(data) ? data : Object.values(data); 
@@ -77,7 +79,7 @@ export class GymsComponent implements OnInit {
       }
     });
 
-    this.apiService.getProvinces().subscribe({
+    this.metaDataService.getProvinces().subscribe({
       next: (data) => {
         console.log("✅ Provinces received:", data);
         this.provinces = Array.isArray(data) ? data : Object.values(data); // ✅ Ensure correct data format
@@ -89,8 +91,8 @@ export class GymsComponent implements OnInit {
   }
 
   fetchPrices() {
-    this.apiService.getPrices().subscribe({
-      next: (data) => {
+    this.metaDataService.getPrices().subscribe({
+      next: (data: any) => {
         this.prices = data;
         console.log("💰 Prices loaded:", this.prices);
         this.mapPricesToGyms();

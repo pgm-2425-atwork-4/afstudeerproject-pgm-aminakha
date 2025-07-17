@@ -77,7 +77,7 @@ export class AdminAddExerciseComponent implements OnInit {
     formData.append('image', imageFile);
   }
 
-  this.apiService.addExercise(formData).subscribe({
+  this.exerciseService.addExercise(formData).subscribe({
     next: () => {
       alert('✅ Exercise added successfully!');
       this.form.reset();

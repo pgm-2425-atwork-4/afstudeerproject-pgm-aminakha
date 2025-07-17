@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterModule, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service'; 
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,17 +18,17 @@ export class LoginComponent {
   password: string = '';
   message: string = ''; 
   profile_image: string = '';
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router, private authService: AuthService) {}
 
   login() {
-    this.apiService.loginUser(this.email, this.password,this.profile_image).subscribe(
+    this.authService.loginUser(this.email, this.password, this.profile_image).subscribe(
       (res: any) => {
         console.log("✅ Login successful:", res);
         if (res.token && res.user) {
           localStorage.setItem('auth_token', res.token); 
           console.log('Stored User in LocalStorage:', res.user);
         }
-        this.apiService.fetchUser();
+        this.authService.fetchUser();
 
         this.router.navigate(['/']); 
       },

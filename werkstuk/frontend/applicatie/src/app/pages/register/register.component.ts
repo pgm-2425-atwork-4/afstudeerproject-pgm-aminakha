@@ -4,6 +4,7 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../../services/api.service'; // ✅ Import API service
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +24,7 @@ export class RegisterComponent {
   profileImage: File | null = null; 
   message: string = ''; 
 
-  constructor(private apiService: ApiService) {}
+  constructor(private authService: AuthService) {}
 
   onFileSelected(event: any) {
     this.profileImage = event.target.files[0]; 
@@ -42,7 +43,7 @@ export class RegisterComponent {
       formData.append('profileImage', this.profileImage);
     }
 
-    this.apiService.registerUser(formData).subscribe({
+    this.authService.registerUser(formData).subscribe({
       next: (res) => {
         this.message = '✅ User Registered Successfully!';
         console.log('🚀 Response:', res);

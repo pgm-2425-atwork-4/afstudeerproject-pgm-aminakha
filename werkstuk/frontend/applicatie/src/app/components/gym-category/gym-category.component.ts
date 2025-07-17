@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../../services/api.service';
+import { MetaDataService } from '../../services/meta-data.service';
 
 @Component({
   selector: 'app-gym-category',
@@ -14,10 +15,10 @@ import { ApiService } from '../../services/api.service';
 export class GymCategoryComponent implements OnInit {
   categories: any[] = [];
 
-  constructor(private apiService: ApiService) {} 
+  constructor(private metaDataService: MetaDataService) {} 
 
   ngOnInit() {
-    this.apiService.getCategories().subscribe({
+    this.metaDataService.getCategories().subscribe({
       next: (data) => {
         console.log("✅ Categories received:", data);
         this.categories = Array.isArray(data) ? data : Object.values(data); 

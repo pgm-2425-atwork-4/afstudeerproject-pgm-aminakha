@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { MetaDataService } from '../../services/meta-data.service';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-admin-category',
@@ -16,14 +18,14 @@ export class AdminCategoryComponent implements OnInit {
   categories: any[] = [];
   editingCategory: any = null;
 
-  constructor(private apiService: ApiService) {} 
+  constructor(private metaDataService: MetaDataService, private categoryService: CategoryService) {}
 
   ngOnInit() {
     this.loadCategories();
   }
 
   loadCategories() {
-    this.apiService.getCategories().subscribe(
+    this.metaDataService.getCategories().subscribe(
       (data) => (this.categories = data),
       (error) => console.error('❌ Error loading categories:', error)
     );
@@ -45,7 +47,7 @@ export class AdminCategoryComponent implements OnInit {
     formData.append('name', this.categoryName);
     formData.append('image', this.selectedFile);
 
-    this.apiService.uploadCategory(formData).subscribe(
+    this.categoryService.uploadCategory(formData).subscribe(
       (response) => {
         console.log('✅ Category added successfully:', response);
         alert('Category added successfully!');
@@ -73,7 +75,7 @@ export class AdminCategoryComponent implements OnInit {
       formData.append('image', this.selectedFile);
     }
 
-    this.apiService.updateCategory(this.editingCategory.id, formData).subscribe(
+    this.categoryService.updateCategory(this.editingCategory.id, formData).subscribe(
       () => {
         alert('✅ Category updated!');
         this.resetForm();
@@ -88,7 +90,7 @@ export class AdminCategoryComponent implements OnInit {
 
   deleteCategory(id: number) {
     if (confirm('Are you sure you want to delete this category?')) {
-      this.apiService.deleteCategory(id).subscribe(
+      this.categoryService.deleteCategory(id).subscribe(
         () => {
           alert('✅ Category deleted!');
           this.loadCategories();

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { MetaDataService } from '../../services/meta-data.service';
+import { GymService } from '../../services/gym.service';
 
 @Component({
   selector: 'app-admin-add-gym',
@@ -45,13 +47,13 @@ export class AdminAddGymComponent implements OnInit {
   pricingPlans: any[] = [];
   provinces: any[] = [];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private metaDataService: MetaDataService, private gymService: GymService) {}
 
   ngOnInit() {
-    this.apiService.getPressureTypes().subscribe((data: any) => this.pressures = data);
-    this.apiService.getCategories().subscribe((data: any) => this.categories = data);
-    this.apiService.getPricingPlans().subscribe((data: any) => this.pricingPlans = data);
-    this.apiService.getProvinces().subscribe((data: any) => this.provinces = data);
+    this.metaDataService.getPressureTypes().subscribe((data: any) => this.pressures = data);
+    this.metaDataService.getCategories().subscribe((data: any) => this.categories = data);
+    this.metaDataService.getPricingPlans().subscribe((data: any) => this.pricingPlans = data);
+    this.metaDataService.getProvinces().subscribe((data: any) => this.provinces = data);
   }
 
   onLogoSelected(event: any) {
@@ -99,7 +101,7 @@ export class AdminAddGymComponent implements OnInit {
 
     console.log('📦 Form Data:', formData);
     
-    this.apiService.addGym(formData).subscribe({
+    this.gymService.addGym(formData).subscribe({
       next: (res) => {        
         console.log('✅ Gym Added:', res);
         alert('Gym added successfully!');

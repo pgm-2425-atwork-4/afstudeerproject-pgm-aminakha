@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HeroHomeComponent } from '../../components/hero-home/hero-home.component';
 import { ApiService } from '../../services/api.service';
 import { GymCardComponent } from '../../components/gym-card/gym-card.component';
+import { GymService } from '../../services/gym.service';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,7 @@ export class HomeComponent implements OnInit {
   selectedCategory: string = 'Indoors';  
   maxGyms: number = 3;  
 
-  constructor(private apiService: ApiService) {}
+  constructor(private gymService: GymService) {}
 
   ngOnInit() {
     const token = localStorage.getItem("auth_token");
@@ -55,8 +56,8 @@ export class HomeComponent implements OnInit {
   }
 
   fetchGyms() {
-    this.apiService.getGyms().subscribe({
-      next: (res) => {
+    this.gymService.getGyms().subscribe({
+      next: (res: any) => {
         console.log("✅ Gyms loaded:", res);
         this.gyms = res;
         this.filterGyms();  
@@ -73,7 +74,7 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.apiService.getSavedGyms(userId).subscribe({
+    this.gymService.getSavedGyms(userId).subscribe({
       next: (res) => {
         if (Array.isArray(res)) {
           console.log("✅ Saved Gyms Loaded:", res);
