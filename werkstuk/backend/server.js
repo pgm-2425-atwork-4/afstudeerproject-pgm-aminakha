@@ -18,8 +18,7 @@ const provinceRoutes = require("./routes/provinces");
 const exerciseCategories = require("./routes/exercises");
 // Init upload dir (if using local uploads too)
 const adminRoutes = require("./routes/admin");  
-const { initUploadDir } = require("./utils/initUploadDir");
-initUploadDir();
+
 
 // Middleware
 const corsOptions = {
