@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { ApiService } from '../../services/api.service'; // ✅ Import API service
 import { AuthService } from '../../services/auth.service';
 
 @Component({

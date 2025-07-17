@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterModule, Router } from '@angular/router';
-import { ApiService } from '../../services/api.service'; 
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -18,7 +17,7 @@ export class LoginComponent {
   password: string = '';
   message: string = ''; 
   profile_image: string = '';
-  constructor(private apiService: ApiService, private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   login() {
     this.authService.loginUser(this.email, this.password, this.profile_image).subscribe(

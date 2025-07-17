@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService } from '../../services/api.service'; // Use ApiService
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GymService } from '../../services/gym.service';

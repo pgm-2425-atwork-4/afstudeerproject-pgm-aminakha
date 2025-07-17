@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../services/api.service'; 
 import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -20,7 +19,7 @@ export class UserProfileComponent implements OnInit {
   showForm: boolean = false;  
   savedGyms: any[] = [];
 
-  constructor(private authService: AuthService, private apiService: ApiService, private gymService: GymService) {}
+  constructor(private authService: AuthService, private gymService: GymService) {}
 
   toggleFormVisibility() {
     this.showForm = !this.showForm; 

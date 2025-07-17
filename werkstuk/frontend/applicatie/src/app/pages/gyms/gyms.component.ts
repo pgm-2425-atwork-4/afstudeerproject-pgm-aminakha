@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';

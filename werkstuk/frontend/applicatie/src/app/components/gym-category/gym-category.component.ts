@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ApiService } from '../../services/api.service';
 import { MetaDataService } from '../../services/meta-data.service';
 
 @Component({
@@ -10,7 +9,7 @@ import { MetaDataService } from '../../services/meta-data.service';
   imports: [CommonModule, HttpClientModule], 
   templateUrl: './gym-category.component.html',
   styleUrls: ['./gym-category.component.css'],
-  providers: [ApiService] 
+  providers: [MetaDataService]
 })
 export class GymCategoryComponent implements OnInit {
   categories: any[] = [];

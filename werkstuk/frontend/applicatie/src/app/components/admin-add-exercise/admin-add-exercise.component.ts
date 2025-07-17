@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ExerciseService } from '../../services/exercise.service';
+import { MetaDataService } from '../../services/meta-data.service';
 
 @Component({
   selector: 'app-admin-add-exercise',
@@ -24,7 +24,7 @@ export class AdminAddExerciseComponent implements OnInit {
   categories: any[] = []; 
   pressures: any[] = []; 
 
-  constructor(private apiService: ApiService, private exerciseService: ExerciseService) {}
+  constructor(private exerciseService: ExerciseService) {}
 
   ngOnInit(): void {
 
@@ -38,8 +38,8 @@ export class AdminAddExerciseComponent implements OnInit {
     }
   });
 
-    this.apiService.getPressures().subscribe({
-      next: (pressures) => {
+    this.exerciseService.getPressures().subscribe({
+      next: (pressures: any) => {
         this.pressures = pressures;
       },
       error: (err) => {

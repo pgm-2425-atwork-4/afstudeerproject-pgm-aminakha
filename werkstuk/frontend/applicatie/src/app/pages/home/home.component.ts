@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeroHomeComponent } from '../../components/hero-home/hero-home.component';
-import { ApiService } from '../../services/api.service';
 import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 import { GymService } from '../../services/gym.service';
 
