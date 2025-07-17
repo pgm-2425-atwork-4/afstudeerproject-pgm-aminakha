@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class MetaDataService {
   constructor(private http: HttpClient) {}
-  private apiUrl = environment.apiUrl + '/gyms';
+  private apiUrl = environment.apiUrl;
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
     

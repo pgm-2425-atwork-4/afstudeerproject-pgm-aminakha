@@ -6,7 +6,7 @@ import { catchError, of, tap } from "rxjs";
   providedIn: 'root'
 })
 export class GymService { 
-  private apiUrl = environment.apiUrl + '/gyms';
+  private apiUrl = environment.apiUrl ;
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
     
