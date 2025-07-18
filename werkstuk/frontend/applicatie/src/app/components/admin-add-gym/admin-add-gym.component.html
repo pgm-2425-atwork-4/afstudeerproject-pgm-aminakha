@@ -1,61 +1,61 @@
 <div class="add-gym-container">
-  <form (ngSubmit)="addGym()" enctype="multipart/form-data">
-  <input type="text" [(ngModel)]="gymData.name" name="name" placeholder="Gym Name" required />
-  <input type="text" [(ngModel)]="gymData.city" name="city" placeholder="City" required />
-  <input type="number" [(ngModel)]="gymData.rating" name="rating" placeholder="Rating (1-5)" required />
-  <input type="text" [(ngModel)]="gymData.opening_hours" name="opening_hours" placeholder="Opening Hours" required />
-  <input type="text" [(ngModel)]="gymData.address" name="address" placeholder="Address" required /> 
-  Personal Trainer Available
-  <input type="checkbox" [(ngModel)]="gymData.personal_trainer" name="personal_trainer" />
+  <form [formGroup]="form" (ngSubmit)="addGym()" enctype="multipart/form-data">
+    <input class="form-control" type="text" formControlName="name" placeholder="Gym Name" required />
+    <input class="form-control" type="text" formControlName="city" placeholder="City" required />
+    <input class="form-control" type="number" formControlName="rating" placeholder="Rating (1-5)" required />
+    <input class="form-control" type="text" formControlName="opening_hours" placeholder="Opening Hours" required />
+    <input class="form-control" type="text" formControlName="address" placeholder="Address" required />
+    Personal Trainer Available
+    <input class="form-control" type="checkbox" formControlName="personal_trainer" />
 
-  <input type="email" [(ngModel)]="gymData.email" name="email" placeholder="Email" required />
-  <input type="text" [(ngModel)]="gymData.phone" name="phone" placeholder="Phone" required />
-  <input type="url" [(ngModel)]="gymData.website" name="website" placeholder="Website" required />
+    <input class="form-control" type="email" formControlName="email" placeholder="Email" required />
+    <input class="form-control" type="text" formControlName="phone" placeholder="Phone" required />
+    <input class="form-control" type="url" formControlName="website" placeholder="Website" required />
 
-  <label>Pressure Type:</label>
-  <select [(ngModel)]="gymData.pressure_id" name="pressure_id" required>
-    <option *ngFor="let pressure of pressures" [value]="pressure.id">{{ pressure.name }}</option>
+    <label>Pressure Type:</label>
+    <select formControlName="pressure_id" required>
+      <option *ngFor="let pressure of pressures" [value]="pressure.id">{{ pressure.name }}</option>
+    </select>
+
+    <label>Category:</label>
+    <select formControlName="category_id" required>
+      <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+    </select>
+
+    <label>Pricing Plans:</label>
+
+  <div style="margin-bottom: 10px;">
+    <input class="form-control" type="number" name="priceOne" placeholder="Price" formControlName="priceOne" required />
+    <input class="form-control" type="text" name="descriptionOne" placeholder="Description" formControlName="descriptionOne" required />
+    <input class="form-control" type="text" name="planTypeOne" placeholder="Plan Type" formControlName="planTypeOne" required />
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <input class="form-control" type="number" name="priceTwo" placeholder="Price" formControlName="priceTwo" required />
+    <input class="form-control" type="text" name="descriptionTwo" placeholder="Description" formControlName="descriptionTwo" required />
+    <input class="form-control" type="text" name="planTypeTwo" placeholder="Plan Type" formControlName="planTypeTwo" required />
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <input class="form-control" type="number" name="priceThree" placeholder="Price" formControlName="priceThree" required />
+    <input class="form-control" type="text" name="descriptionThree" placeholder="Description" formControlName="descriptionThree" required />
+    <input class="form-control" type="text" name="planTypeThree" placeholder="Plan Type" formControlName="planTypeThree" required />
+  </div>
+
+    <label for="province">Select Province:</label>
+  <select formControlName="province_id" required>
+    <option *ngFor="let province of provinces" [value]="province.id">
+      {{ province.name }}
+    </option>
   </select>
 
-  <label>Category:</label>
-  <select [(ngModel)]="gymData.category_id" name="category_id" required>
-    <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-  </select>
+    <label>Gym Logo:</label>
+    <input class="form-control" type="file" (change)="onLogoSelected($event)" accept="image/*" name="logo" required />
 
-  <label>Pricing Plans:</label>
+    <label>Gallery Images:</label>
+    <input class="form-control" type="file" (change)="onImagesSelected($event)" accept="image/*" name="images" multiple required />
 
-<div style="margin-bottom: 10px;">
-  <input type="number" name="priceOne" placeholder="Price" [(ngModel)]="gymData.priceOne" required />
-  <input type="text" name="descriptionOne" placeholder="Description" [(ngModel)]="gymData.descriptionOne" required />
-  <input type="text" name="planTypeOne" placeholder="Plan Type" [(ngModel)]="gymData.planTypeOne" required />
-</div>
-
-<div style="margin-bottom: 10px;">
-  <input type="number" name="priceTwo" placeholder="Price" [(ngModel)]="gymData.priceTwo" required />
-  <input type="text" name="descriptionTwo" placeholder="Description" [(ngModel)]="gymData.descriptionTwo" required />
-  <input type="text" name="planTypeTwo" placeholder="Plan Type" [(ngModel)]="gymData.planTypeTwo" required />
-</div>
-
-<div style="margin-bottom: 10px;">
-  <input type="number" name="priceThree" placeholder="Price" [(ngModel)]="gymData.priceThree" required />
-  <input type="text" name="descriptionThree" placeholder="Description" [(ngModel)]="gymData.descriptionThree" required />
-  <input type="text" name="planTypeThree" placeholder="Plan Type" [(ngModel)]="gymData.planTypeThree" required />
-</div>
-
-  <label for="province">Select Province:</label>
-<select [(ngModel)]="gymData.province_id" name="province_id" required>
-  <option *ngFor="let province of provinces" [value]="province.id">
-    {{ province.name }}
-  </option>
-</select>
-
-  <label>Gym Logo:</label>
-  <input type="file" (change)="onLogoSelected($event)" accept="image/*" name="logo" required />
-
-  <label>Gallery Images:</label>
-  <input type="file" (change)="onImagesSelected($event)" accept="image/*" name="images" multiple required />
-
-  <button type="submit">Add Gym</button>
+    <button type="submit">Add Gym</button>
 </form>
 </div>
 

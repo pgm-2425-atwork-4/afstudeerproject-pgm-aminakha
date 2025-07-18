@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiUrl = 'http://localhost:5000/categories';
+  private apiUrl = environment.apiUrl;
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
     

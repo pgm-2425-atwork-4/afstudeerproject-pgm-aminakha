@@ -8,9 +8,9 @@
       <h1>Gymly</h1>
     </div>
 
-    <form (ngSubmit)="login()">
-      <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="Email">
-      <input type="password" id="password" [(ngModel)]="password" name="password" required placeholder="Wachtwoord">
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <input type="email" id="email" formControlName="email" required placeholder="Email">
+      <input type="password" id="password" formControlName="password" required placeholder="Wachtwoord">
       <button type="submit"><p>Login</p></button>
     </form>
 

@@ -1,9 +1,9 @@
 
 <h2>Add Exercise Category</h2>
-<form (ngSubmit)="addCategory()">
+<form [formGroup]="form" (ngSubmit)="addCategory()">
   <div>
     <label for="name">Categorie for exercise:</label>
-    <input type="text" id="name" [(ngModel)]="category.name" name="name" required />
+    <input type="text" id="name" formControlName="name" required />
   </div>
 
   <button type="submit">Add Category</button>

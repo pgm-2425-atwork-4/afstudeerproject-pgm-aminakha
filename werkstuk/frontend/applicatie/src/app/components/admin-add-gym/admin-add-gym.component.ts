@@ -1,42 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MetaDataService } from '../../services/meta-data.service';
 import { GymService } from '../../services/gym.service';
 
 @Component({
   selector: 'app-admin-add-gym',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './admin-add-gym.component.html',
   styleUrls: ['./admin-add-gym.component.css']
 })
 export class AdminAddGymComponent implements OnInit {
+  form = new FormGroup({
+    name: new FormControl('', Validators.required),
+    city: new FormControl('', Validators.required),
+    rating: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(5)]),
+    opening_hours: new FormControl('', Validators.required),
+    address: new FormControl('', Validators.required),
+    personal_trainer: new FormControl(false),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    phone: new FormControl('', Validators.required),
+    website: new FormControl('', Validators.required),
+    pressure_id: new FormControl(null, Validators.required),
+    category_id: new FormControl(null, Validators.required),
+    province_id: new FormControl(null, Validators.required),
+    priceOne: new FormControl(null, Validators.required),
+    descriptionOne: new FormControl('', Validators.required),
+    planTypeOne: new FormControl('', Validators.required),
+    priceTwo: new FormControl(null, Validators.required),
+    descriptionTwo: new FormControl('', Validators.required),
+    planTypeTwo: new FormControl('', Validators.required),
+    priceThree: new FormControl(null, Validators.required),
+    descriptionThree: new FormControl('', Validators.required),
+    planTypeThree: new FormControl('', Validators.required),
+    logo: new FormControl<File | null>(null),
+    images: new FormControl<File[] | null>(null)
+  })
   
-  gymData: any = {
-    name: '',
-    city: '',
-    rating: '',
-    opening_hours: '',
-    address: '',
-    personal_trainer: false,
-    pressure_id: '',
-    category_id: '',
-    pricing_id: '',
-    province_id: '',
-    email: '',
-    phone: '',
-    website: '',
-    priceOne: '',
-    descriptionOne: '',
-    priceTwo: '',
-    descriptionTwo: '',
-    priceThree: '',
-    descriptionThree: '',
-    planTypeOne: '',
-    planTypeTwo: '',
-    planTypeThree: ''
-  };
 
   selectedLogo: File | null = null;
   selectedImages: File[] = [];
@@ -65,30 +66,30 @@ export class AdminAddGymComponent implements OnInit {
 
   addGym() {
     const formData = new FormData();
-    
-    formData.append('name', this.gymData.name);
-    formData.append('city', this.gymData.city);
-    formData.append('rating', this.gymData.rating);
-    formData.append('opening_hours', this.gymData.opening_hours);
-    formData.append('address', this.gymData.address);
-    formData.append('personal_trainer', this.gymData.personal_trainer ? '1' : '0');
-    formData.append('pressure_id', this.gymData.pressure_id);
-    formData.append('category_id', this.gymData.category_id);
-    formData.append('pricing_id', this.gymData.pricing_id);
-    formData.append('province_id', this.gymData.province_id);
-    formData.append("priceOne", this.gymData.priceOne);
-    formData.append("descriptionOne", this.gymData.descriptionOne);
-    formData.append("priceTwo", this.gymData.priceTwo);
-    formData.append("descriptionTwo", this.gymData.descriptionTwo);
-    formData.append("priceThree", this.gymData.priceThree);
-    formData.append("descriptionThree", this.gymData.descriptionThree);
-    formData.append("planTypeOne", this.gymData.planTypeOne);
-    formData.append("planTypeTwo", this.gymData.planTypeTwo);
-    formData.append("planTypeThree", this.gymData.planTypeThree);
+    const data = this.form.value;
 
-    formData.append('email', this.gymData.email);
-    formData.append('phone', this.gymData.phone);
-    formData.append('website', this.gymData.website);
+    formData.append('name', data.name ?? '');
+    formData.append('city', data.city ?? '');
+    formData.append('rating', data.rating ?? '');
+    formData.append('opening_hours', data.opening_hours ?? '');
+    formData.append('address', data.address ?? '');
+    formData.append('personal_trainer', data.personal_trainer ? '1' : '0');
+    formData.append('pressure_id', data.pressure_id ?? '');
+    formData.append('category_id', data.category_id ?? '');
+    formData.append('province_id', data.province_id ?? '');
+    formData.append("priceOne", data.priceOne ?? '');
+    formData.append("descriptionOne", data.descriptionOne ?? '');
+    formData.append("priceTwo", data.priceTwo ?? '');
+    formData.append("descriptionTwo", data.descriptionTwo ?? '');
+    formData.append("priceThree", data.priceThree ?? '');
+    formData.append("descriptionThree", data.descriptionThree ?? '');
+    formData.append("planTypeOne", data.planTypeOne ?? '');
+    formData.append("planTypeTwo", data.planTypeTwo ?? '');
+    formData.append("planTypeThree", data.planTypeThree ?? '');
+
+    formData.append('email', data.email ?? '');
+    formData.append('phone', data.phone ?? '');
+    formData.append('website', data.website ?? '');
 
     if (this.selectedLogo) {
       formData.append('logo', this.selectedLogo);

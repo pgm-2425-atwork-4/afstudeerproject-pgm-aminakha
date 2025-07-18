@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ExerciseService } from '../../services/exercise.service';
-import { MetaDataService } from '../../services/meta-data.service';
 
 @Component({
   selector: 'app-admin-add-exercise',

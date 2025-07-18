@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -9,7 +9,7 @@ import { GymService } from '../../services/gym.service';
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, FormsModule,GymCardComponent,RouterLink],
+  imports: [CommonModule, FormsModule,GymCardComponent,RouterLink, ReactiveFormsModule],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
@@ -18,7 +18,13 @@ export class UserProfileComponent implements OnInit {
   profileImage: File | null = null;
   showForm: boolean = false;  
   savedGyms: any[] = [];
-
+  form = new FormGroup({
+    username: new FormControl(''),
+    firstname: new FormControl(''),
+    lastname: new FormControl(''),
+    email: new FormControl(''),
+    birthday: new FormControl('')
+  })
   constructor(private authService: AuthService, private gymService: GymService) {}
 
   toggleFormVisibility() {

@@ -7,21 +7,21 @@
       <div class="form-title">
         <h1>Gymly</h1>
       </div>
-  
-      <form (submit)="registerUser()">
-        <input type="text" [(ngModel)]="username" name="username" required placeholder="User name">
-        <input type="text" [(ngModel)]="firstname" name="firstname" required placeholder="First name">
-        <input type="text" [(ngModel)]="lastname" name="lastname" required placeholder="Last name">
-        <input type="email" [(ngModel)]="email" name="email" required placeholder="Email">
-        <input type="password" [(ngModel)]="password" name="password" required placeholder="Password">
-        <input type="date" [(ngModel)]="birthday" name="birthday" required placeholder="Birthdate">
-        
-        <input type="file" (change)="onFileSelected($event)" accept="image/*"> <!-- ✅ Profile Image Upload -->
+
+      <form [formGroup]="form" (submit)="registerUser()">
+        <input type="text" formControlName="username" placeholder="User name">
+        <input type="text" formControlName="firstname" placeholder="First name">
+        <input type="text" formControlName="lastname" placeholder="Last name">
+        <input type="email" formControlName="email" placeholder="Email">
+        <input type="password" formControlName="password" placeholder="Password">
+        <input type="date" formControlName="birthday" placeholder="Birthdate">
+
+        <input type="file" formControlName="profileImage" (change)="onFileSelected($event)" accept="image/*"> 
         
         <button type="submit"><p>Register</p></button>
       </form>
   
-      <p>{{ message }}</p> <!-- ✅ Show success/fail message -->
+      <p>{{ message }}</p> 
   
       <p><span></span>or <span></span></p>
       <p><a routerLink="/login">Login</a></p>

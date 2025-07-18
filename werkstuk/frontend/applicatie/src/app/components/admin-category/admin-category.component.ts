@@ -1,110 +1,119 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MetaDataService } from '../../services/meta-data.service';
 import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-admin-category',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './admin-category.component.html',
   styleUrls: ['./admin-category.component.css'],
 })
 export class AdminCategoryComponent implements OnInit {
-  categoryName: string = '';
-  selectedFile: File | null = null;
+  form = new FormGroup({
+    name: new FormControl('', Validators.required),
+    image: new FormControl<File | null>(null)
+  });
+
+  image: File | null = null;
   categories: any[] = [];
   editingCategory: any = null;
 
-  constructor(private metaDataService: MetaDataService, private categoryService: CategoryService) {}
+  constructor(
+    private metaDataService: MetaDataService,
+    private categoryService: CategoryService
+  ) {}
 
   ngOnInit() {
     this.loadCategories();
   }
 
   loadCategories() {
-    this.metaDataService.getCategories().subscribe(
-      (data) => (this.categories = data),
-      (error) => console.error('❌ Error loading categories:', error)
-    );
+    this.metaDataService.getCategories().subscribe({
+      next: (data) => (this.categories = data),
+      error: (err) => console.error('❌ Error loading categories:', err)
+    });
   }
 
   onFileSelected(event: any) {
-    if (event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0];
+    const file = event.target.files?.[0];
+    if (file) {
+      this.image = file;
+      this.form.patchValue({ image: file });
     }
   }
 
   onSubmit() {
-    if (!this.categoryName || !this.selectedFile) {
-      alert('Please provide a category name and select an image.');
+    if (this.form.invalid || !this.image) {
+      alert('❗ Vul alle velden in en kies een afbeelding.');
       return;
     }
 
     const formData = new FormData();
-    formData.append('name', this.categoryName);
-    formData.append('image', this.selectedFile);
+    formData.append('name', this.form.value.name || '');
+    formData.append('image', this.image);
 
-    this.categoryService.uploadCategory(formData).subscribe(
-      (response) => {
-        console.log('✅ Category added successfully:', response);
-        alert('Category added successfully!');
+    this.categoryService.uploadCategory(formData).subscribe({
+      next: () => {
+        alert('✅ Categorie toegevoegd!');
         this.resetForm();
         this.loadCategories();
       },
-      (error) => {
-        console.error('🔥 Error adding category:', error);
-        alert('Error adding category. Please try again.');
+      error: (err) => {
+        console.error('🔥 Fout bij toevoegen categorie:', err);
+        alert('Fout bij toevoegen.');
       }
-    );
+    });
   }
 
   editCategory(category: any) {
     this.editingCategory = { ...category };
-    this.categoryName = category.name;
+    this.form.patchValue({ name: category.name });
+    this.image = null;
   }
 
   updateCategory() {
     if (!this.editingCategory) return;
 
     const formData = new FormData();
-    formData.append('name', this.categoryName);
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
+    formData.append('name', this.form.value.name || '');
+    if (this.image) {
+      formData.append('image', this.image);
     }
 
-    this.categoryService.updateCategory(this.editingCategory.id, formData).subscribe(
-      () => {
-        alert('✅ Category updated!');
+    this.categoryService.updateCategory(this.editingCategory.id, formData).subscribe({
+      next: () => {
+        alert('✅ Categorie geüpdatet!');
         this.resetForm();
         this.loadCategories();
       },
-      (err) => {
-        console.error('🔥 Error updating category:', err);
-        alert('Error updating category');
+      error: (err) => {
+        console.error('🔥 Fout bij updaten categorie:', err);
+        alert('Updaten mislukt.');
       }
-    );
+    });
   }
 
   deleteCategory(id: number) {
-    if (confirm('Are you sure you want to delete this category?')) {
-      this.categoryService.deleteCategory(id).subscribe(
-        () => {
-          alert('✅ Category deleted!');
+    if (confirm('Weet je zeker dat je deze categorie wilt verwijderen?')) {
+      this.categoryService.deleteCategory(id).subscribe({
+        next: () => {
+          alert('✅ Categorie verwijderd!');
           this.loadCategories();
         },
-        (err) => {
-          console.error('🔥 Error deleting category:', err);
-          alert('Error deleting category');
+        error: (err) => {
+          console.error('🔥 Fout bij verwijderen:', err);
+          alert('Verwijderen mislukt.');
         }
-      );
+      });
     }
   }
 
   resetForm() {
-    this.categoryName = '';
-    this.selectedFile = null;
+    this.form.reset();
+    this.image = null;
     this.editingCategory = null;
   }
 }

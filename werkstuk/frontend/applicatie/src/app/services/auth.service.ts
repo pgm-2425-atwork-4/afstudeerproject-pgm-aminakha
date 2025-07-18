@@ -27,8 +27,8 @@ export class AuthService {
   ngOnInit() {
     this.loadUserFromStorage(); 
   }
-  loginUser(email: string, password: string,profile_image:string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, { email, password,profile_image }).pipe(
+  loginUser(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/login`, { email, password}).pipe(
       tap((response: any) => {
         if (response.token) {
           localStorage.setItem('auth_token', response.token);
