@@ -16,7 +16,6 @@ const savedGymsRoutes = require("./routes/savedGyms");
 const pressureRoutes = require("./routes/pressures");
 const provinceRoutes = require("./routes/provinces");
 const exerciseCategories = require("./routes/exercises");
-// Init upload dir (if using local uploads too)
 const adminRoutes = require("./routes/admin");  
 
 
