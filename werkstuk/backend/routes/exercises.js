@@ -51,7 +51,7 @@ router.get("/exercises", (req, res) => {
   db.query(`SELECT * FROM exercises`, (err, results) => {
     if (err) {
       console.error("Error fetching exercises:", err);
-      return res.status(500).json({ error: "Internal server error" });
+      return res.status(500).json({ error: "Internal server error!" });
     }
     res.json(results);
   });
