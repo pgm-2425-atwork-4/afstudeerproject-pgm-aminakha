@@ -22,6 +22,10 @@
           </select>
           <button type="button" class="reset-btn btn" (click)="resetFilters()">Reset filters</button>
         </div>
+        <info-card [items]="[filteredExercises]" type="exercise"></info-card>
+        <div *ngIf="filteredExercises.length === 0">
+          <h2 class="no-results">No exercises found...</h2>
+        </div>
     </form>
     <div class="motivation-container">
       <div class="author d-flex flex-column">

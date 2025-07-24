@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'info-card',
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule,RouterLink, ],
   templateUrl: './info-card.component.html',
   styleUrl: './info-card.component.css'
 })

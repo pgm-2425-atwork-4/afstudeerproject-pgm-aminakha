@@ -56,5 +56,15 @@ router.get("/", (req, res) => {
     res.json(results);
   });
 });
+router.get('/:id/images', (req, res) => {
+  const exerciseId = req.params.id;
+  db.query(`SELECT * FROM exercise_images WHERE exercise_id = ?`, [exerciseId], (err, results) => {
+    if (err) {
+      console.error("Error fetching exercise images:", err);
+      return res.status(500).json({ error: "Internal server error!" });
+    }
+    res.json(results);
+  });
+});
 
 module.exports = router;

@@ -21,6 +21,12 @@ export class ExerciseService {
   getExercises() {
     return this.http.get(this.apiUrl, { headers: this.getAuthHeaders() });
   }
+  getExerciseById(id: string) {
+    return this.http.get(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+  }
+  getExerciseImages(id: string) {
+    return this.http.get(`${this.apiUrl}/${id}/images`, { headers: this.getAuthHeaders() });
+  }
   getExerciseCategories() {
     return this.http.get(`${this.apiUrl}/categories`);
   }
