@@ -47,7 +47,7 @@ router.post("/admin/add-exercise", uploadImage, (req, res) => {
 });
 
 
-router.get("/exercises", (req, res) => {
+router.get("/", (req, res) => {
   db.query(`SELECT * FROM exercises`, (err, results) => {
     if (err) {
       console.error("Error fetching exercises:", err);
