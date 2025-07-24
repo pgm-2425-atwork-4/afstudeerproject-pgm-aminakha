@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require('../config/db');  
-const { uploadImage } = require("../middlewares/multerConfig");
+const { uploadImage, exerciseImages } = require("../middlewares/multerConfig");
 
 router.get("/categories", (req, res) => {
     db.query("SELECT * FROM exercise_categories", (err, results) => {
@@ -13,9 +13,9 @@ router.get("/categories", (req, res) => {
     });
 });
 
-router.post("/admin/add-exercise", uploadImage, (req, res) => {
+router.post("/admin/add-exercise", exerciseImages, (req, res) => {
   const { name, exercise_category_id, pressure_id, big_description } = req.body;
-  const imageUrl = req.file?.path;
+  const imageUrls = req.files.map(file => file.path);
 
   const insertExercise = `
     INSERT INTO exercises (name, exercise_category_id, pressure_id, big_description)

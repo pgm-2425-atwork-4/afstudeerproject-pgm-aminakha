@@ -30,17 +30,17 @@ export class HomeComponent implements OnInit {
     {
       text: "“Success is doing what you have to do, even when you don’t feel like it.”",
       author: '@Daniël Storm',
-      image: 'assets/images/daniel.png'
+      image: 'images/daniel.png'
     }, 
     {
       text: "“Discipline is choosing between what you want now and what you want most.”",
       author: '@Sven Richter',
-      image: 'assets/images/sven.png'
+      image: 'images/sven.png'
     },
     {
       text: "“Your body can stand almost anything. It’s your mind you have to convince.”",
       author: '@Noah de Vries',
-      image: 'assets/images/noah.png'
+      image: 'images/noah.png'
   }];
   constructor(private gymService: GymService, private router: Router, private metadataService: MetaDataService) {}
 

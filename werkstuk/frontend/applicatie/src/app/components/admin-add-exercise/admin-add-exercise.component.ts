@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ExerciseService } from '../../services/exercise.service';
+import { MetaDataService } from '../../services/meta-data.service';
 
 @Component({
   selector: 'app-admin-add-exercise',
@@ -22,8 +23,8 @@ export class AdminAddExerciseComponent implements OnInit {
 
   categories: any[] = []; 
   pressures: any[] = []; 
-
-  constructor(private exerciseService: ExerciseService) {}
+  selectedImages: File[] = [];
+  constructor(private exerciseService: ExerciseService, private metaDataService: MetaDataService) {}
 
   ngOnInit(): void {
 
@@ -37,7 +38,7 @@ export class AdminAddExerciseComponent implements OnInit {
     }
   });
 
-    this.exerciseService.getPressures().subscribe({
+    this.metaDataService.getPressureTypes().subscribe({
       next: (pressures: any) => {
         this.pressures = pressures;
       },
@@ -61,6 +62,10 @@ export class AdminAddExerciseComponent implements OnInit {
       this.form.patchValue({ image: file });
       console.log('Image selected:', file);
     }
+  }
+
+  onImagesSelected(event: any) {
+    this.selectedImages = Array.from(event.target.files);
   }
 
   addExercise() {

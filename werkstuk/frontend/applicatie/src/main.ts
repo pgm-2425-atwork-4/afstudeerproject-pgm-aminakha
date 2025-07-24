@@ -22,7 +22,8 @@ import { withHashLocation } from '@angular/router'; // Import the hash location 
 
 bootstrapApplication(AppComponent, {
   providers: [
-     provideRouter(routes, withHashLocation()),
+    //uncomment als het naar github papges moet 
+    //  provideRouter(routes, withHashLocation()),
     provideHttpClient(), // ✅ HTTP Client
     provideRouter([       // ✅ Angular 18 Routing
       { path: '', component: HomeComponent },
