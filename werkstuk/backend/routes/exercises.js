@@ -15,7 +15,11 @@ router.get("/categories", (req, res) => {
 
 router.post("/admin/add-exercise", exerciseImages, (req, res) => {
   const { name, exercise_category_id, pressure_id, big_description } = req.body;
-  const imageUrls = req.files.map(file => file.path);
+  const imageUrls = req.files?.map(file => file.path) || [];
+
+  if (imageUrls.length === 0) {
+    return res.status(400).json({ error: "❌ Minstens één afbeelding vereist" });
+  }
 
   const insertExercise = `
     INSERT INTO exercises (name, exercise_category_id, pressure_id, big_description)
@@ -31,17 +35,20 @@ router.post("/admin/add-exercise", exerciseImages, (req, res) => {
 
     const exerciseId = result.insertId;
 
+    // Insert alle afbeeldingen
     const insertImage = `
       INSERT INTO exercise_images (exercise_id, image_url)
-      VALUES (?, ?)
+      VALUES ?
     `;
-    db.query(insertImage, [exerciseId, imageUrl], (err2) => {
+    const imageValues = imageUrls.map(url => [exerciseId, url]);
+
+    db.query(insertImage, [imageValues], (err2) => {
       if (err2) {
-        console.error("❌ Error inserting exercise image:", err2);
-        return res.status(500).json({ error: "Failed to insert exercise image" });
+        console.error("❌ Error inserting exercise images:", err2);
+        return res.status(500).json({ error: "Failed to insert exercise images" });
       }
 
-      res.json({ message: "✅ Exercise and image inserted", id: exerciseId });
+      res.json({ message: "✅ Exercise and images inserted", id: exerciseId });
     });
   });
 });
