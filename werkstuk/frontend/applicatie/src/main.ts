@@ -17,8 +17,12 @@ import { ExercisesComponent } from './app/pages/exercises/exercises.component';
 import { AdminAddExerciseCategoryComponent } from './app/components/admin-add-exercise-category/admin-add-exercise-category.component';
 import { AdminAddExerciseComponent } from './app/components/admin-add-exercise/admin-add-exercise.component';
 import { AdminGymsComponent } from './app/components/admin-gyms/admin-gyms.component';
+import { routes } from './app/app.routes'; // of waar jouw routes ook staan
+import { withHashLocation } from '@angular/router'; // Import the hash location strategy
+
 bootstrapApplication(AppComponent, {
   providers: [
+     provideRouter(routes, withHashLocation()),
     provideHttpClient(), // ✅ HTTP Client
     provideRouter([       // ✅ Angular 18 Routing
       { path: '', component: HomeComponent },
@@ -35,7 +39,7 @@ bootstrapApplication(AppComponent, {
     { path: '', redirectTo: 'categories', pathMatch: 'full' }, // Default admin route
     { path: 'categories', component: AdminCategoryComponent },
     { path: 'gyms', component: AdminGymsComponent },
-    { path: 'add-gym', component: AdminAddGymComponent }, // ✅ Ensure this matches
+    { path: 'add-gym', component: AdminAddGymComponent }, 
           {path:"add-exercise-category",component:AdminAddExerciseCategoryComponent}, 
                 {path:"add-exercise",component:AdminAddExerciseComponent}
           
