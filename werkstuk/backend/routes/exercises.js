@@ -87,7 +87,7 @@ router.get('/:id', (req, res) => {
     JOIN 
       exercise_categories ec ON e.exercise_category_id = ec.id
     JOIN 
-      pressure_types pt ON e.pressure_id = pt.id
+      pressures pt ON e.pressure_id = pt.id
     WHERE 
       e.id = ?
   `;
