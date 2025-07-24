@@ -78,7 +78,9 @@ router.get('/:id', (req, res) => {
   const exerciseId = req.params.id;
   const query = `
     SELECT 
-      e.*, 
+      e.*,
+      pt.*,
+      ec.*,
       ec.name AS category_name,
       ec.symbol AS category_symbol,
       pt.name AS pressure_name
