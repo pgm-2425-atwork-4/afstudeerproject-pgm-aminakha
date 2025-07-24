@@ -1,7 +1,7 @@
 <section class="list-container">
     <div *ngFor="let item of items" class="item-card">
         <img *ngIf="type === 'gym'" [src]="item.logo" alt="{{ item.name }} logo">
-        <img *ngIf="type === 'exercise'" [src]="item.image" alt="{{ item.name }} image">
+        <img *ngIf="type === 'exercise'" [src]="foundExerciseImage?.image_url" alt="{{ item.name }} image">
         <div class="item-details">
             <h2>{{ item.name }}</h2>
             <p *ngIf="type === 'gym'">{{ item.city }}</p>

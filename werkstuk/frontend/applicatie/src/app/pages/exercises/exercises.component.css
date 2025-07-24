@@ -9,53 +9,54 @@
         text-transform: uppercase;
     }
     .filter-sidebar {
-      background-color: #4c4c4c;
-      border-radius: var(--standard-border-radius);
-      color: white;
-      padding: 20px;
-      width: 15rem;
-      font-family: 'Archivo', sans-serif;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      h3 {
-        font-size: 2rem;
-        text-align: center;
-      }
-
-      select {
-        padding: 0.5rem;
+        background-color: #4c4c4c;
         border-radius: var(--standard-border-radius);
-        width: 100%;
-      }
-
-      .personal-trainer-options {
+        color: white;
+        padding: 20px;
+        width: 15rem;
+        font-family: 'Archivo', sans-serif;
         display: flex;
-        justify-content: center;
-        gap: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
 
-        input[type='radio'] {
-          width: 2rem;
-          height: 2rem;
-          accent-color: var(--primary-color);
-          cursor: pointer;
-
-          &:hover {
-            transform: scale(1.1);
-          }
+        h3 {
+            font-size: 2rem;
+            text-align: center;
         }
 
-        label {
-          font-size: 1.5rem;
+        select {
+            padding: 0.5rem;
+            border-radius: var(--standard-border-radius);
+            width: 100%;
         }
-      }
+
+        .personal-trainer-options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+
+            input[type='radio'] {
+            width: 2rem;
+            height: 2rem;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+            }
+
+            label {
+            font-size: 1.5rem;
+            }
+        }
     }
     form {
         display: flex;
         align-items: center;
         justify-content: center;
         flex-wrap: wrap;
+        flex-direction: column;
         .search-bar {
             position: relative;
             svg {
@@ -78,6 +79,11 @@
                 position: absolute;
                 right: 0.5rem;
             }
+        }
+        .search-items {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
         }
     }
     .motivation-container {

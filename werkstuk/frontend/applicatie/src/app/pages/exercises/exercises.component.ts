@@ -64,19 +64,20 @@ export class ExercisesComponent implements OnInit {
     this.exerciseService.getExercises().subscribe({
       next: (data: any) => {
         this.exercises = data;
-        this.filteredExercises = data; // initieel tonen we alles
+        console.log(this.exercises[0]);
+
+        this.filteredExercises = data;
       },
       error: (error) => console.error('Error fetching exercises:', error)
     });
 
-    // Filter toepassen wanneer formulier verandert
     this.form.valueChanges.subscribe(() => {
       this.applyFilters();
     });
   }
 
   onSearchSubmit() {
-    this.applyFilters(); // ook filter toepassen bij submit
+    this.applyFilters();
   }
 
   resetFilters() {
@@ -85,13 +86,14 @@ export class ExercisesComponent implements OnInit {
   }
 
   applyFilters() {
-    const values = this.form.value;
-    this.filteredExercises = this.exercises.filter(ex => {
-      return (
-        (!values.query || ex.name?.toLowerCase().includes(values.query.toLowerCase())) &&
-        (!values.difficulty || ex.pressure?.toLowerCase() === values.difficulty.toLowerCase()) &&
-        (!values.targetMuscleGroup || ex.exercise_category?.toLowerCase() === values.targetMuscleGroup.toLowerCase())
-      );
-    });
-  }
+  const values = this.form.value;
+
+  this.filteredExercises = this.exercises.filter(ex => {
+    return (
+      (!values.query || ex.name?.toLowerCase().includes(values.query.toLowerCase())) &&
+      (!values.difficulty || ex.pressure_id === Number(values.difficulty)) &&
+      (!values.targetMuscleGroup || ex.exercise_category_id === Number(values.targetMuscleGroup))
+    );
+  });
+}
 }

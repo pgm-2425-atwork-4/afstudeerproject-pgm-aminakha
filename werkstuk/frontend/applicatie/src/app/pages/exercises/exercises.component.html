@@ -8,24 +8,27 @@
         <input type="text" formControlName="query" placeholder="Zoek een gym" class="form-control" required />
         <button class="btn" type="submit">Zoeken</button>
       </div>
-      <div class="filter-sidebar">
+      <div class="search-items d-flex flex-row">
+        <div class="filter-sidebar">
           <h3>Filters</h3>
 
           <label for="difficulty">Kies een moeilijkheid</label>
           <select id="difficulty" formControlName="difficulty">
-            <option *ngFor="let difficulty of difficulties" [value]="difficulty.name">{{ difficulty.name }}</option>
+            <option *ngFor="let difficulty of difficulties" [value]="difficulty.id">{{ difficulty.name }}</option>
           </select>
 
           <label for="targetMuscleGroup">Kies een doelgroep</label>
           <select id="targetMuscleGroup" formControlName="targetMuscleGroup">
-            <option *ngFor="let group of targetMuscleGroups" [value]="group.name">{{ group.name }}</option>
+            <option *ngFor="let group of targetMuscleGroups" [value]="group.id">{{ group.name }}</option>
           </select>
           <button type="button" class="reset-btn btn" (click)="resetFilters()">Reset filters</button>
         </div>
-        <info-card [items]="[filteredExercises]" type="exercise"></info-card>
+        <info-card [items]="filteredExercises" type="exercise"></info-card>
         <div *ngIf="filteredExercises.length === 0">
           <h2 class="no-results">No exercises found...</h2>
         </div>
+      </div>
+      
     </form>
     <div class="motivation-container">
       <div class="author d-flex flex-column">
