@@ -6,13 +6,15 @@
 
     <!-- Exercise image -->
     <img *ngIf="type === 'exercise'" [src]="item.image" alt="{{ item.name }} image">
-
     <div class="item-details">
       <h2>{{ item.name }}</h2>
 
         <!-- Exercise details -->
         <p *ngIf="type === 'exercise'">{{ item.big_description | slice:0:15  }} {{ item.big_description.length > 10 ? '...' : '' }}</p>
         <p *ngIf="type === 'exercise'">{{ item.duration }} minuten</p>
+        <p *ngIf="type === 'exercise'">
+          <a class="btn" [routerLink]="['/oefening-detail', item.id]">Bekijk oefening</a>
+        </p>
       <!-- Gym details -->
       <p *ngIf="type === 'gym'">{{ item.city }}</p>
       <p *ngIf="type === 'gym'">

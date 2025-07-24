@@ -74,4 +74,38 @@ router.get('/:id/images', (req, res) => {
   });
 });
 
+router.get('/:id', (req, res) => {
+  const exerciseId = req.params.id;
+  const query = `
+    SELECT 
+      e.*, 
+      ec.name AS category_name,
+      ec.symbol AS category_symbol,
+      pt.name AS pressure_name
+    FROM 
+      exercises e
+    JOIN 
+      exercise_categories ec ON e.exercise_category_id = ec.id
+    JOIN 
+      pressure_types pt ON e.pressure_id = pt.id
+    WHERE 
+      e.id = ?
+  `;
+
+  db.query(query, [exerciseId], (err, results) => {
+    if (err) {
+      console.error("Error fetching detailed exercise info:", err);
+      return res.status(500).json({ error: "Internal server error!" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Exercise not found!" });
+    }
+
+    res.json(results[0]);
+  });
+});
+
+
+
 module.exports = router;
