@@ -35,21 +35,23 @@ export class InfoCardComponent {
   }
 
   if (this.type === 'exercise') {
-    const id = this.items[0].id;
-    this.exerciseService.getExerciseImages(id).subscribe(
-      (data: any) => {
-        if (Array.isArray(data) && data.length > 0) {
-          this.foundExerciseImage = data[0];
-        } else {
-          this.foundExerciseImage = null;
+    this.items.forEach((exercise: any) => {
+      const id = exercise.id;
+      console.log(`🔍 Fetching image for exercise ID: ${id}`);
+
+      this.exerciseService.getExerciseImages(id).subscribe(
+        (data: any) => {
+          exercise.image = Array.isArray(data) && data.length > 0 ? data[0].image_url : null;
+          console.log(`✅ Successfully loaded image for exercise ${id}:`, exercise.image);
+          
+        },
+        (error: any) => {
+          console.error(`❌ Error loading image for exercise ${id}:`, error);
+          exercise.image = null;
         }
-      },
-      (error: any) => {
-        console.error('Error fetching exercise images:', error);
-        this.foundExerciseImage = null;
-      }
-    );
-    }
+      );
+    });
+  }
 
   }
 }

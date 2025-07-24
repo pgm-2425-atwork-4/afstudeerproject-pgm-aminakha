@@ -10,7 +10,8 @@
         padding-bottom: 1rem;
         img {
             border-radius: var(--standard-border-radius);
-            height: 15rem;
+            width: 15rem;
+            aspect-ratio: 1 / 1;
             object-fit: cover;
         }
         .item-details {                

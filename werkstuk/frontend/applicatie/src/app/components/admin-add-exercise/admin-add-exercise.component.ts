@@ -17,7 +17,7 @@ export class AdminAddExerciseComponent implements OnInit {
     exercise_category_id: new FormControl(null, Validators.required),
     pressure_id: new FormControl(null, Validators.required),
     big_description: new FormControl('', Validators.required),
-    image: new FormControl<File | null>(null)
+    duration: new FormControl('', [Validators.required, Validators.min(1)]),
   });
   image : any = null;
 
@@ -48,22 +48,6 @@ export class AdminAddExerciseComponent implements OnInit {
     });
   }
 
-  onFileChange(event: Event): void {
-  const input = event.target as HTMLInputElement;
-
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0];
-    this.form.patchValue({ image: file });
-  }
-}
-  onImageSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.form.patchValue({ image: file });
-      console.log('Image selected:', file);
-    }
-  }
-
   onImagesSelected(event: any) {
     this.selectedImages = Array.from(event.target.files);
   }
@@ -75,11 +59,17 @@ export class AdminAddExerciseComponent implements OnInit {
   formData.append('exercise_category_id', (this.form.value.exercise_category_id ?? '').toString());
   formData.append('pressure_id', (this.form.value.pressure_id ?? '').toString());
   formData.append('big_description', this.form.value.big_description ?? '');
+  formData.append('duration', (this.form.value.duration ?? '').toString());
 
-  const imageFile = this.form.value.image;
-  if (imageFile) {
-    formData.append('image', imageFile);
-  }
+  if (this.selectedImages.length === 0) {
+  alert('❌ Geen afbeelding(en) geselecteerd!');
+  return;
+  
+}
+
+  this.selectedImages.forEach(image => {
+    formData.append('images', image);
+  });
 
   this.exerciseService.addExercise(formData).subscribe({
     next: () => {

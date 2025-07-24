@@ -14,7 +14,7 @@ router.get("/categories", (req, res) => {
 });
 
 router.post("/admin/add-exercise", exerciseImages, (req, res) => {
-  const { name, exercise_category_id, pressure_id, big_description } = req.body;
+  const { name, exercise_category_id, pressure_id, big_description, duration } = req.body;
   const imageUrls = req.files?.map(file => file.path) || [];
 
   if (imageUrls.length === 0) {
@@ -22,10 +22,10 @@ router.post("/admin/add-exercise", exerciseImages, (req, res) => {
   }
 
   const insertExercise = `
-    INSERT INTO exercises (name, exercise_category_id, pressure_id, big_description)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO exercises (name, exercise_category_id, pressure_id, big_description, duration)
+    VALUES (?, ?, ?, ?, ?)
   `;
-  const exerciseValues = [name, exercise_category_id, pressure_id, big_description];
+  const exerciseValues = [name, exercise_category_id, pressure_id, big_description, duration];
 
   db.query(insertExercise, exerciseValues, (err, result) => {
     if (err) {

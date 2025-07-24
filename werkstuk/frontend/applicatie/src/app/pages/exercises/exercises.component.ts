@@ -52,7 +52,6 @@ export class ExercisesComponent implements OnInit {
 
   ngOnInit() {
     this.randomMotivation = this.motivations[Math.floor(Math.random() * this.motivations.length)];
-
     this.metaDataService.getPressureTypes().subscribe((data: any) => {
       this.difficulties = data;
     });
