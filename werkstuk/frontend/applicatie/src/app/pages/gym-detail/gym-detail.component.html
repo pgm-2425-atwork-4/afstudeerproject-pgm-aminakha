@@ -1,16 +1,12 @@
 <div *ngIf="gym" class="gym-detail-container">
-  {{ gym | json }}
-  <div class="gym-detail-content ">
-    <div class="gym-detail-content--hero">
+  <div class="gym-detail__hero container">
       <h1>{{ gym.name }}</h1>
-
       <div class="gym-gallery" *ngIf="gym.images && gym.images.length > 0">
         <img *ngFor="let img of gym.images" [src]="img" alt="{{ gym.name }} Image" class="gym-image">
       </div>  
     </div>
-
-    <div class="gym-detail-content--description">
-      <ul>
+    <div class="gym-detail__description">
+      <ul class="container">
         <li>
           <h2> {{ gym.rating }}/5 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="165px" width="165px" version="1.1" id="Capa_1" viewBox="0 0 47.94 47.94" xml:space="preserve" fill="#000000">
             <g id="SVGRepo_bgCarrier" stroke-width="0"/>
@@ -21,7 +17,7 @@
         </li>
         <li>
           <h2>{{ gym.category }}</h2>
-          <p>Drukte in de gym gedurende de dag</p>
+          <p>Categorie van de gym</p>
         </li>
         <li>
           <h2> {{ gym.pressure }} <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
@@ -33,83 +29,84 @@
         </li>
       </ul>
     </div>
-
-    <div class="general-information">
+    <div class="general-information container mb-4">
       <h2>Algemene informatie</h2>
       <ul>
-        <li><p>Email: <strong><a href="mailto:{{ gym.email }}">{{ gym.email }}</a></strong></p></li>
-        <li><p>Phone: <strong><a href="tel:{{ gym.phone }}">{{ gym.phone }}</a></strong></p></li>
-        <li><p>Website: <strong><a href="{{ gym.website }}" target="_blank">{{ gym.name }}</a></strong></p></li>
-        <li><p>Location: <a href="https://www.google.com/maps/place/{{ gym.address }}" target="_blank"><strong>{{ gym.city }}, {{ gym.address }}</strong></a></p></li>
+        <li><p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M112 128C85.5 128 64 149.5 64 176C64 191.1 71.1 205.3 83.2 214.4L291.2 370.4C308.3 383.2 331.7 383.2 348.8 370.4L556.8 214.4C568.9 205.3 576 191.1 576 176C576 149.5 554.5 128 528 128L112 128zM64 260L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 260L377.6 408.8C343.5 434.4 296.5 434.4 262.4 408.8L64 260z"/></svg> <strong><a href="mailto:{{ gym.email }}">{{ gym.email }}</a></strong></p></li>
+        <li><p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224.2 89C216.3 70.1 195.7 60.1 176.1 65.4L170.6 66.9C106 84.5 50.8 147.1 66.9 223.3C104 398.3 241.7 536 416.7 573.1C493 589.3 555.5 534 573.1 469.4L574.6 463.9C580 444.2 569.9 423.6 551.1 415.8L453.8 375.3C437.3 368.4 418.2 373.2 406.8 387.1L368.2 434.3C297.9 399.4 241.3 341 208.8 269.3L253 233.3C266.9 222 271.6 202.9 264.8 186.3L224.2 89z"/></svg><strong><a href="tel:{{ gym.phone }}">{{ gym.phone }}</a></strong></p></li>
+        <li><p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M352 256c0 22.2-1.2 43.6-3.3 64l-185.3 0c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64l185.3 0c2.2 20.4 3.3 41.8 3.3 64zm28.8-64l123.1 0c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64l-123.1 0c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32l-116.7 0c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0l-176.6 0c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0L18.6 160C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192l123.1 0c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64L8.1 320C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6l176.6 0c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352l116.7 0zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6l116.7 0z"/></svg><strong><a href="{{ gym.website }}" target="_blank">{{ gym.name }}</a></strong></p></li>
+        <li><p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--!Font Awesome Free v6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M16 144a144 144 0 1 1 288 0A144 144 0 1 1 16 144zM160 80c8.8 0 16-7.2 16-16s-7.2-16-16-16c-53 0-96 43-96 96c0 8.8 7.2 16 16 16s16-7.2 16-16c0-35.3 28.7-64 64-64zM128 480l0-162.9c10.4 1.9 21.1 2.9 32 2.9s21.6-1 32-2.9L192 480c0 17.7-14.3 32-32 32s-32-14.3-32-32z"/></svg> <a href="https://www.google.com/maps/place/{{ gym.address }}" target="_blank"><strong>{{ gym.city }}, {{ gym.address }}</strong></a></p></li>
         <li><p>Opening Hours: {{ gym.opening_hours }}</p></li>
+        <li><p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 61" fill="#28282B">
+          <path d="M20.6319 30.4553C9.35967 30.4544 0.445195 39.9191 0.444761 51.2641L0.444486 58.4566C0.444438 59.709 1.42926 60.7245 2.6442 60.7246L38.6175 60.7274C39.8323 60.7275 40.8173 59.7123 40.8174 58.4598L40.8176 51.2673C40.8182 39.7975 31.763 30.4561 20.6319 30.4553ZM18.8595 35.0937C20.0336 34.9588 21.2097 34.9556 22.404 35.094L22.4039 38.4193C22.4039 39.4267 21.6088 40.2463 20.6316 40.2462C19.6543 40.2462 18.8593 39.4265 18.8594 38.419L18.8595 35.0937ZM7.34793 56.1894L4.84406 56.1892C4.84425 51.0156 4.4121 47.1791 7.34834 42.4782L7.34781 56.1894L7.34793 56.1894ZM29.5146 56.1911L11.7475 56.1897L11.7482 37.8185C12.5968 37.2209 13.5043 36.706 14.4601 36.2861L14.46 38.4189C14.4599 41.9272 17.2284 44.7818 20.6316 44.7821C24.0349 44.7824 26.8036 41.9284 26.8037 38.4199L26.8038 36.2871C27.7596 36.7073 28.667 37.2222 29.5155 37.8199L29.5148 56.1911L29.5146 56.1911ZM36.4181 56.1916L33.9143 56.1914L33.9148 42.4803C36.8154 47.1251 36.4183 50.8733 36.4181 56.1916Z" fill="black"/>
+          <path d="M7.74597 10.3725C4.89209 19.3918 11.4556 28.6657 20.6323 28.6664C29.829 28.6672 36.3677 19.3777 33.5198 10.3745C34.1877 9.98528 34.6392 9.24786 34.6392 8.40047C34.6393 7.14809 33.6545 6.13259 32.4395 6.13249L31.332 6.13241C25.8913 -1.07562 15.3744 -1.07574 9.93376 6.13073L8.82636 6.13065C7.61154 6.13055 6.62652 7.14579 6.62648 8.39828C6.62656 9.24555 7.07804 9.98304 7.74597 10.3725ZM24.4665 6.13175L16.7993 6.13115C19.1691 4.99966 21.9745 4.94129 24.4665 6.13175ZM12.359 10.6664L28.9066 10.6677C31.7699 16.8927 27.3431 24.1314 20.6323 24.1308C13.9223 24.1303 9.49492 16.8917 12.359 10.6664Z" fill="black"/>
+          </svg>Personal Trainer: {{ gym.personal_trainer ? 'Aanwezig' : 'Niet aanwezig' }}</p>
+        </li>
       </ul>
     </div>
-    <div class="gym-pricing">
+    <div class="gym-pricing container">
       <h2>Lidmaatschapsopties</h2>
-  
-      <ul *ngIf="gymPrices.length > 0; else noPrices">
+      <ul *ngIf="gymPrices.length > 0">
         <li *ngFor="let bundle of gymPrices">
-          <h3>{{ bundle.bundle_name }} - €{{ bundle.price }}</h3>
+          <h3>{{ bundle.plan_type }} - €{{ bundle.price }}</h3>
           <p>{{ bundle.description }}</p>
         </li>
       </ul>
-  
-      <ng-template #noPrices>
-        <p>Geen lidmaatschapsopties beschikbaar voor deze gym.</p>
-      </ng-template>
-        <p class="gym__trainer"><svg xmlns="http://www.w3.org/2000/svg" width="41" height="61" viewBox="0 0 41 61" fill="#28282B">
-          <path d="M20.6319 30.4553C9.35967 30.4544 0.445195 39.9191 0.444761 51.2641L0.444486 58.4566C0.444438 59.709 1.42926 60.7245 2.6442 60.7246L38.6175 60.7274C39.8323 60.7275 40.8173 59.7123 40.8174 58.4598L40.8176 51.2673C40.8182 39.7975 31.763 30.4561 20.6319 30.4553ZM18.8595 35.0937C20.0336 34.9588 21.2097 34.9556 22.404 35.094L22.4039 38.4193C22.4039 39.4267 21.6088 40.2463 20.6316 40.2462C19.6543 40.2462 18.8593 39.4265 18.8594 38.419L18.8595 35.0937ZM7.34793 56.1894L4.84406 56.1892C4.84425 51.0156 4.4121 47.1791 7.34834 42.4782L7.34781 56.1894L7.34793 56.1894ZM29.5146 56.1911L11.7475 56.1897L11.7482 37.8185C12.5968 37.2209 13.5043 36.706 14.4601 36.2861L14.46 38.4189C14.4599 41.9272 17.2284 44.7818 20.6316 44.7821C24.0349 44.7824 26.8036 41.9284 26.8037 38.4199L26.8038 36.2871C27.7596 36.7073 28.667 37.2222 29.5155 37.8199L29.5148 56.1911L29.5146 56.1911ZM36.4181 56.1916L33.9143 56.1914L33.9148 42.4803C36.8154 47.1251 36.4183 50.8733 36.4181 56.1916Z" fill="black"/>
-          <path d="M7.74597 10.3725C4.89209 19.3918 11.4556 28.6657 20.6323 28.6664C29.829 28.6672 36.3677 19.3777 33.5198 10.3745C34.1877 9.98528 34.6392 9.24786 34.6392 8.40047C34.6393 7.14809 33.6545 6.13259 32.4395 6.13249L31.332 6.13241C25.8913 -1.07562 15.3744 -1.07574 9.93376 6.13073L8.82636 6.13065C7.61154 6.13055 6.62652 7.14579 6.62648 8.39828C6.62656 9.24555 7.07804 9.98304 7.74597 10.3725ZM24.4665 6.13175L16.7993 6.13115C19.1691 4.99966 21.9745 4.94129 24.4665 6.13175ZM12.359 10.6664L28.9066 10.6677C31.7699 16.8927 27.3431 24.1314 20.6323 24.1308C13.9223 24.1303 9.49492 16.8917 12.359 10.6664Z" fill="black"/>
-          </svg><strong>Trainer Available:{{ gym.personal_trainer ? 'Yes' : 'No' }}</strong> </p>
-            <button *ngIf="userId" class="save-btn" (click)="saveGym()"> Save Gym</button>
-
+      <button *ngIf="userId" class="save-btn" (click)="saveGym()"> Save Gym</button>
     </div>
 
-    <div class="comments-section-container">
-      <div class="comments-content">
-        <h2>Reviews</h2>
-<div *ngIf="userId" class="add-comment-form">
-  <p class="user-information"><img *ngIf="profile_image" [src]="profile_image" alt="Avatar"><strong>{{ user.username }}</strong></p>
-  <div class="comment-content">
-      <div class="title-container">
-          <label for="commentTitle">Title</label>
-        <input type="text" [(ngModel)]="newCommentTitle" placeholder="Plaats een titel" id="commentTitle">
+    <div class="comments-section-container container">
+  <div class="comments-content">
+    <h2>Reviews</h2>
+
+    <form *ngIf="userId" [formGroup]="form" (ngSubmit)="submitComment()" class="add-comment-form">
+      <p class="user-information">
+        <img *ngIf="profile_image" [src]="profile_image" alt="Avatar" />
+        <strong>{{ user.username }}</strong>
+      </p>
+
+      <div class="comment-content">
+        <div class="title-container">
+          <label for="commentTitle">Titel</label>
+          <input id="commentTitle" formControlName="title" placeholder="Titel van je reactie" />
         </div>
+
         <div class="comment-container">
           <label for="commentText">Comment</label>
-        <textarea id="commentText" [(ngModel)]="newComment" placeholder="Schrijf je comment hier " rows="4"></textarea>
+          <textarea
+            id="commentText"
+            formControlName="description"
+            placeholder="Typ je reactie hier..."
+            rows="4"
+          ></textarea>
         </div>
-  </div>
-      
+      </div>
 
-        
-        <button class="btn-submit" (click)="submitComment()">Submit Comment</button>
-      </div>
-      <div class="comments-list">
-        <div *ngFor="let comment of gym.comments">
-          <div class="comment">
-            <div class="comment-content">
-            <h3><img src="{{comment.profile_image}}" alt="Avatar">{{ comment.username }} <strong>{{ comment.title }}</strong></h3>
-            <p>{{ comment.description }}</p> 
-            <p><small>Gepost : {{ comment.created_at | date:'short' }}</small></p>
-            </div>
+      <button type="submit" class="btn-submit">Reactie plaatsen</button>
+    </form>
+
+    <div class="comments-list">
+      <div *ngFor="let comment of gym.comments">
+        <div class="comment">
+          <div class="comment-content">
+            <h3>
+              <img [src]="comment.profile_image" alt="Avatar" />
+              {{ comment.username }} <strong>{{ comment.title }}</strong>
+            </h3>
+            <p>{{ comment.description }}</p>
+            <p><small>Gepost: {{ comment.created_at | date: 'short' }}</small></p>
+          </div>
         </div>
-        </div>
       </div>
-<div *ngIf="gym.noCommentsMessage">
-        <p>{{ gym.noCommentsMessage }}</p>
-      </div>
-      
-      <div *ngIf="gym.noCommentsMessage">
-        <p>{{ gym.noCommentsMessage }}</p>
-      </div>
-      
-      <div *ngIf="!userId" class="login-message">
-        <p>You must be logged in to add a comment!</p>
-      </div>
-      </div>
-      
     </div>
 
+    <div *ngIf="gym.noCommentsMessage">
+      <h2 class="first-comment-text">{{ gym.noCommentsMessage }}</h2>
+    </div>
+
+    <div *ngIf="!userId" class="login-message">
+      <p>Je moet ingelogd zijn om een reactie achter te laten!</p>
+    </div>
   </div>
+</div>
 </div>

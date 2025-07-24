@@ -1,0 +1,11 @@
+<section class="category-container">
+    <h2>Categories</h2>
+    <ul class="category-list">
+        <li *ngFor="let category of gymCategories">
+            <a href="#">
+                <span>{{ category.name }}</span>
+                <img [src]="category.image_url" [alt]="category.name">
+            </a>
+        </li>
+    </ul>
+</section>

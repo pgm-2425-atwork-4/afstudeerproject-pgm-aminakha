@@ -1,56 +1,38 @@
-<main>    
-    <app-hero-home></app-hero-home> 
-  
-    <div class="saved-gyms-container">
-      <div *ngIf="userId">
-        <h2 class="title-saved-gyms">
-          OPGESLAGEN GYM’S 
-          <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 16 16" fill="white">
-            <path d="M1.24264 8.24264L8 15L14.7574 8.24264C15.553 7.44699 16 6.36786 16 5.24264V5.05234C16 2.8143 14.1857 1 11.9477 1C10.7166 1 9.55233 1.55959 8.78331 2.52086L8 3.5L7.21669 2.52086C6.44767 1.55959 5.28338 1 4.05234 1C1.8143 1 0 2.8143 0 5.05234V5.24264C0 6.36786 0.44699 7.44699 1.24264 8.24264Z" fill="white"/>
-            </svg>
-        </h2>
-        <p *ngIf="savedGyms.length === 0">You have no saved gyms.</p>
-        <div *ngFor="let gym of savedGyms" class="gym-card-item">
-          <gym-card [gym]="gym"></gym-card>
-        </div>
+  <section class="hero">
+    <h1>VIND EEN GYM IN DE BUURT !</h1>
+    <form [formGroup]="form" (ngSubmit)="onSearchSubmit()">
+      <div class="search-bar d-flex align-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 20 20" fill="none">
+          <path fill="white" fill-rule="evenodd" d="M4 9a5 5 0 1110 0A5 5 0 014 9zm5-7a7 7 0 104.2 12.6.999.999 0 00.093.107l3 3a1 1 0 001.414-1.414l-3-3a.999.999 0 00-.107-.093A7 7 0 009 2z"/>
+        </svg>
+        <input type="text" formControlName="query" placeholder="Zoek een gym" class="form-control" required />
+        <button class="btn" type="submit">Zoeken</button>
       </div>
-  
-      <div class="no-user-container" *ngIf="!userId">
-        <h2> 
-          <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 16 16" fill="none">
-            <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="white"/>
-            <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="white"/>
-            </svg>          Inloggen om je opgeslagen gyms te bekijken
-        </h2>
-        <p><a routerLink="/login">Log u in</a></p>
-        <p><span></span>OF <span></span></p>
-        <p><a routerLink="/register">Registreer</a></p>
+    </form>
+    <div class="motivation-container">
+      <div class="author d-flex flex-column">
+        <img src="{{ randomMotivation.image }}" alt="{{ randomMotivation.author }}">
+        <p>{{ randomMotivation.author }}</p>
+      </div>
+      <div class="motivation-text">
+        <h2>{{ randomMotivation.text }}</h2>
+        <p>Begin je avontuur met een simpele klik!</p>
+        <button class="btn" type="submit">Zoeken</button>
+      </div>
+      
+    </div>
+  </section>
+  <card-list type="category" [items]="gymCategories" title="Categorieën"></card-list>
+  <div class="dark-container mb-5 pb-2 pt-2">
+      <card-list type="gym" [items]="gyms" title="Populaire Gyms" ></card-list>
+  </div>
+  <section class="register-container container">      
+
+    <div class="content">        
+      <div class="register-info">
+        <p>Word lid van onze community en ontdek de beste gyms in jouw buurt.</p>
+        <button class="btn btn-large m-auto" routerLink="/register">Registreer</button>
       </div>
     </div>
-  
-    <div *ngIf="userId; else notLoggedIn">
-      <div class="for-you-container">
-        <div class="for-you-container__title">
-          <h2>For You</h2>
-        </div>
 
-        <div class="tags-container">
-          <div class="tags-container__title">
-            <h2>TAGS</h2>
-          </div>
-          <div class="tags">
-            <p *ngIf="selectedCity" class="tag">{{ selectedCity }} <img src="/images/compass.svg" alt=""></p>
-            <p *ngIf="selectedCategory" class="tag"><span>{{ selectedCategory }}</span></p>
-          </div>
-        </div>
-
-        <div *ngFor="let gym of filteredGyms; let i = index" class="gym-card-item" [ngClass]="{'gym-card-top-left': i === 0, 'gym-card-top-right': i === 1, 'gym-card-bottom': i === 2}">
-          <gym-card [gym]="gym"></gym-card>
-        </div>
-      </div>
-    </div>
-    <ng-template #notLoggedIn>
-      <h2>Log in to see personalized recommendations.</h2>
-    </ng-template>
-  </main>
-  
+  </section>

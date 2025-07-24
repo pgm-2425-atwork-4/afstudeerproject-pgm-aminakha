@@ -18,7 +18,9 @@ export class ExerciseService {
     });
   }
   constructor(private http: HttpClient) {}
-
+  getExercises() {
+    return this.http.get(this.apiUrl, { headers: this.getAuthHeaders() });
+  }
   getExerciseCategories() {
     return this.http.get(`${this.apiUrl}/categories`);
   }

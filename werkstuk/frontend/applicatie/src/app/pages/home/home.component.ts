@@ -1,27 +1,48 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { HeroHomeComponent } from '../../components/hero-home/hero-home.component';
-import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 import { GymService } from '../../services/gym.service';
-
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MetaDataService } from '../../services/meta-data.service';
+import {CategoriesComponent} from '../../components/categories/categories.component';
+import { PopularComponent } from '../../components/popular/popular.component';
+import { CardListComponent } from '../../components/card-list/card-list.component';
+import { InfoCardComponent } from '../../components/info-card/info-card.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeroHomeComponent, GymCardComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, CardListComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   gyms: any[] = [];
-  filteredGyms: any[] = [];
   savedGyms: any[] = [];
   userId: string | null = null;
-  selectedCity: string = 'Gent';  
-  selectedCategory: string = 'Indoors';  
-  maxGyms: number = 3;  
-
-  constructor(private gymService: GymService) {}
+  gymCategories: any[] = [];  
+  form = new FormGroup({
+    query: new FormControl('', Validators.required)
+  });
+  randomMotivation: any;
+  motivations = [
+    {
+      text: "“Success is doing what you have to do, even when you don’t feel like it.”",
+      author: '@Daniël Storm',
+      image: '/images/daniel.png'
+    }, 
+    {
+      text: "“Discipline is choosing between what you want now and what you want most.”",
+      author: '@Sven Richter',
+      image: '/images/sven.png'
+    },
+    {
+      text: "“Your body can stand almost anything. It’s your mind you have to convince.”",
+      author: '@Noah de Vries',
+      image: '/images/noah.png'
+  }];
+  constructor(private gymService: GymService, private router: Router, private metadataService: MetaDataService) {}
 
   ngOnInit() {
     const token = localStorage.getItem("auth_token");
@@ -40,8 +61,25 @@ export class HomeComponent implements OnInit {
     }
 
     this.fetchGyms();
+    this.randomMotivation = this.motivations[Math.floor(Math.random() * this.motivations.length)];
+    this.metadataService.getCategories().subscribe({
+      next: (res: any) => {
+        console.log("✅ Categories loaded:", res);
+        this.gymCategories = res;
+        console.log("🔍 Gym Categories:", this.gymCategories);
+        
+      },
+      error: (err) => {
+        console.error("🔥 Error fetching categories:", err);
+      }
+    });    
   }
-
+  onSearchSubmit() {
+      const searchValue = this.form.get('query')?.value?.trim();
+      if (searchValue) {
+        this.router.navigate(['/gyms'], { queryParams: { search: searchValue } });
+      }
+    }
   decodeJWT(token: string): any {
     const parts = token.split('.');
     if (parts.length !== 3) {
@@ -59,7 +97,6 @@ export class HomeComponent implements OnInit {
       next: (res: any) => {
         console.log("✅ Gyms loaded:", res);
         this.gyms = res;
-        this.filterGyms();  
       },
       error: (err) => {
         console.error("🔥 Error fetching gyms:", err);
@@ -82,7 +119,6 @@ export class HomeComponent implements OnInit {
           console.warn("📭 No saved gyms returned, defaulting to empty list.");
           this.savedGyms = [];
         }
-        this.filterGyms();  
       },
       error: (err) => {
         console.error("🔥 Error fetching saved gyms:", err);
@@ -90,31 +126,8 @@ export class HomeComponent implements OnInit {
         if (err.status === 404) {
           console.log("📭 No saved gyms found. Treating as empty.");
           this.savedGyms = [];
-          this.filterGyms();
         }
       }
     });
-  }
-
-  filterGyms() {
-    this.filteredGyms = this.gyms.filter(gym => 
-      gym.city === this.selectedCity && gym.category === this.selectedCategory
-    );
-
-    this.filteredGyms = this.filteredGyms.filter(gym => 
-      !this.savedGyms.some(savedGym => savedGym.id === gym.id)
-    );
-
-    this.filteredGyms = this.filteredGyms.slice(0, this.maxGyms);
-  }
-
-  onCityChange(city: string) {
-    this.selectedCity = city;
-    this.filterGyms();  
-  }
-
-  onCategoryChange(category: string) {
-    this.selectedCategory = category;
-    this.filterGyms(); 
   }
 }

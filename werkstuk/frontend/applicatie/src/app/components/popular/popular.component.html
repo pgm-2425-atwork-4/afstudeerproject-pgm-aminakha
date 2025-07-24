@@ -1,0 +1,13 @@
+<section class="popular-container">
+    <div class="content container">
+        <h2>Populair</h2>
+        <ul class="category-list">
+            <li *ngFor="let category of gyms">
+                <a href="#">
+                    <span>{{ category.name }}</span>
+                    <img [src]="category.image_url" [alt]="category.name">
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>

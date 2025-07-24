@@ -7,9 +7,48 @@
     --primary-color: #28282B;
     --secondary-color: #F2F3F4;
     --tertiary-color: #2F2F76;
+    --white: #FFFFFF;
     
 }
 
+.container {
+    width: var(--width);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--standard-padding_margin);
+}
+.btn {
+    background-color: var(--tertiary-color);
+    padding: 0.5rem;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    color: white;
+    border-radius: var(--large-border-radius);
+    padding: 0.25rem 1rem;
+    font-weight: bold;
+    &:hover {
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
+    }
+    &.btn-large {
+        font-size: 1.5rem;
+        padding: 0.5rem 2rem;
+    }
+}
+.dark-container {
+    background-color: var(--primary-color);
+}
+h2 {
+    font-family: 'Archivo', sans-serif;
+    font-size: 2.5rem;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    display: inline-block;
+    padding: 0.5rem 1rem;
+}
 @font-face {
     font-family: 'Anton';
     src: url('../fonts/Anton-Regular.woff2') format('woff2'),

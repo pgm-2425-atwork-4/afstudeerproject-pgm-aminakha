@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../environments/environment";
 import { Injectable } from "@angular/core";
-import { catchError, of, tap } from "rxjs";
+import { catchError, Observable, of, tap } from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
@@ -20,14 +20,14 @@ export class GymService {
   }
   constructor(private http: HttpClient) {}
 
-  getGyms() {
+  getGyms(): Observable<any> {
     return this.http.get(`${this.apiUrl}/gyms`, { headers: this.getAuthHeaders() });
   }
   getGymById(gymId: string) {
     return this.http.get(`${this.apiUrl}/gyms/${gymId}`, { headers: this.getAuthHeaders() });
   }
   getGymImages(gymId: any) {
-    return this.http.get(`${this.apiUrl}/${gymId}/images`);
+    return this.http.get(`${this.apiUrl}/gyms/${gymId}/images`);
   }
   addGym(formData: FormData) {
     return this.http.post(`${this.apiUrl}/gyms/add-gym`, formData, { headers: this.getAuthHeaders() });

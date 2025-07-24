@@ -1,8 +1,140 @@
-h1 {
-    font-family: 'Archivo', sans-serif;   
-    text-align: center;
-    text-transform: uppercase;
-    font-size:5rem;
-    letter-spacing: -0.25rem;
-    
+.exercises-container {
+    margin-bottom: 2rem;
+    h1 {
+        font-family: 'Archivo', sans-serif;
+        font-size: 6rem;
+        text-align: center;
+        letter-spacing: -4px;
+        word-break: break-word;
+        text-transform: uppercase;
+    }
+    .filter-sidebar {
+      background-color: #4c4c4c;
+      border-radius: var(--standard-border-radius);
+      color: white;
+      padding: 20px;
+      width: 15rem;
+      font-family: 'Archivo', sans-serif;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      h3 {
+        font-size: 2rem;
+        text-align: center;
+      }
+
+      select {
+        padding: 0.5rem;
+        border-radius: var(--standard-border-radius);
+        width: 100%;
+      }
+
+      .personal-trainer-options {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+
+        input[type='radio'] {
+          width: 2rem;
+          height: 2rem;
+          accent-color: var(--primary-color);
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+
+        label {
+          font-size: 1.5rem;
+        }
+      }
+    }
+    form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        .search-bar {
+            position: relative;
+            svg {
+                width: 1.5rem;
+                height: 1.5rem;
+                position: absolute;
+                left: 0.5rem;
+            }
+            input {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 0.5rem;
+                padding-left: 2.5rem;
+                border-radius: var(--large-border-radius);
+                width: 30rem;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            button {
+                position: absolute;
+                right: 0.5rem;
+            }
+        }
+    }
+    .motivation-container {
+        max-width: 65%;
+        margin: 0 auto;
+        margin-top: 1.5rem;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        display: flex;
+        padding: 1rem;
+        border-radius: var(--standard-border-radius);
+        .author {
+            position: relative;
+            img {
+                width: 30rem;
+            }
+            margin-right: 1rem;
+            p {
+                position: absolute;
+                background-color: var(--tertiary-color);
+                bottom: 0;
+                left: 1rem;
+                padding: 0.5rem;
+                border-radius: var(--standard-border-radius);
+                font-weight: bold;
+            }
+            border-right: 1px solid var(--secondary-color);
+            padding-right: 2rem;
+        }
+        .motivation-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+            h2 {
+                display: block;
+                text-align: center;
+                font-family: 'Archivo', sans-serif;
+                font-size: 2rem;
+                width: auto;
+                font-weight: 600;
+                margin: 0 auto;
+                margin-bottom: 1.5rem;
+            }
+            p {
+                font-size: 1.2rem;
+                font-weight: 600;
+                text-align: center;
+                margin-bottom: 1.5rem;
+                font-family: 'Work Sans', sans-serif;
+            }
+            button {
+                &:hover {
+                    color: var(--primary-color);
+                }
+                font-size: 1.2rem;
+            }
+        }
+    }
 }

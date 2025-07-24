@@ -1,58 +1,73 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { log } from 'console';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GymService } from '../../services/gym.service';
 import { MetaDataService } from '../../services/meta-data.service';
-
+import { ActivatedRoute } from '@angular/router';
+import { InfoCardComponent } from '../../components/info-card/info-card.component';
 @Component({
   selector: 'app-gyms',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, FormsModule, InfoCardComponent, ReactiveFormsModule],
   templateUrl: './gyms.component.html',
   styleUrls: ['./gyms.component.css']
 })
 export class GymsComponent implements OnInit {
   gyms: any[] = [];
   filteredGyms: any[] = [];
-  searchQuery: string = "";
   prices: any[] = [];
   categories: any[] = [];
-  selectedProvince: string = "";
-  selectedCity: string = "";
-  selectedRating: string = "";
-  selectedType: string = "";
-  isFilterModalActive: boolean = false;  
-  selectedPersonalTrainer: string = ""; 
   provinces: any[] = [];
+  form = new FormGroup({
+    search: new FormControl('', Validators.required),
+    province: new FormControl(''),
+    city: new FormControl(''),
+    rating: new FormControl(''),
+    type: new FormControl(''),
+    personalTrainer: new FormControl('')
+  });
 
-  constructor(private gymService: GymService, private metaDataService: MetaDataService) {}
+  constructor(private gymService: GymService, private metaDataService: MetaDataService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.fetchGyms();
-    this.fetchPrices(); 
-  }
-
-  toggleFilterModal() {
-    if (this.isFilterModalActive) {
-      const modalElement = document.querySelector('.filter-modal') as HTMLElement;
-      modalElement.classList.remove('active');
-      setTimeout(() => {
-        this.isFilterModalActive = !this.isFilterModalActive;
-      }, 300); 
-    } else {
-      this.isFilterModalActive = !this.isFilterModalActive;
-      setTimeout(() => {
-        const modalElement = document.querySelector('.filter-modal') as HTMLElement;
-        modalElement.classList.add('active');
-      }, 0);
+    this.metaDataService.getProvinces().subscribe({
+      next: (data: any) => {
+        this.provinces = data;
+      },
+      error: (error) => {
+        console.error("🔥 Error fetching provinces:", error);
+      }
+    });
+    this.route.queryParams.subscribe(params => {
+      const query = params['search'];
+      const category = params['category'];
+      if (query) {
+        this.form.get('search')?.setValue(query);
     }
+    if (category) {
+      this.form.get('type')?.setValue(category);
+    }
+      this.fetchGyms();
+    });
+    this.fetchPrices();
+    this.metaDataService.getCategories().subscribe({
+      next: (data: any) => {
+        this.categories = data;
+      },
+      error: (error) => {
+        console.error("🔥 Error fetching categories:", error);
+      }
+    });
+    this.form.valueChanges.subscribe(() => {
+      this.searchGyms();
+    });
   }
 
-  applyFilters() {
-    this.searchGyms();  
-    this.toggleFilterModal();  
+
+  resetFilters() {
+    this.form.reset();
+    this.searchGyms();
   }
 
   fetchGyms() {
@@ -61,33 +76,14 @@ export class GymsComponent implements OnInit {
         this.gyms = data;
         this.filteredGyms = data;
         this.mapPricesToGyms();
-        console.log("✅ Gyms loaded:", this.gyms);
+        
+        this.searchGyms();
       },
       error: (error) => {
         console.error("🔥 Error fetching gyms:", error);
       }
     });
-
-    this.metaDataService.getCategories().subscribe({
-      next: (data) => {
-        console.log("✅ Categories received:", data);
-        this.categories = Array.isArray(data) ? data : Object.values(data); 
-      },
-      error: (error) => {
-        console.error("❌ Error fetching categories:", error);
-      }
-    });
-
-    this.metaDataService.getProvinces().subscribe({
-      next: (data) => {
-        console.log("✅ Provinces received:", data);
-        this.provinces = Array.isArray(data) ? data : Object.values(data); // ✅ Ensure correct data format
-      },
-      error: (error) => {
-        console.error("❌ Error fetching provinces:", error);
-      }
-    });
-  }
+}
 
   fetchPrices() {
     this.metaDataService.getPrices().subscribe({
@@ -113,24 +109,22 @@ export class GymsComponent implements OnInit {
   }
 
   searchGyms() {
-    this.filteredGyms = this.gyms.filter(gym => {
-      return (
-        (this.selectedCity ? gym.city.toLowerCase().includes(this.selectedCity.toLowerCase()) : true) &&
-        
-        (this.selectedProvince ? gym.province.toLowerCase().includes(this.selectedProvince.toLowerCase()) : true) &&
-        
-        (this.selectedRating ? gym.rating.toString().charAt(0) === this.selectedRating.charAt(0) : true) &&
-        
-        (this.selectedType ? gym.category.toLowerCase().includes(this.selectedType.toLowerCase()) : true) &&
-        
-        (this.selectedPersonalTrainer ? gym.personal_trainer.toString() === this.selectedPersonalTrainer : true) &&
-        
-        (this.searchQuery ? 
-          (gym.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-          gym.city.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-          gym.province.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-          gym.category.toLowerCase().includes(this.searchQuery.toLowerCase())) : true)
-      );
-    });
-  }
+  const values = this.form.value;
+
+  this.filteredGyms = this.gyms.filter(gym => {
+    return (
+      (!values.city || gym.city?.toLowerCase().includes(values.city.toLowerCase())) &&
+      (!values.province || gym.province?.toLowerCase().includes(values.province.toLowerCase())) &&
+      (!values.rating || gym.rating?.toString().charAt(0) === values.rating.charAt(0)) &&
+      (!values.type || gym.category?.toLowerCase().includes(values.type.toLowerCase())) &&
+      (!values.personalTrainer || gym.personal_trainer?.toString() === values.personalTrainer) &&
+      (!values.search || (
+        gym.name?.toLowerCase().includes(values.search.toLowerCase()) ||
+        gym.city?.toLowerCase().includes(values.search.toLowerCase()) ||
+        gym.province?.toLowerCase().includes(values.search.toLowerCase()) ||
+        gym.category?.toLowerCase().includes(values.search.toLowerCase())
+      ))
+    );
+  });
+}
 }
