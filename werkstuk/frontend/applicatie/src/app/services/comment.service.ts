@@ -26,9 +26,11 @@ export class CommentService {
   addComment(commentData: any) {
     return this.http.post<any>(`${this.apiUrl}/comments`, commentData, { headers: this.getAuthHeaders() });
   }
-  likeComment(commentId: number, userId: number) {
-    return this.http.post<any>(`${this.apiUrl}/comments/like`, { commentId, userId }, {
-      headers: this.getAuthHeaders()  
-    });
+  getExerciseComments(exerciseId: string) {
+    return this.http.get<any>(`${this.apiUrl}/comments/exercise/${exerciseId}`, { headers: this.getAuthHeaders() });
+  }
+
+  addExerciseComment(exerciseId: string, commentData: any) {
+    return this.http.post<any>(`${this.apiUrl}/comments/exercise/${exerciseId}`, commentData, { headers: this.getAuthHeaders() });
   }
 }

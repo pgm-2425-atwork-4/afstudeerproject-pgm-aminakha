@@ -42,27 +42,42 @@ router.post("/", verifyToken, (req, res) => {
         });
     });
 });
-router.post("/like", (req, res) => {
-    const { commentId, userId } = req.body;
-    const checkSql = "SELECT * FROM likes WHERE comment_id = ? AND user_id = ?";
-    db.query(checkSql, [commentId, userId], (err, results) => {
-        if (err) return res.status(500).json({ error: "Error checking like" });
-        if (results.length) return res.status(400).json({ error: "Already liked" });
-        const insertSql = "INSERT INTO likes (comment_id, user_id) VALUES (?, ?)";
-        db.query(insertSql, [commentId, userId], (err) => {
-            if (err) return res.status(500).json({ error: "Error liking comment" });
-            const updateSql = `
-                UPDATE comments 
-                SET likes = likes + 1, 
-                liked_by_users = CONCAT(IFNULL(liked_by_users, ''), ?, ',') 
-                WHERE id = ?
-            `;
-            db.query(updateSql, [userId, commentId], (err) => {
-                if (err) return res.status(500).json({ error: "Error updating comment" });
-                res.json({ message: "Comment liked successfully" });
-            });
-        });
-    });
+
+router.get('/exercise/:id/comments', (req, res) => {
+  const exerciseId = req.params.id;
+  const sql = `
+    SELECT comments.*, users.username, users.profile_image 
+    FROM comments 
+    JOIN users ON comments.user_id = users.id 
+    WHERE comments.exercise_id = ? 
+    ORDER BY comments.created_at DESC
+  `;
+  db.query(sql, [exerciseId], (err, results) => {
+    if (err) return res.status(500).json({ error: '❌ DB error' });
+    res.json(results);
+  });
+});
+
+router.post('/exercise/:id', verifyToken, (req, res) => {
+  const exerciseId = req.params.id;
+  const { title, description } = req.body;
+  const userId = req.user.id; 
+
+  if (!title || !description) {
+    return res.status(400).json({ error: "Title and description are required" });
+  }
+
+  const sql = `
+    INSERT INTO exercise_comments (exercise_id, user_id, title, description)
+    VALUES (?, ?, ?, ?)
+  `;
+  db.query(sql, [exerciseId, userId, title, description], (err, result) => {
+    if (err) {
+      console.error("❌ Error inserting exercise comment:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ message: "✅ Comment added successfully!", id: result.insertId });
+  });
 });
 
 module.exports = router;

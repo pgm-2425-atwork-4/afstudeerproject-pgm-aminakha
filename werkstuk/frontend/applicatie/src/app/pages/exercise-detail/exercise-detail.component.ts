@@ -3,18 +3,30 @@ import { Component } from '@angular/core';
 import { MetaDataService } from '../../services/meta-data.service';
 import { ExerciseService } from '../../services/exercise.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommentService } from '../../services/comment.service';
 
 @Component({
   selector: 'app-exercise-detail',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './exercise-detail.component.html',
   styleUrl: './exercise-detail.component.css'
 })
 export class ExerciseDetailComponent {
-  constructor(private exerciseService: ExerciseService, private route: ActivatedRoute) { }
+  constructor(private exerciseService: ExerciseService, private route: ActivatedRoute, private commentService: CommentService) { }
   id : any;
   exercise: any;
   exerciseImages: any[] = [];
+  userId: string | null = null;
+  user: any;
+  profile_image: any;
+  form = new FormGroup({
+    title: new FormControl('', Validators.required),
+    description: new FormControl('', [Validators.required, Validators.minLength(5)])
+  });
+  comments: any[] = [];
+  noCommentsMessage: string = 'Er zijn nog geen reacties op deze oefening. Wees de eerste om een reactie achter te laten!';
   ngOnInit() {
       this.id = this.route.snapshot.params['id'];
       console.log(`🔍 Fetching details for exercise ID: ${this.id}`);
@@ -26,6 +38,61 @@ export class ExerciseDetailComponent {
       this.exerciseImages = data;
       console.log(this.exerciseImages);
     });
+    const token = localStorage.getItem('auth_token');
+    
+    if (token) {
+      const decodedToken = this.decodeJWT(token);
+      if (decodedToken?.id) {
+        this.userId = decodedToken.id.toString();
+        this.user = decodedToken;
+        this.profile_image = decodedToken.profile_image;
+      }
+    }
+  }
+  decodeJWT(token: string): any {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const decoded = atob(parts[1]);
+    return JSON.parse(decoded);
   }
 
+  saveExercise(): void {
+    if (!this.userId) {
+      alert('You must be logged in to save an exercise!');
+      return;
+    }
+
+    this.exerciseService.saveExercise(this.userId, this.exercise.id).subscribe({
+      next: () => alert('Gym saved successfully!'),
+      error: (err) => console.error('❌ Error saving gym:', err)
+    });
+  }
+  submitComment(): void {
+    if (!this.userId) {
+      alert('You must be logged in to submit a comment!');
+      return;
+    }
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const newCommentData = {
+      exerciseId: this.exercise.id,
+      commentText: this.form.value.description,
+      title: this.form.value.title
+    };
+
+    this.commentService.addComment(newCommentData).subscribe({
+      next: (data) => {
+        alert('Comment submitted successfully!');
+        this.form.reset();
+      },
+      error: (err) => {
+        console.error('❌ Error adding comment:', err);
+        alert('Failed to submit comment!');
+      }
+    });
+  }
 }

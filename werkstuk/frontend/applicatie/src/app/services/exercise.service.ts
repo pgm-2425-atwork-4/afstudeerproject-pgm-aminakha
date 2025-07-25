@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
   providedIn: 'root'
 })
 export class ExerciseService { 
-  private apiUrl = environment.apiUrl + '/exercises';
+  private apiUrl = environment.apiUrl;
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
     
@@ -19,24 +19,27 @@ export class ExerciseService {
   }
   constructor(private http: HttpClient) {}
   getExercises() {
-    return this.http.get(this.apiUrl, { headers: this.getAuthHeaders() });
+    return this.http.get(`${this.apiUrl}/exercises`, { headers: this.getAuthHeaders() });
   }
   getExerciseById(id: string) {
-    return this.http.get(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+    return this.http.get(`${this.apiUrl}/exercises/${id}`, { headers: this.getAuthHeaders() });
   }
   getExerciseImages(id: string) {
-    return this.http.get(`${this.apiUrl}/${id}/images`, { headers: this.getAuthHeaders() });
+    return this.http.get(`${this.apiUrl}/exercises/${id}/images`, { headers: this.getAuthHeaders() });
   }
   getExerciseCategories() {
-    return this.http.get(`${this.apiUrl}/categories`);
+    return this.http.get(`${this.apiUrl}/exercises/categories`);
   }
   addExercise(exercise: any){
-    return this.http.post(`${this.apiUrl}/admin/add-exercise`, exercise, {
+    return this.http.post(`${this.apiUrl}/exercises/admin/add-exercise`, exercise, {
       headers: this.getAuthHeaders()
     });
   }
   getPressures() {
-    return this.http.get(`${this.apiUrl}/pressures`, { headers: this.getAuthHeaders() });
+    return this.http.get(`${this.apiUrl}/exercises/pressures`, { headers: this.getAuthHeaders() });
+  }
+  saveExercise(userId: string, exerciseId: string) {
+    return this.http.post(`${this.apiUrl}/users/save-exercise`, { userId, exerciseId }, { headers: this.getAuthHeaders() });
   }
   
 }

@@ -22,6 +22,59 @@
                 <p class="btn">Pressure: {{exercise.pressure_name}}</p>
             </div>
         </div>
-        
     </section>
+    <button *ngIf="userId" class="save-btn btn container" (click)="saveExercise()"> Save exercise</button>
+    <div class="comments-section-container container">
+        <div class="comments-content">
+            <h2>Reviews</h2>
+            <form *ngIf="userId" [formGroup]="form" (ngSubmit)="submitComment()" class="form-group">
+                <p class="user-information">
+                    <img *ngIf="profile_image" [src]="profile_image" alt="Avatar" />
+                    <strong>{{ user.username }}</strong>
+                </p>
+
+                <div class="comment-content">
+                    <div class="title-container">
+                        <label for="commentTitle">Titel</label>
+                        <input id="commentTitle" formControlName="title" placeholder="Titel van je reactie" />
+                    </div>
+
+                    <div class="comment-container">
+                        <label for="commentText">Comment</label>
+                        <textarea
+                        id="commentText"
+                        formControlName="description"
+                        placeholder="Typ je reactie hier..."
+                        rows="4"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Reactie plaatsen</button>
+            </form>
+
+            <div class="comments-list">
+                <div *ngFor="let comment of comments">
+                    <div class="comment">
+                        <div class="comment-content">
+                            <h3>
+                                <img [src]="comment.profile_image" alt="Avatar" />
+                                {{ comment.username }} <strong>{{ comment.title }}</strong>
+                            </h3>
+                            <p>{{ comment.description }}</p>
+                            <p><small>Gepost: {{ comment.created_at | date: 'short' }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="noCommentsMessage">
+                <h2 class="first-comment-text">{{ noCommentsMessage }}</h2>
+            </div>
+
+            <div *ngIf="!userId" class="login-message">
+                <p>Je moet ingelogd zijn om een reactie achter te laten!</p>
+            </div>
+        </div>
+    </div>
 </div>
