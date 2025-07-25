@@ -46,14 +46,17 @@ router.post("/", verifyToken, (req, res) => {
 router.get('/exercise/:id', (req, res) => {
   const exerciseId = req.params.id;
   const sql = `
-    SELECT comments.*, users.username, users.profile_image 
-    FROM comments 
-    JOIN users ON comments.user_id = users.id 
-    WHERE comments.exercise_id = ? 
-    ORDER BY comments.created_at DESC
+    SELECT ec.*, u.username, u.profile_image 
+    FROM exercise_comments ec
+    JOIN users u ON ec.user_id = u.id 
+    WHERE ec.exercise_id = ?
+    ORDER BY ec.created_at DESC
   `;
   db.query(sql, [exerciseId], (err, results) => {
-    if (err) return res.status(500).json({ error: '❌ DB error' });
+    if (err) {
+      console.error('❌ DB error:', err);
+      return res.status(500).json({ error: '❌ DB error' });
+    }
     res.json(results);
   });
 });
