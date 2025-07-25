@@ -23,7 +23,7 @@ export class ExerciseDetailComponent {
   profile_image: any;
   form = new FormGroup({
     title: new FormControl('', Validators.required),
-    description: new FormControl('', [Validators.required, Validators.minLength(5)])
+    description: new FormControl('', [Validators.required])
   });
   comments: any[] = [];
   noCommentsMessage: string = 'Er zijn nog geen reacties op deze oefening. Wees de eerste om een reactie achter te laten!';
@@ -48,6 +48,16 @@ export class ExerciseDetailComponent {
         this.profile_image = decodedToken.profile_image;
       }
     }
+    this.commentService.getExerciseComments(this.id).subscribe({
+      next: (data) => {
+        this.comments = data;
+      },
+      error: (err) => {
+        console.error('❌ Error fetching exercise comments:', err);
+        this.noCommentsMessage = 'Er is een fout opgetreden bij het ophalen van de reacties.';
+      }
+    });
+    
   }
   decodeJWT(token: string): any {
     const parts = token.split('.');
@@ -68,6 +78,8 @@ export class ExerciseDetailComponent {
     });
   }
   submitComment(): void {
+    console.log(this.form.value);
+    
     if (!this.userId) {
       alert('You must be logged in to submit a comment!');
       return;
@@ -79,12 +91,12 @@ export class ExerciseDetailComponent {
     }
 
     const newCommentData = {
-      exerciseId: this.exercise.id,
-      commentText: this.form.value.description,
-      title: this.form.value.title
+      title: this.form.value.title,
+      description: this.form.value.description
     };
-
-    this.commentService.addComment(newCommentData).subscribe({
+    console.log('Submitting comment:', newCommentData);
+    
+    this.commentService.addExerciseComment(this.exercise.id, newCommentData).subscribe({
       next: (data) => {
         alert('Comment submitted successfully!');
         this.form.reset();

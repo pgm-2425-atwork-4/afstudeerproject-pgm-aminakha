@@ -43,7 +43,7 @@ router.post("/", verifyToken, (req, res) => {
     });
 });
 
-router.get('/exercise/:id/comments', (req, res) => {
+router.get('/exercise/:id', (req, res) => {
   const exerciseId = req.params.id;
   const sql = `
     SELECT comments.*, users.username, users.profile_image 
