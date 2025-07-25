@@ -79,11 +79,9 @@ router.get('/:id', (req, res) => {
   const query = `
     SELECT 
       e.*,
-      pt.*,
-      ec.*,
+      pt.name AS pressure_name,
       ec.name AS category_name,
-      ec.symbol AS category_symbol,
-      pt.name AS pressure_name
+      ec.symbol AS category_symbol
     FROM 
       exercises e
     JOIN 
