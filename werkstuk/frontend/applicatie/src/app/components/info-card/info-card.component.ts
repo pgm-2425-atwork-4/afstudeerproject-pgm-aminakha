@@ -15,11 +15,17 @@ export class InfoCardComponent {
   popularGyms: any[] = [];
   foundExerciseImage: any;
   constructor(private exerciseService: ExerciseService) {}
+  getTruncatedHtml(html: string): string {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    const text = div.textContent || div.innerText || '';
+    return text.slice(0, 20) + '...';
+}
   ngOnChanges() {
     if (Array.isArray(this.items) && Array.isArray(this.items[0])) {
     this.items = this.items[0];
   }
-
+  
   if (!Array.isArray(this.items) || this.items.length === 0) {
     console.warn('🚫 No items to display');
     return;

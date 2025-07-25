@@ -14,12 +14,17 @@ export class ExerciseDetailComponent {
   constructor(private exerciseService: ExerciseService, private route: ActivatedRoute) { }
   id : any;
   exercise: any;
+  exerciseImages: any[] = [];
   ngOnInit() {
       this.id = this.route.snapshot.params['id'];
       console.log(`🔍 Fetching details for exercise ID: ${this.id}`);
       this.exerciseService.getExerciseById(this.id).subscribe(exercise => {
         this.exercise = exercise;
         console.log(this.exercise);
+    });
+    this.exerciseService.getExerciseImages(this.id).subscribe((data: any) => {
+      this.exerciseImages = data;
+      console.log(this.exerciseImages);
     });
   }
 

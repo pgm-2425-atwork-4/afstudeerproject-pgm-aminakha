@@ -47,6 +47,7 @@ h1 {
     text-align: center;
     letter-spacing: -4px;
     word-break: break-word;
+    text-transform: uppercase;
 }
 h2 {
     font-family: 'Archivo', sans-serif;
@@ -55,6 +56,9 @@ h2 {
     color: var(--secondary-color);
     display: inline-block;
     padding: 0.5rem 1rem;
+}
+ul {
+    padding: 0;
 }
 @font-face {
     font-family: 'Anton';

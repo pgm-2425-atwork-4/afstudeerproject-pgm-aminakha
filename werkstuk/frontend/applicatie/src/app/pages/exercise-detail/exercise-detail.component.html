@@ -1,4 +1,27 @@
-<div class="exercise-detail-container container">
-    <h1>{{exercise.name}}</h1>
-    <p>Details about the selected exercise will be displayed here.</p>
+<div *ngIf="exercise" class="exercise-detail-container">
+    <section class="exercise-detail__hero container">
+        <h1 >{{exercise.name}} <img [src]="exercise.category_symbol" alt="{{exercise.name}} image"></h1>
+        <div class="exercise-images">
+            <img *ngFor="let image of exerciseImages" [src]="image.image_url" alt="{{exercise.name}} image">
+        </div>
+    </section>
+
+    <section class="dark-container">
+        <div class="exercise-description container">
+            <h2>Descriptie</h2>
+            <div class="exercise-content">
+                <div class="exercise-big-description" [innerHTML]="exercise.big_description"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 61" fill="white">
+                    <path d="M20.6319 30.4553C9.35967 30.4544 0.445195 39.9191 0.444761 51.2641L0.444486 58.4566C0.444438 59.709 1.42926 60.7245 2.6442 60.7246L38.6175 60.7274C39.8323 60.7275 40.8173 59.7123 40.8174 58.4598L40.8176 51.2673C40.8182 39.7975 31.763 30.4561 20.6319 30.4553ZM18.8595 35.0937C20.0336 34.9588 21.2097 34.9556 22.404 35.094L22.4039 38.4193C22.4039 39.4267 21.6088 40.2463 20.6316 40.2462C19.6543 40.2462 18.8593 39.4265 18.8594 38.419L18.8595 35.0937ZM7.34793 56.1894L4.84406 56.1892C4.84425 51.0156 4.4121 47.1791 7.34834 42.4782L7.34781 56.1894L7.34793 56.1894ZM29.5146 56.1911L11.7475 56.1897L11.7482 37.8185C12.5968 37.2209 13.5043 36.706 14.4601 36.2861L14.46 38.4189C14.4599 41.9272 17.2284 44.7818 20.6316 44.7821C24.0349 44.7824 26.8036 41.9284 26.8037 38.4199L26.8038 36.2871C27.7596 36.7073 28.667 37.2222 29.5155 37.8199L29.5148 56.1911L29.5146 56.1911ZM36.4181 56.1916L33.9143 56.1914L33.9148 42.4803C36.8154 47.1251 36.4183 50.8733 36.4181 56.1916Z" fill="white"/>
+                    <path d="M7.74597 10.3725C4.89209 19.3918 11.4556 28.6657 20.6323 28.6664C29.829 28.6672 36.3677 19.3777 33.5198 10.3745C34.1877 9.98528 34.6392 9.24786 34.6392 8.40047C34.6393 7.14809 33.6545 6.13259 32.4395 6.13249L31.332 6.13241C25.8913 -1.07562 15.3744 -1.07574 9.93376 6.13073L8.82636 6.13065C7.61154 6.13055 6.62652 7.14579 6.62648 8.39828C6.62656 9.24555 7.07804 9.98304 7.74597 10.3725ZM24.4665 6.13175L16.7993 6.13115C19.1691 4.99966 21.9745 4.94129 24.4665 6.13175ZM12.359 10.6664L28.9066 10.6677C31.7699 16.8927 27.3431 24.1314 20.6323 24.1308C13.9223 24.1303 9.49492 16.8917 12.359 10.6664Z" fill="white"/>
+                </svg>
+            </div>
+            <div class="exercise-details">
+                <p class="btn">Category: {{exercise.category_name}}</p>
+                <p class="btn">Duration: {{exercise.duration}} minutes</p>
+                <p class="btn">Pressure: {{exercise.pressure_name}}</p>
+            </div>
+        </div>
+        
+    </section>
 </div>
