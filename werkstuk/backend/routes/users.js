@@ -82,11 +82,30 @@ router.delete("/saved-gyms/:userId/:gymId", verifyToken, (req, res) => {
 });
 router.get('/saved-exercises/:userId', (req, res) => {
     const userId = req.params.userId;
-    db.query(`SELECT * FROM saved_exercises WHERE user_id = ?`, [userId], (err, results) => {
+
+    const sql = `
+        SELECT 
+            e.*, 
+            c.name AS category_name, 
+            GROUP_CONCAT(i.image_url) AS images 
+        FROM saved_exercises se
+        JOIN exercises e ON se.exercise_id = e.id
+        LEFT JOIN exercise_categories c ON e.category_id = c.id
+        LEFT JOIN exercise_images i ON e.id = i.exercise_id
+        WHERE se.user_id = ?
+        GROUP BY e.id
+    `;
+
+    db.query(sql, [userId], (err, results) => {
         if (err) {
             console.error("Error fetching saved exercises:", err);
             return res.status(500).json({ error: "Internal server error!" });
         }
+
+        results.forEach(exercise => {
+            exercise.images = exercise.images ? exercise.images.split(",") : [];
+        });
+
         res.json(results);
     });
 });
