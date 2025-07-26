@@ -12,6 +12,7 @@ import { ExerciseService } from '../../services/exercise.service';
 export class InfoCardComponent {
   @Input() items: any[] = [];
   @Input() type: string = '';
+  @Input() deleteSavedExercise: boolean = false;
   popularGyms: any[] = [];
   foundExerciseImage: any;
   constructor(private exerciseService: ExerciseService) {}
@@ -59,5 +60,16 @@ export class InfoCardComponent {
     });
   }
 
+  }
+  deleteExercise(id: string) {
+    console.log(`🗑️ Deleting exercise with ID: ${id}`);
+    this.exerciseService.deleteSavedExercise(id).subscribe({
+      next: () => {
+        console.log(`✅ Successfully deleted exercise with ID: ${id}`);
+      },
+      error: (error) => {
+        console.error(`❌ Error deleting exercise with ID: ${id}`, error);
+      }
+    });
   }
 }

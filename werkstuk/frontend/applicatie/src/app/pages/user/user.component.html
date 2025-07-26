@@ -1,4 +1,4 @@
-<div *ngIf="user; else loading" class="user-profile-container">
+<div *ngIf="user; else loading" class="user-profile-container container">
   <div class="title">
     <h1>Profiel</h1>
   </div>
@@ -82,13 +82,13 @@
       </div>
 </div>
 
-  <div>
+  <div class="saved-exercises-container">
     <h2>Your Saved Exercises</h2>
     <div class="no-exercises-container" *ngIf="savedExercises.length === 0">
       <p>Je hebt nog niks zoek een oefening op : <a routerLink="/exercises" routerActive="active">Oefeningen</a></p>
     </div>
-    <div class="saved-exercises-list" *ngFor="let exercise of savedExercises">
-      <button (click)="deleteSavedExercise(exercise.id)">Delete</button>
+    <div class="saved-exercises-list">
+      <info-card [items]="savedExercises" type="exercise" [deleteSavedExercise]="true"></info-card>
     </div>
   </div>
 

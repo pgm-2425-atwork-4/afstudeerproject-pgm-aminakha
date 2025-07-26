@@ -57,16 +57,6 @@
             }
         }
     }
-    
-    & h1, h2 {
-        font-family: 'Archivo', sans-serif;  
-        text-align: center;
-        text-transform: uppercase;
-        font-size:5rem;
-        letter-spacing: -0.25rem;
-        padding-bottom: 18rem;        
-        /* <img *ngIf="user?.profile_image" [src]="getProfileImageUrl(user.profile_image)" alt="User Profile"> */
-    }
     & img {
         max-width: 20rem;
         height: 20rem;

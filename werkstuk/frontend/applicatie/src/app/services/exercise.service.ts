@@ -44,5 +44,8 @@ export class ExerciseService {
   savedExercises(userId: string) {
     return this.http.get(`${this.apiUrl}/users/saved-exercises/${userId}`, { headers: this.getAuthHeaders() });
   }
+  deleteSavedExercise(exerciseId: string) {
+    return this.http.delete(`${this.apiUrl}/users/saved-exercises/${exerciseId}`, { headers: this.getAuthHeaders() });
+  }
   
 }

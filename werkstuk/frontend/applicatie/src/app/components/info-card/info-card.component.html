@@ -15,6 +15,9 @@
         <p *ngIf="type === 'exercise'">
           <a class="btn" [routerLink]="['/oefening-detail', item.id]">Bekijk oefening</a>
         </p>
+        <p *ngIf="deleteSavedExercise">
+          <button class="btn" (click)="deleteExercise(item.id)">Delete</button>
+        </p>
       <!-- Gym details -->
       <p *ngIf="type === 'gym'">{{ item.city }}</p>
       <p *ngIf="type === 'gym'">

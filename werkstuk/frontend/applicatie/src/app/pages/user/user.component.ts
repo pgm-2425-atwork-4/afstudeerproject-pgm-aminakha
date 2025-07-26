@@ -6,12 +6,12 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { GymService } from '../../services/gym.service';
 import { ExerciseService } from '../../services/exercise.service';
- 
+import { InfoCardComponent } from '../../components/info-card/info-card.component';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, FormsModule,GymCardComponent,RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule,GymCardComponent,RouterLink, ReactiveFormsModule, InfoCardComponent],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
