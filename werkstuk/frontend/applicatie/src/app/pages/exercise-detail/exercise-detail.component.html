@@ -26,8 +26,8 @@
     <button *ngIf="userId" class="save-btn btn container" (click)="saveExercise()"> Save exercise</button>
     <div class="comments-section-container container">
         <div class="comments-content">
-            <h2>Reviews</h2>
-            <form *ngIf="userId" [formGroup]="form" (ngSubmit)="submitComment()" class="form-group">
+            <h2>Comments</h2>
+            <form *ngIf="userId" [formGroup]="form" (ngSubmit)="submitComment()" class="form-group add-comment-form">
                 <p class="user-information">
                     <img *ngIf="profile_image" [src]="profile_image" alt="Avatar" />
                     <strong>{{ user.username }}</strong>
@@ -52,7 +52,9 @@
 
                 <button type="submit" class="btn-submit">Reactie plaatsen</button>
             </form>
-
+             <div *ngIf="!userId" class="login-message pb-0">
+                <p>Je moet ingelogd zijn om een reactie achter te laten!</p>
+            </div>
             <div class="comments-list">
                 <div *ngFor="let comment of comments">
                     <div class="comment">
@@ -66,14 +68,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div *ngIf="noCommentsMessage">
-                <h2 class="first-comment-text">{{ noCommentsMessage }}</h2>
-            </div>
-
-            <div *ngIf="!userId" class="login-message">
-                <p>Je moet ingelogd zijn om een reactie achter te laten!</p>
             </div>
         </div>
     </div>

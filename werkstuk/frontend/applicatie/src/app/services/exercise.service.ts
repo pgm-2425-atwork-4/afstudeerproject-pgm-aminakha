@@ -41,5 +41,8 @@ export class ExerciseService {
   saveExercise(userId: string, exerciseId: string) {
     return this.http.post(`${this.apiUrl}/users/save-exercise`, { userId, exerciseId }, { headers: this.getAuthHeaders() });
   }
+  savedExercises(userId: string) {
+    return this.http.get(`${this.apiUrl}/users/saved-exercises/${userId}`, { headers: this.getAuthHeaders() });
+  }
   
 }

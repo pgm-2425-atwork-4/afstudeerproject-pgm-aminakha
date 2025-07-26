@@ -80,6 +80,16 @@ router.delete("/saved-gyms/:userId/:gymId", verifyToken, (req, res) => {
         res.json({ message: "✅ Saved gym deleted successfully!" });
     });
 });
+router.get('/saved-exercises/:userId', (req, res) => {
+    const userId = req.params.userId;
+    db.query(`SELECT * FROM saved_exercises WHERE user_id = ?`, [userId], (err, results) => {
+        if (err) {
+            console.error("Error fetching saved exercises:", err);
+            return res.status(500).json({ error: "Internal server error!" });
+        }
+        res.json(results);
+    });
+});
 router.post("/save-gym", verifyToken, (req, res) => {
     const { userId, gymId } = req.body;
 

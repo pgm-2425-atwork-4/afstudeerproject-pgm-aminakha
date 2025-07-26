@@ -5,6 +5,8 @@ import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { GymService } from '../../services/gym.service';
+import { ExerciseService } from '../../services/exercise.service';
+ 
 
 @Component({
   selector: 'app-user',
@@ -18,6 +20,7 @@ export class UserProfileComponent implements OnInit {
   profileImage: File | null = null;
   showForm: boolean = false;  
   savedGyms: any[] = [];
+  savedExercises: any[] = [];
   form = new FormGroup({
     username: new FormControl(''),
     firstname: new FormControl(''),
@@ -25,40 +28,47 @@ export class UserProfileComponent implements OnInit {
     email: new FormControl(''),
     birthday: new FormControl('')
   })
-  constructor(private authService: AuthService, private gymService: GymService) {}
+  constructor(private authService: AuthService, private gymService: GymService, private exerciseService: ExerciseService) {}
 
   toggleFormVisibility() {
     this.showForm = !this.showForm; 
   }
 
   ngOnInit() {
-  
-    const token = localStorage.getItem("auth_token"); 
-    console.log("🔍 Stored Token:", token);
+  const token = localStorage.getItem("auth_token"); 
+  console.log("🔍 Stored Token:", token);
 
-    if (token) {
-     
-      const decodedToken = this.decodeJWT(token);
-      console.log("🔑 Decoded Token:", decodedToken);
+  if (token) {
+    const decodedToken = this.decodeJWT(token);
+    console.log("🔑 Decoded Token:", decodedToken);
 
-      if (decodedToken && decodedToken.id) {
-        const userId = decodedToken.id.toString();
-        console.log("🆔 User ID from Token:", userId);
+    if (decodedToken && decodedToken.id) {
+      const userId = decodedToken.id.toString();
+      console.log("🆔 User ID from Token:", userId);
 
-        this.authService.getUserById(userId).subscribe({
-          next: (user) => {
-            console.log("✅ User Data:", user);
-            this.user = user;
-          },
-          error: (error) => {
-            console.error("🔥 Error fetching user:", error);
-          }
-        });
+      this.authService.getUserById(userId).subscribe({
+        next: (user) => {
+          console.log("✅ User Data:", user);
+          this.user = user;
 
-        this.fetchSavedGyms(userId);
-      }
+          this.fetchSavedGyms(userId);
+          this.exerciseService.savedExercises(userId).subscribe({
+            next: (res: any) => {
+              console.log("✅ Saved Exercises Loaded:", res);
+              this.savedExercises = res; 
+            },
+            error: (err) => {
+              console.error("🔥 Error fetching saved exercises:", err);
+            }
+          });
+        },
+        error: (error) => {
+          console.error("🔥 Error fetching user:", error);
+        }
+      });
     }
   }
+}
 
   decodeJWT(token: string): any {
     const parts = token.split('.');
@@ -80,6 +90,26 @@ export class UserProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error("🔥 Error fetching saved gyms:", err);
+      }
+    });
+  }
+
+  deleteSavedExercise(exerciseId: string) {
+    const userId = this.user?.id;
+    if (!userId) {
+      console.error("❌ No user ID available");
+      return;
+    }
+
+    this.gymService.deleteSavedGym(userId, exerciseId).subscribe({
+      next: (res) => {
+        console.log("✅ Saved Exercise deleted:", res);
+        this.savedGyms = this.savedGyms.filter(exercise => exercise.id !== exerciseId);
+        alert("Exercise deleted successfully!");
+      },
+      error: (err) => {
+        console.error("🔥 Error deleting exercise:", err);
+        alert("Failed to delete exercise.");
       }
     });
   }
@@ -132,4 +162,6 @@ export class UserProfileComponent implements OnInit {
       }
     });
   }
+
+
 }
