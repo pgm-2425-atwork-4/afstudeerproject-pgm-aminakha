@@ -90,10 +90,10 @@ router.get('/saved-exercises/:userId', (req, res) => {
             GROUP_CONCAT(i.image_url) AS images 
         FROM saved_exercises se
         JOIN exercises e ON se.exercise_id = e.id
-        LEFT JOIN exercise_categories c ON e.category_id = c.id
+        LEFT JOIN exercise_categories c ON e.exercise_category_id = c.id
         LEFT JOIN exercise_images i ON e.id = i.exercise_id
         WHERE se.user_id = ?
-        GROUP BY e.id
+        GROUP BY e.id;
     `;
 
     db.query(sql, [userId], (err, results) => {
