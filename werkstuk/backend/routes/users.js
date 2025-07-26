@@ -109,7 +109,7 @@ router.get('/saved-exercises/:userId', (req, res) => {
         res.json(results);
     });
 });
-router.delete("/saved-exercises/:exerciseId", verifyToken, (req, res) => {
+router.delete("/saved-exercises/:userId/:exerciseId", verifyToken, (req, res) => {
     const { userId, exerciseId } = req.params;
     const sql = "DELETE FROM saved_exercises WHERE user_id = ? AND exercise_id = ?";
     db.query(sql, [userId, exerciseId], (err, result) => {
@@ -118,7 +118,6 @@ router.delete("/saved-exercises/:exerciseId", verifyToken, (req, res) => {
         res.json({ message: "Saved exercise deleted successfully!" });
     });
 });
-
 router.post("/save-gym", verifyToken, (req, res) => {
     const { userId, gymId } = req.body;
 
