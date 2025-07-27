@@ -10,6 +10,6 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     provideRouter(routes), // ✅ hoofdrouter hier injecteren
     // of voor GitHub Pages:
-    provideRouter(routes, withHashLocation())
+    // provideRouter(routes, withHashLocation())
   ],
 }).catch((err) => console.error(err));

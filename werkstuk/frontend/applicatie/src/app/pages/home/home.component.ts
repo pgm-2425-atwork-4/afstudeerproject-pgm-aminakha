@@ -105,29 +105,20 @@ export class HomeComponent implements OnInit {
   }
 
   fetchSavedGyms(userId: string | null) {
-    if (!userId) {
-      console.warn("⚠️ No user ID provided. Skipping saved gyms fetch.");
-      return;
-    }
+  if (!userId) return;
 
-    this.gymService.getSavedGyms(userId).subscribe({
-      next: (res) => {
-        if (Array.isArray(res)) {
-          console.log("✅ Saved Gyms Loaded:", res);
-          this.savedGyms = res;
-        } else {
-          console.warn("📭 No saved gyms returned, defaulting to empty list.");
-          this.savedGyms = [];
-        }
-      },
-      error: (err) => {
-        console.error("🔥 Error fetching saved gyms:", err);
-
-        if (err.status === 404) {
-          console.log("📭 No saved gyms found. Treating as empty.");
-          this.savedGyms = [];
-        }
+  this.gymService.getSavedGyms(userId).subscribe({
+    next: (res: any) => {
+      this.savedGyms = Array.isArray(res) ? res : [];
+    },
+    error: (err) => {
+      if (err.status === 404) {
+        // Zwijgen bij lege lijst
+        this.savedGyms = [];
+      } else {
+        console.error("🔥 Fout bij ophalen gyms:", err);
       }
-    });
+    }
+  });
   }
 }

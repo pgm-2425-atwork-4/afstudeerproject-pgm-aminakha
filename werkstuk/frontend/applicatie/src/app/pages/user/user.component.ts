@@ -59,7 +59,12 @@ export class UserProfileComponent implements OnInit {
                 this.savedGyms = res;
               },
               error: (err) => {
-                console.error("🔥 Error fetching saved gyms:", err);
+                if (err.status === 404) {
+                  this.savedGyms = []; // gewoon leeg
+                } 
+                else {
+                  console.error("🔥 Error fetching saved gyms:", err);
+                }
               }
             });
 

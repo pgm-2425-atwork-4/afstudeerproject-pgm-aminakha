@@ -50,21 +50,7 @@ export class GymService {
     return this.http.get(`${this.apiUrl}/saved-gyms/${userId}`, {
       headers: this.getAuthHeaders(),
       withCredentials: true
-    }).pipe(
-      catchError(err => {
-        if (err.status === 404) {
-          console.warn("📭 No saved gyms found for user:", userId);
-          return of([]);
-        } else {
-          console.error("🔥 Error fetching saved gyms:", err);
-          return of([]);
-        }
-      }),
-      tap({
-        next: (res) => console.log("✅ Saved Gyms Loaded:", res),
-        error: (err) => console.error("🔥 Error fetching saved gyms:", err)
-      })
-    );
+    });
   }
   saveGym(userId: string, gymId: string) {
     return this.http.post(`${this.apiUrl}/users/save-gym`, { userId, gymId }, { headers: this.getAuthHeaders() });
