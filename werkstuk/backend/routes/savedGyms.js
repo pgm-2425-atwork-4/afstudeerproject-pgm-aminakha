@@ -42,10 +42,6 @@ router.get("/:userId", verifyToken, (req, res) => {
       return res.status(500).json({ error: "Database error" });
     }
 
-    if (result.length === 0) {
-      return res.status(404).json({ message: "No saved gyms found" });
-    }
-
     res.json(result);
   });
 });

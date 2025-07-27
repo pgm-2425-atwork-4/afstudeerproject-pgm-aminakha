@@ -11,3 +11,4 @@ router.delete("/users/saved-exercises/:exerciseId", verifyToken, (req, res) => {
         res.json({ message: "Saved exercise deleted successfully!" });
     });
 });
+
