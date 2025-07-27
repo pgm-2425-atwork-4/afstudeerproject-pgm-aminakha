@@ -1,6 +1,6 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withHashLocation } from '@angular/router';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes'; // ✅ alles komt hiervandaan
@@ -10,6 +10,6 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     provideRouter(routes), // ✅ hoofdrouter hier injecteren
     // of voor GitHub Pages:
-    // provideRouter(routes, withHashLocation())
+    provideRouter(routes, withHashLocation())
   ],
 }).catch((err) => console.error(err));
