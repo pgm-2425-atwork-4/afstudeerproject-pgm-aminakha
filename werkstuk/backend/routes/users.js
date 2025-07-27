@@ -48,23 +48,28 @@ router.put("/:id", verifyToken, upload.single("profileImage"), async (req, res) 
     });
 });
 router.get("/saved-gyms/:userId", verifyToken, (req, res) => {
-    const sql = `
-    SELECT g.*, p.name AS province, c.name AS category, pr.bundle_name AS pricing_bundle, pr.price,
+  const sql = `
+    SELECT  g.*, p.name AS province, c.name AS category, pr.bundle_name AS pricing_bundle, pr.price,
             pres.name AS pressure, GROUP_CONCAT(i.image_url) AS images
-    FROM saved_gyms sg
-    JOIN gyms g ON sg.gym_id = g.id
-    LEFT JOIN provinces p ON g.province_id = p.id
-    LEFT JOIN categories c ON g.category_id = c.id
-    LEFT JOIN prices pr ON g.pricing_id = pr.id
-    LEFT JOIN images i ON g.id = i.gym_id
-    LEFT JOIN pressures pres ON g.pressure_id = pres.id
+            FROM saved_gyms sg
+            JOIN gyms g ON sg.gym_id = g.id
+            LEFT JOIN provinces p ON g.province_id = p.id
+            LEFT JOIN categories c ON g.category_id = c.id
+            LEFT JOIN prices pr ON g.pricing_id = pr.id
+            LEFT JOIN images i ON g.id = i.gym_id
+            LEFT JOIN pressures pres ON g.pressure_id = pres.id
     WHERE sg.user_id = ?
     GROUP BY g.id;
-    `;
+  `;
+
     db.query(sql, [req.params.userId], (err, results) => {
         if (err) return res.status(500).json({ error: "Database error" });
-        results.forEach(gym => gym.images = gym.images ? gym.images.split(",") : []);
-        res.json(results);
+        
+        results.forEach(gym => {
+            gym.images = gym.images ? gym.images.split(",") : [];
+        });
+    
+    res.status(200).json(results);
     });
 });
 router.get("/saved-gyms", verifyToken, (req, res) => {
