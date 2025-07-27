@@ -65,8 +65,24 @@
 @media (max-width: 576px) {
     
     ul {
+        flex-wrap: nowrap;
+        display: grid;
+        justify-content: start;
+        grid-auto-flow: column;
+        gap: 1rem;
+        grid-auto-columns: 65%;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;  /* IE en Edge */
+        &::-webkit-scrollbar {
+            display: none; /* Chrome, Safari en Opera */
+        }
         li {
-            width: 100%;
+            flex: 0 0 auto;    
+            width: 200px;      
+            scroll-snap-align: start;
         }
     }
 }
