@@ -97,9 +97,9 @@ ul {
 }
 
 
-  @media (max-width: 480px) {
+  @media (max-width: 576px) {
     h1,h2 {
-        font-size: 2rem;
+        font-size: 2.4rem;
         letter-spacing: -2px;
     }
     h2 {

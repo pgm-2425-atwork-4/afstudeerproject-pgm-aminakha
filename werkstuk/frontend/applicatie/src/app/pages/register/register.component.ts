@@ -39,18 +39,20 @@ export class RegisterComponent {
   onFileSelected(event: any) {
     this.profileImage = event.target.files[0]; 
   }
-  formData = this.form.value ;
+
   registerUser() {
     const formData = new FormData();
-    formData.append('username', this.formData.username ?? '');
-    formData.append('firstname', this.formData.firstname ?? '');
-    formData.append('lastname', this.formData.lastname ?? '');
-    formData.append('email', this.formData.email ?? '');
-    formData.append('password', this.formData.password ?? '');
-    formData.append('birthday', this.formData.birthday ?? '');
-    
+    const values = this.form.value;
+
+    formData.append('username', values.username ?? '');
+    formData.append('firstname', values.firstname ?? '');
+    formData.append('lastname', values.lastname ?? '');
+    formData.append('email', values.email ?? '');
+    formData.append('password', values.password ?? '');
+    formData.append('birthday', values.birthday ?? '');
+
     if (this.profileImage) {
-      formData.append('profileImage', this.formData.profileImage ?? '');
+      formData.append('profileImage', this.profileImage); // ✅ juist
     }
 
     this.authService.registerUser(formData).subscribe({
