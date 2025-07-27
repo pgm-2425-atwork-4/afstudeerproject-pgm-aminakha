@@ -46,8 +46,8 @@
             p {
                 position: absolute;
                 background-color: var(--tertiary-color);
-                bottom: 0;
-                left: 1rem;
+                bottom: 6%;
+                left: 6%;
                 padding: 0.5rem;
                 border-radius: var(--standard-border-radius);
                 font-weight: bold;
