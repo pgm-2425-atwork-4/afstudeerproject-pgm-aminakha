@@ -1,6 +1,6 @@
-  <section class="hero">
+  <section class="hero container py-5">
     <h1>VIND EEN GYM IN DE BUURT !</h1>
-    <form [formGroup]="form" (ngSubmit)="onSearchSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSearchSubmit()" class="mb-5">
       <div class="search-bar d-flex align-items-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 20 20" fill="none">
           <path fill="white" fill-rule="evenodd" d="M4 9a5 5 0 1110 0A5 5 0 014 9zm5-7a7 7 0 104.2 12.6.999.999 0 00.093.107l3 3a1 1 0 001.414-1.414l-3-3a.999.999 0 00-.107-.093A7 7 0 009 2z"/>
@@ -9,12 +9,12 @@
         <button class="btn" type="submit">Zoeken</button>
       </div>
     </form>
-    <div class="motivation-container">
-      <div class="author d-flex flex-column">
+    <div class="motivation-container row justify-content-center align-items-center">
+      <div class="author d-flex flex-column col-12 col-md-4" >
         <img src="{{ randomMotivation.image }}" alt="{{ randomMotivation.author }}">
         <p>{{ randomMotivation.author }}</p>
       </div>
-      <div class="motivation-text">
+      <div class="motivation-text col-12 col-md-7">
         <h2>{{ randomMotivation.text }}</h2>
         <p>Begin je avontuur met een simpele klik!</p>
         <button class="btn" type="submit">Zoeken</button>
@@ -23,10 +23,10 @@
     </div>
   </section>
   <card-list type="category" [items]="gymCategories" title="Categorieën"></card-list>
-  <div class="dark-container mb-5 pb-2 pt-2">
+  <section class="dark-container mb-5 pb-2 pt-2">
       <card-list type="gym" [items]="gyms" title="Populaire Gyms" ></card-list>
-  </div>
-  <section class="register-container container">      
+  </section>
+  <section class="register-container container text-center">      
 
     <div class="content">        
       <div class="register-info">

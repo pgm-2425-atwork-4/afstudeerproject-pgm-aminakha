@@ -32,6 +32,7 @@
     &:hover {
         background-color: var(--secondary-color);
         color: var(--primary-color);
+        border: 1px solid var(--primary-color);
     }
     &.btn-large {
         font-size: 1.5rem;
@@ -42,13 +43,12 @@
     background-color: var(--primary-color);
 }
 h1 {
-        font-family: "Archivo", sans-serif;
-    font-size: 6rem;
-    text-align: center;
-    letter-spacing: -4px;
-    word-break: break-word;
-    text-transform: uppercase;
-}
+        font-family: 'Archivo', sans-serif;
+        font-size: 5.8rem;
+        text-align: center;
+        letter-spacing: -4px;
+        word-break: break-word;
+    }
 h2 {
     font-family: 'Archivo', sans-serif;
     font-size: 2.5rem;
@@ -96,3 +96,30 @@ ul {
     font-display: swap;
 }
 
+
+  @media (max-width: 480px) {
+    h1,h2 {
+        font-size: 2rem;
+        letter-spacing: -2px;
+    }
+    h2 {
+        letter-spacing: -1px;
+    }
+    ul {
+        li {
+            width: 100%;
+        }
+    }
+    h2 {
+        width: 100% !important;
+        text-align: center;
+    }
+    p {
+        text-align: center;
+        margin: 0 auto;
+    }
+    .btn {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+  }

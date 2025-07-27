@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { GymCardComponent } from '../../components/gym-card/gym-card.component';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { GymService } from '../../services/gym.service';
@@ -11,7 +10,7 @@ import { InfoCardComponent } from '../../components/info-card/info-card.componen
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, FormsModule,GymCardComponent,RouterLink, ReactiveFormsModule, InfoCardComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ReactiveFormsModule, InfoCardComponent],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
@@ -21,54 +20,67 @@ export class UserProfileComponent implements OnInit {
   showForm: boolean = false;  
   savedGyms: any[] = [];
   savedExercises: any[] = [];
+
   form = new FormGroup({
     username: new FormControl(''),
     firstname: new FormControl(''),
     lastname: new FormControl(''),
     email: new FormControl(''),
     birthday: new FormControl('')
-  })
-  constructor(private authService: AuthService, private gymService: GymService, private exerciseService: ExerciseService) {}
+  });
 
-  toggleFormVisibility() {
-    this.showForm = !this.showForm; 
-  }
+  constructor(
+    private authService: AuthService,
+    private gymService: GymService,
+    private exerciseService: ExerciseService
+  ) {}
 
   ngOnInit() {
-  const token = localStorage.getItem("auth_token"); 
-  console.log("🔍 Stored Token:", token);
+    const token = localStorage.getItem("auth_token"); 
+    console.log("🔍 Stored Token:", token);
 
-  if (token) {
-    const decodedToken = this.decodeJWT(token);
-    console.log("🔑 Decoded Token:", decodedToken);
+    if (token) {
+      const decodedToken = this.decodeJWT(token);
+      console.log("🔑 Decoded Token:", decodedToken);
 
-    if (decodedToken && decodedToken.id) {
-      const userId = decodedToken.id.toString();
-      console.log("🆔 User ID from Token:", userId);
+      if (decodedToken && decodedToken.id) {
+        const userId = decodedToken.id.toString();
+        console.log("🆔 User ID from Token:", userId);
 
-      this.authService.getUserById(userId).subscribe({
-        next: (user) => {
-          console.log("✅ User Data:", user);
-          this.user = user;
+        this.authService.getUserById(userId).subscribe({
+          next: (user) => {
+            console.log("✅ User Data:", user);
+            this.user = user;
 
-          this.fetchSavedGyms(userId);
-          this.exerciseService.savedExercises(userId).subscribe({
-            next: (res: any) => {
-              console.log("✅ Saved Exercises Loaded:", res);
-              this.savedExercises = res; 
-            },
-            error: (err) => {
-              console.error("🔥 Error fetching saved exercises:", err);
-            }
-          });
-        },
-        error: (error) => {
-          console.error("🔥 Error fetching user:", error);
-        }
-      });
+            // ✅ GYMS OPHALEN
+            this.gymService.getSavedGyms(userId).subscribe({
+              next: (res: any) => {
+                console.log("✅ Saved Gyms Loaded:", res);
+                this.savedGyms = res;
+              },
+              error: (err) => {
+                console.error("🔥 Error fetching saved gyms:", err);
+              }
+            });
+
+            // ✅ EXERCISES OPHALEN
+            this.exerciseService.savedExercises(userId).subscribe({
+              next: (res: any) => {
+                console.log("✅ Saved Exercises Loaded:", res);
+                this.savedExercises = res; 
+              },
+              error: (err) => {
+                console.error("🔥 Error fetching saved exercises:", err);
+              }
+            });
+          },
+          error: (error) => {
+            console.error("🔥 Error fetching user:", error);
+          }
+        });
+      }
     }
   }
-}
 
   decodeJWT(token: string): any {
     const parts = token.split('.');
@@ -82,64 +94,12 @@ export class UserProfileComponent implements OnInit {
     return JSON.parse(decoded); 
   }
 
-  fetchSavedGyms(userId: string) {
-    this.gymService.getSavedGyms(userId).subscribe({
-      next: (res: any) => {
-        console.log("✅ Saved Gyms Loaded:", res);
-        this.savedGyms = res; 
-      },
-      error: (err) => {
-        console.error("🔥 Error fetching saved gyms:", err);
-      }
-    });
-  }
-
-  deleteSavedExercise(exerciseId: string) {
-    const userId = this.user?.id;
-    if (!userId) {
-      console.error("❌ No user ID available");
-      return;
-    }
-
-    this.gymService.deleteSavedGym(userId, exerciseId).subscribe({
-      next: (res) => {
-        console.log("✅ Saved Exercise deleted:", res);
-        this.savedGyms = this.savedGyms.filter(exercise => exercise.id !== exerciseId);
-        alert("Exercise deleted successfully!");
-      },
-      error: (err) => {
-        console.error("🔥 Error deleting exercise:", err);
-        alert("Failed to delete exercise.");
-      }
-    });
-  }
-
-  deleteSavedGym(gymId: string) {
-    const userId = this.user?.id;
-    if (!userId) {
-      console.error("❌ No user ID available");
-      return;
-    }
-
-    this.gymService.deleteSavedGym(userId, gymId).subscribe({
-      next: (res) => {
-        console.log("✅ Saved Gym deleted:", res);
-        this.savedGyms = this.savedGyms.filter(gym => gym.id !== gymId);
-        alert("Gym deleted successfully!");
-      },
-      error: (err) => {
-        console.error("🔥 Error deleting gym:", err);
-        alert("Failed to delete gym.");
-      }
-    });
-  }
   onImageSelected(event: any) {
     this.profileImage = event.target.files[0];
   }
 
   updateUserProfile() {
     const formData = new FormData();
-
     formData.append('username', this.user.username);
     formData.append('firstname', this.user.firstname);
     formData.append('lastname', this.user.lastname);
@@ -163,5 +123,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-
+  toggleFormVisibility() {
+    this.showForm = !this.showForm; 
+  }
 }

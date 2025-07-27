@@ -1,12 +1,5 @@
 .hero {
     margin-bottom: 2rem;
-    h1 {
-        font-family: 'Archivo', sans-serif;
-        font-size: 6rem;
-        text-align: center;
-        letter-spacing: -4px;
-        word-break: break-word;
-    }
     form {
         display: flex;
         align-items: center;
@@ -37,12 +30,11 @@
         }
     }
     .motivation-container {
-        max-width: 65%;
+        max-width: 75rem;
         margin: 0 auto;
         margin-top: 1.5rem;
         background-color: var(--primary-color);
         color: var(--secondary-color);
-        display: flex;
         padding: 1rem;
         border-radius: var(--standard-border-radius);
         .author {
@@ -111,14 +103,7 @@
             p {
                 margin-bottom: 1rem;
             }
-            .btn {
-                &:hover {
-                    background-color: var(--primary-color);
-                    color: var(--secondary-color);
-                }
-                margin: 0 auto;
-                
-            }
+
         }
         margin-bottom: 2rem;
     }
@@ -182,47 +167,60 @@
   }
 
   @media (max-width: 480px) {
- main {
-    & .saved-gyms-container {
-        & h2 {
-            align-items: center;
-            font-size: 1.5rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            & img {
-                width: 1.5rem;
-                height: 1.5rem;
+    .hero {
+        form {
+            .search-bar {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                svg {
+                    top: 21%;
+                    transform: translateY(-50%);
+                }
+                input {
+                    width: 20rem;
+                }
+                .btn {
+                    position: relative;
+                    width: 100%;
+                    margin-top: 1rem;
+                    padding: 0.5rem;
+                }
+            }
+            
+        }
+        .motivation-container {
+            
+            .author  {
+                border-right: none;
+                margin: 0;
+                padding: 0;
+                img {
+                    width: 100%
+                }
+            }
+            .motivation-text {
+                h2 {
+                    font-size: 1.2rem;
+                    margin-top: 1rem;
+                    padding: 0;
+                }
             }
         }
-        
     }
-    & .no-user-container {
-        & h2 {
-            flex-direction: column;
-            align-items: center;
-            font-size: 1.5rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        & p {
-            font-size: 1rem;
-        }
-      }
-      & .for-you-container {
-        & .tags-container {
-            & .tags-container__title {
-                & h2 {
-                    margin-left: 0;
-                }
-            }
-            & .tags {
-                & p {
-                    & img {
-                        display: none;
-                    }
+    .register-container {
+        .content {
+            .register-info {
+                font-size: 2rem;
+                width: 100%;
+                max-width: 100%;
+                margin-right: 0;
+                text-align: center;
+                p {
+                    font-size: 1.58rem;
+                    letter-spacing: -2px;
                 }
             }
         }
-      }
- }
-  }
+    }
+}

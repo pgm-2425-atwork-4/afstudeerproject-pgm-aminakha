@@ -6,7 +6,7 @@
         gap: 1rem;
         flex-wrap: wrap;
         li {
-            width: 17rem;
+            width: 16rem;
             a {
                 
                 position: relative;
@@ -51,3 +51,10 @@
         }
     }
 
+@media (max-width: 480px) {
+    ul {
+        li {
+            width: 100%;
+        }
+    }
+}
