@@ -6,10 +6,11 @@
         gap: 1rem;
         flex-wrap: wrap;
         li {
-            width: 16rem;
+            width: 16rem;                
             a {
-                
+                display: block;
                 position: relative;
+
                 span {
                     position: absolute;
                     font-family: 'Archivo', sans-serif;
