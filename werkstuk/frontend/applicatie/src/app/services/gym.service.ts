@@ -49,7 +49,6 @@ export class GymService {
   getSavedGyms(userId: string){
     return this.http.get(`${this.apiUrl}/saved-gyms/${userId}`, {
       headers: this.getAuthHeaders(),
-      withCredentials: true
     });
   }
   saveGym(userId: string, gymId: string) {
