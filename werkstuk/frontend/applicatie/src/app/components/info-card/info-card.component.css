@@ -67,3 +67,20 @@
         }
     }
 }
+
+@media (max-width: 576px) {
+    .list-container {
+        align-items: center;
+        justify-content: center;
+        .item-card {
+            width: 100%;
+            h2 {
+                text-align: start;
+            }
+            .btn {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    }
+}

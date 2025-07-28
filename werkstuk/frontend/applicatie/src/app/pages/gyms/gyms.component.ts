@@ -15,6 +15,8 @@ import { InfoCardComponent } from '../../components/info-card/info-card.componen
 })
 export class GymsComponent implements OnInit {
   gyms: any[] = [];
+  isMobile: boolean = window.innerWidth < 768;
+  showFilters: boolean = false;
   filteredGyms: any[] = [];
   prices: any[] = [];
   categories: any[] = [];
@@ -31,6 +33,8 @@ export class GymsComponent implements OnInit {
   constructor(private gymService: GymService, private metaDataService: MetaDataService, private route: ActivatedRoute) {}
 
   ngOnInit() {
+    console.log(this.isMobile);
+    
     this.metaDataService.getProvinces().subscribe({
       next: (data: any) => {
         this.provinces = data;
@@ -63,7 +67,9 @@ export class GymsComponent implements OnInit {
       this.searchGyms();
     });
   }
-
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
+  }
 
   resetFilters() {
     this.form.reset();

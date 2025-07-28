@@ -1,12 +1,19 @@
 <section class="gyms-container d-flex">
-  <form [formGroup]="form" class="gyms-container container">
+  <form [formGroup]="form" class="container">
     <div class="gyms-content">
-      <div class="search-input">
-        <input formControlName="search" placeholder="Search gyms..." class="search-box">
+      <div class="d-flex justify-content-center">
+        <div class="search-bar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 20 20" fill="none">
+            <path fill="white" fill-rule="evenodd" d="M4 9a5 5 0 1110 0A5 5 0 014 9zm5-7a7 7 0 104.2 12.6.999.999 0 00.093.107l3 3a1 1 0 001.414-1.414l-3-3a.999.999 0 00-.107-.093A7 7 0 009 2z"/>
+          </svg>
+          <input formControlName="search" placeholder="Search gyms...">
+        </div>
       </div>
+      
 
-      <div class="gyms-content__items d-flex">
-        <div class="filter-sidebar">
+      <div class="gyms-content__items d-flex row">
+        <h2 *ngIf="isMobile" (click)="toggleFilters()" class="toggle-filters-btn grand-title">Filters tonen</h2>
+        <div [ngClass]="{ 'mobile-filter': isMobile, 'open': isMobile && showFilters }" class="filter-sidebar col-12 col-sm-5">
           <h3>Filters</h3>
 
           <label for="province">Kies een provincie</label>
@@ -44,7 +51,9 @@
           </div>
           <button type="button" class="reset-btn btn" (click)="resetFilters()">Reset filters</button>
         </div>
-        <info-card [items]="[filteredGyms]" type="gym"></info-card>
+        <div class="col-12 col-sm-7">
+          <info-card [items]="[filteredGyms]" type="gym"></info-card>
+        </div>
         <div *ngIf="filteredGyms.length === 0">
           <h2 class="no-results">No gyms found...</h2>
         </div>
