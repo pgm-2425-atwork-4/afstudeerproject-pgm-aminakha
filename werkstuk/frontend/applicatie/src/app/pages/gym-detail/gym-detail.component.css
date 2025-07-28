@@ -38,6 +38,7 @@
                             align-items: center;
                             gap: 1rem;
                             font-family: "Archivo", sans-serif;
+                            flex-wrap: wrap;
                             & strong {
                                 background-color: var(--primary-color);
                                 color: var(--secondary-color);
@@ -420,6 +421,12 @@
                 height: 12rem;
                 & h2 {
                     font-size: 1.5rem;
+                    align-items: center;
+                    padding-bottom: 0.5rem;
+                    svg {
+                        width: 1.5rem;
+                        height: 1.5rem;
+                    }
                 }
                 & p {
                     width:17rem
