@@ -53,10 +53,11 @@
         </div>
         <div class="col-12 col-sm-7">
           <info-card [items]="[filteredGyms]" type="gym"></info-card>
+          <div *ngIf="filteredGyms.length === 0">
+            <h2 class="no-results">No gyms found...</h2>
+          </div>
         </div>
-        <div *ngIf="filteredGyms.length === 0">
-          <h2 class="no-results">No gyms found...</h2>
-        </div>
+        
       </div>
     </div>
   </form>
