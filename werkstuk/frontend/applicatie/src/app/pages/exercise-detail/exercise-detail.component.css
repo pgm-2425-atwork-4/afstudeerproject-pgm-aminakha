@@ -256,5 +256,10 @@
                 }
             }
         }
+        .comments-section-container {
+            .comments-content {
+                max-width: 100%;
+            }
+        }
     }
 }
