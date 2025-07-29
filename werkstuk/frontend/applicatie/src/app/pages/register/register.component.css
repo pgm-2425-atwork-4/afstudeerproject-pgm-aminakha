@@ -20,8 +20,6 @@
       font-weight: 600;
       
       & span {
-        
-       
         width: 15rem;
         height: .3rem;
         display: block;
@@ -96,28 +94,29 @@
     .login_register-container {
       
       margin: 0 auto;
-      & .form-container {
-        & form {
-          & button {
-            & p {
+      .form-container {
+        form {
+          button {
+            p {
               font-size: 2rem;
             }
           }
         }
-      
         display: flex;
-                flex-direction: column;
-                /* align-items: center; */
-                margin-left: 0;
-                /* justify-content: center; */
-                margin: 0 auto;
-                width: 100%;
-        & .form-title {
-        & h1 {
-          font-size: 5rem;
+        flex-direction: column;
+        margin-left: 0;
+        margin: 0 auto;
+        width: 100%;
+        .form-title {
+          h1 {
+            font-size: 5rem;
+          }
         }
-        
-      }
+        p {
+          span {
+            width: 5rem;
+          }
+        }
       
     }
     }

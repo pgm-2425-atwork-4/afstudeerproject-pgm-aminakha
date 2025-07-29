@@ -95,19 +95,27 @@
   @media (max-width: 480px) {
     .login_register-container {
       margin: 0 auto;
-      & .form-container {
-        display: flex;
-                flex-direction: column;
-                /* align-items: center; */
-                margin-left: 0;
-                /* justify-content: center; */
-                margin: 0 auto;
-                width: 100%;
-        & .form-title {
-        & h1 {
-          font-size: 5rem;
+      .backgroundimg {
+        img {
+          display: none;
         }
       }
+      .form-container {
+        display: flex;
+        flex-direction: column;
+        margin-left: 0;
+        margin: 0 auto;
+        width: 100%;
+        .form-title {
+          h1 {
+            font-size: 5rem;
+          }
+        }
+        p {
+          span {
+            width: 5rem;
+          }
+        }
       }
       
     }
