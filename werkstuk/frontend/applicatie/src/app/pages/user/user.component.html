@@ -1,100 +1,115 @@
-<div *ngIf="user; else loading" class="user-profile-container container">
-  <div class="title">
+<section class="user-profile-container container">
+  <div class="title text-center py-4">
     <h1>Profiel</h1>
   </div>
-  <div class="user-profile">
-    <div *ngIf="user.profile_image">
+
+  <!-- Persoonlijke Informatie -->
+  <section class="personal-info-container py-4">
+    <div class="user-description text-center">
+      <div class="d-flex">
+        <div class="user-profile text-center">
+          <img *ngIf="user?.profile_image" [src]="user.profile_image" alt="{{ user.username }}">
+        </div>
+        <div class="d-flex flex-column">
+          <h2 class="username">{{ user?.username }}</h2>
+          <p>{{ user?.firstname }} {{ user?.lastname }}</p>
+          <p>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="24" height="24" viewBox="0 0 24 24">
+              <path d="M19,4H17V3a1,1,0,0,0-2,0V4H9V3A1,1,0,0,0,7,3V4H5A3,3,0,0,0,2,7V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V7A3,3,0,0,0,19,4Zm1,15a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V12H20Zm0-9H4V7A1,1,0,0,1,5,6H7V7A1,1,0,0,0,9,7V6h6V7a1,1,0,0,0,2,0V6h2a1,1,0,0,1,1,1Z" />
+            </svg>
+            {{ user?.birthday | date:'yyyy-MM-dd' }}
+          </p>
+        </div>
+      </div>
       
-      <img [src]="user.profile_image" alt="{{ user.username }}" >
-
+      <div class="saved-container d-flex ">
+        <p class="saved-gyms-count">
+          <span class="count">{{ savedGyms.length }}</span> gyms opgeslagen
+        </p>
+        <p class="saved-exercises-count">
+          <span class="count">{{ savedExercises.length }}</span> oefeningen opgeslagen
+        </p>
+      </div>
     </div>
-
-    
-    
-  </div>
-  <div class="personal-info-container">
-  
-    <div class="user-description">  
-      <div class="title">
-      <h2>{{ user.username }}</h2>
-    </div>
-      <p>{{ user.firstname }} {{ user.lastname }}</p>
-    
-
-    <p></p>
-    <p><svg xmlns="http://www.w3.org/2000/svg" fill="white" width="800px" height="800px" viewBox="0 0 24 24"><path d="M19,4H17V3a1,1,0,0,0-2,0V4H9V3A1,1,0,0,0,7,3V4H5A3,3,0,0,0,2,7V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V7A3,3,0,0,0,19,4Zm1,15a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V12H20Zm0-9H4V7A1,1,0,0,1,5,6H7V7A1,1,0,0,0,9,7V6h6V7a1,1,0,0,0,2,0V6h2a1,1,0,0,1,1,1Z"/></svg> {{ user.birthday | date:'yyyy-MM-dd' }}</p>
-    </div>
-    <div *ngIf="user; else loading" class="user-profile-container">
-      
-    
-     
-    </div>
-    <ng-template #loading>
-      <p>Loading...</p>
-    </ng-template>
-    <div class="edit-container">
+<div class="edit-container text-center">
       <button (click)="toggleFormVisibility()">
-      {{ showForm ? 'Verberg' : 'Verander gegevens' }}
-    </button>
-     <!-- Form for Editing Profile -->
-      <div *ngIf="showForm">
+        {{ showForm ? 'Verberg' : 'Verander gegevens' }}
+      </button>
 
-        <form [formGroup]="form" (ngSubmit)="updateUserProfile()">
-          <div>
-            <label for="username">Username</label>
-            <input type="text" id="username" formControlName="username" required placeholder="{{ user.username }}"/>
-          </div>
-          <div>
-            <label for="firstname">First Name</label>
-            <input type="text" id="firstname" formControlName="firstname" required placeholder="{{ user.firstname }}"/>
-          </div>
-          <div>
-            <label for="lastname">Last Name</label>
-            <input type="text" id="lastname" formControlName="lastname" required placeholder="{{ user.lastname }}"/>
-          </div>
-          <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" formControlName="email" required placeholder="{{ user.email }}"/>
-          </div>
-          <div>
-            <label for="birthday">Birthday</label>
-            <input type="date" id="birthday" formControlName="birthday" required placeholder="{{ user.birthday | date:'yyyy-MM-dd' }}"/>
-          </div>
-          <div>
-            <label for="profileImage">Profile Image</label>
-            <input type="file" id="profileImage" (change)="onImageSelected($event)" />
-          </div>
-        <button class="save-btn" type="submit">Sla op</button>
-    </form>
+      <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="updateUserProfile()" class="edit-form mt-3">
+        <div>
+          <label for="username">Gebruikersnaam</label>
+          <input type="text" id="username" formControlName="username" placeholder="{{ user.username }}" required />
+        </div>
+        <div>
+          <label for="firstname">Voornaam</label>
+          <input type="text" id="firstname" formControlName="firstname" placeholder="{{ user.firstname }}" required />
+        </div>
+        <div>
+          <label for="lastname">Achternaam</label>
+          <input type="text" id="lastname" formControlName="lastname" placeholder="{{ user.lastname }}" required />
+        </div>
+        <div>
+          <label for="email">E-mail</label>
+          <input type="email" id="email" formControlName="email" placeholder="{{ user.email }}" required />
+        </div>
+        <div>
+          <label for="birthday">Geboortedatum</label>
+          <input type="date" id="birthday" formControlName="birthday" placeholder="{{ user.birthday | date:'yyyy-MM-dd' }}" required />
+        </div>
+        <div>
+          <label for="profileImage">Profielfoto</label>
+          <input type="file" id="profileImage" (change)="onImageSelected($event)" />
+        </div>
+        <button type="submit" class="btn mt-3 pb-2 pt-2">Sla op</button>
+      </form>
     </div>
     
-    
-      </div>
-     
-</div>
+  </section>
 
-<div class="saved-gyms-container">
-  <h2 >Your Saved Gyms</h2>
-      <div class="no-gyms-container" *ngIf="savedGyms.length === 0"><p>Je hebt nog niks zoek een gym op : <a routerLink="/gyms" routerActive="active">Gyms</a></p></div>
-      <div class="saved-gyms-list">
-        <info-card [items]="savedGyms" type="gym" [deleteGym]="true" [userId]="user?.id"></info-card>
-      </div>
-</div>
+  <!-- Saved Gyms -->
+  <section class="saved-gyms-container mt-5">
+  <h2 class="text-center">Jouw Gyms</h2>
 
-  <div class="saved-exercises-container">
-    <h2>Your Saved Exercises</h2>
-    <div class="no-exercises-container" *ngIf="savedExercises.length === 0">
-      <p class="empty-message">Je hebt nog niks zoek een oefening op : <a routerLink="/exercises" routerActive="active">Oefeningen</a></p>
-    </div>
-    <div class="saved-exercises-list">
-      <info-card [items]="savedExercises" type="exercise" [deleteSavedExercise]="true" [userId]="user?.id"></info-card>
-    </div>
+  <div *ngIf="savedGyms.length === 0" class="no-gyms-container text-center">
+    <p>
+      Je hebt nog niks – zoek een gym op: 
+      <a routerLink="/gyms" routerActive="active">Gyms</a>
+    </p>
   </div>
 
-</div>
+  <!-- FLEX CONTAINER for info-card -->
+  <div class="saved-gyms-list d-flex flex-row row">
+    <div class="col-12 col-sm-7">
+      <info-card
+        [items]="savedGyms"
+        type="gym"
+        [deleteGym]="true"
+        [userId]="user?.id"
+      ></info-card>
+    </div>
+  </div>
+</section>
 
-  
-  <ng-template #loading>
-    <p>Loading user data...</p>
-  </ng-template>
-  
+  <!-- Saved Exercises -->
+  <section class="saved-exercises-container mt-5 row d-flex">
+  <h2 class="text-center col-12">Jouw Oefeningen</h2>
+
+  <div *ngIf="savedExercises.length === 0" class="no-exercises-container text-center col-12">
+    <p class="empty-message">
+      Je hebt nog niks – zoek een oefening op:
+      <a routerLink="/exercises" routerActive="active">Oefeningen</a>
+    </p>
+  </div>
+
+  <!-- De lijst zelf -->
+  <div class="saved-exercises-list col-12 col-sm-7">
+    <info-card
+      [items]="savedExercises"
+      type="exercise"
+      [deleteSavedExercise]="true"
+      [userId]="user?.id">
+    </info-card>
+  </div>
+</section>
+</section>

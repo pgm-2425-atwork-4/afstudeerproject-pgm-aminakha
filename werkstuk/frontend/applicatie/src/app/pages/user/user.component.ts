@@ -52,23 +52,16 @@ export class UserProfileComponent implements OnInit {
             console.log("✅ User Data:", user);
             this.user = user;
 
-            // ✅ GYMS OPHALEN
             this.gymService.getSavedGyms(userId).subscribe({
               next: (res: any) => {
                 console.log("✅ Saved Gyms Loaded:", res);
                 this.savedGyms = res;
               },
               error: (err) => {
-                if (err.status === 404) {
-                  this.savedGyms = []; // gewoon leeg
-                } 
-                else {
-                  console.error("🔥 Error fetching saved gyms:", err);
-                }
+                  console.error("🔥 Error fetching saved gyms:", err);    
               }
             });
 
-            // ✅ EXERCISES OPHALEN
             this.exerciseService.savedExercises(userId).subscribe({
               next: (res: any) => {
                 console.log("✅ Saved Exercises Loaded:", res);

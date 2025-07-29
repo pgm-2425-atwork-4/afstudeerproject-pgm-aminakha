@@ -147,9 +147,6 @@
             letter-spacing: -2px;}
         .filter-sidebar {
             width: 100%;
-            h3 {
-                display: none;
-            }
         }
         form {
             .search-items {
