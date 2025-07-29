@@ -1,13 +1,5 @@
 .exercises-container {
     margin-bottom: 2rem;
-    h1 {
-        font-family: 'Archivo', sans-serif;
-        font-size: 6rem;
-        text-align: center;
-        letter-spacing: -4px;
-        word-break: break-word;
-        text-transform: uppercase;
-    }
     .filter-sidebar {
         background-color: #4c4c4c;
         border-radius: var(--standard-border-radius);
@@ -84,6 +76,8 @@
             display: flex;
             gap: 1rem;
             margin-top: 1rem;
+            width: 100%;
+            justify-content: center;
         }
     }
     .motivation-container {
@@ -140,6 +134,99 @@
                     color: var(--primary-color);
                 }
                 font-size: 1.2rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .exercises-container {
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            letter-spacing: -2px;}
+        .filter-sidebar {
+            width: 100%;
+            h3 {
+                display: none;
+            }
+        }
+        form {
+            .search-items {
+                justify-content: start;
+                flex: 2;
+                .col-sm-7 {
+                    flex: 1;
+                }
+            }
+        }
+        
+    }
+}
+
+@media (max-width: 576px) {
+    .exercises-container {
+        max-width: 100%;
+        form {
+            .search-bar {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                svg {
+                    top: 21%;
+                    transform: translateY(-50%);
+                }
+                input {
+                    width: 20rem;
+                }
+                .btn {
+                    position: relative;
+                    width: 100%;
+                    margin-top: 1rem;
+                    padding: 0.5rem;
+                }
+            }
+            
+        }
+        .toggle-filters-btn {
+            border-radius: var(--standard-border-radius);
+            margin-top: 1rem;
+        }
+        .filter-sidebar {
+            transition: all 0.3s ease;
+            width: 100%;
+            overflow: hidden;
+            h3 {
+                display: none;
+            }
+            &.mobile-filter {
+                max-height: 0;
+                padding: 0;
+            }
+            &.mobile-filter.open {
+                max-height: 1000px; 
+                padding: 1rem;
+            }
+        }
+        .motivation-container {
+            max-width: 100%;
+            .author  {
+                border-right: none;
+                margin: 0;
+                padding: 0;
+                img {
+                    width: 100%
+                }
+                p {
+                    bottom: 5%;
+                }
+            }
+            .motivation-text {
+                h2 {
+                    font-size: 1.2rem;
+                    margin-top: 1rem;
+                    padding: 0;
+                }
             }
         }
     }

@@ -345,12 +345,11 @@
         }
     }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
 
     .gym-detail-container {
-        & .gym-detail-content {
-            & .gym-detail-content__hero {
-                & .gym-gallery {
+            .gym-detail__hero {
+                .gym-gallery {
                     grid-template-columns: 20rem 20rem;
                     grid-template-rows: 20rem 20rem 20rem;
                     gap: 1rem;
@@ -369,24 +368,33 @@
                     }
                 }
             }
-            & .gym-detail__description {
+            .gym-detail__description {
                 & ul {
-                                    max-width: 100%;
-                                    gap:0rem;
+                    max-width: 100%;
+                    gap:0rem;
                     & li {
                         padding: 1.5rem;
                         & h2 {
                             font-size: 2.5rem;
                         }
                         & p {
-                            width:16rem
+                            width:16rem;
+                        }
+                    }
+                }
+            }
+            .comments-section-container {
+                .comments-content {
+                    .login-message {
+                        p {
+                            margin-bottom: 0;
                         }
                     }
                 }
             }
         }
     }
-   }
+
 
    @media (max-width: 576px) {
     .gym-detail-container {

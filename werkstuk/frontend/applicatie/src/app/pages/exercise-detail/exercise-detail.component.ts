@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { MetaDataService } from '../../services/meta-data.service';
 import { ExerciseService } from '../../services/exercise.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -11,7 +11,8 @@ import { CommentService } from '../../services/comment.service';
   selector: 'app-exercise-detail',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './exercise-detail.component.html',
-  styleUrl: './exercise-detail.component.css'
+  styleUrl: './exercise-detail.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class ExerciseDetailComponent {
   constructor(private exerciseService: ExerciseService, private route: ActivatedRoute, private commentService: CommentService) { }

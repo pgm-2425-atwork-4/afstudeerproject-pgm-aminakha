@@ -31,8 +31,10 @@ export class GymsComponent implements OnInit {
   });
 
   constructor(private gymService: GymService, private metaDataService: MetaDataService, private route: ActivatedRoute) {}
+  resizeHandler = () => this.isMobile = window.innerWidth < 576;
 
   ngOnInit() {
+    window.addEventListener('resize', () => this.isMobile = window.innerWidth < 576);
     console.log(this.isMobile);
     
     this.metaDataService.getProvinces().subscribe({

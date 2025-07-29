@@ -73,7 +73,28 @@
     }
   }
 }
-
+@media (max-width: 992px) {
+    .gyms-container {
+      .container {
+        .gyms-content {
+          .filter-sidebar {
+            width: 100%;
+            h3 {
+                display: none;
+            }
+          }
+          .gyms-content__items {
+            justify-content: start;
+            flex: 2;
+            .col-sm-7 {
+                flex: 1;
+            }
+          }
+        }
+      }
+        
+    }
+}
 @media (max-width: 576px) {
   .gyms-container {
     .container {

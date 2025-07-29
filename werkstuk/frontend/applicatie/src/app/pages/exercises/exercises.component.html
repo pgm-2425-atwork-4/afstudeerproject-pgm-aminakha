@@ -7,9 +7,11 @@
         </svg>
         <input type="text" formControlName="query" placeholder="Zoek een gym" class="form-control" required />
         <button class="btn" type="submit">Zoeken</button>
-      </div>
-      <div class="search-items d-flex flex-row">
-        <div class="filter-sidebar">
+      </div>          
+      
+      <h2 *ngIf="isMobile" (click)="toggleFilters()" class="toggle-filters-btn grand-title">Filters tonen</h2>
+      <div class="search-items d-flex flex-row row">
+        <div [ngClass]="{ 'mobile-filter': isMobile, 'open': isMobile && showFilters }" class="filter-sidebar col-12 col-sm-5">
           <h3>Filters</h3>
 
           <label for="difficulty">Kies een moeilijkheid</label>
@@ -23,19 +25,22 @@
           </select>
           <button type="button" class="reset-btn btn" (click)="resetFilters()">Reset filters</button>
         </div>
-        <info-card [items]="filteredExercises" type="exercise"></info-card>
-        <div *ngIf="filteredExercises.length === 0">
-          <h2 class="no-results">No exercises found...</h2>
+        <div class="col-12 col-sm-7">
+          <info-card [items]="filteredExercises" type="exercise"></info-card>
+          <div *ngIf="filteredExercises.length === 0">
+            <h2 class="no-results">No exercises found...</h2>
+          </div>
         </div>
+        
       </div>
       
     </form>
-    <div class="motivation-container">
-      <div class="author d-flex flex-column">
+    <div class="motivation-container row">
+      <div class="author d-flex flex-column col-12 col-md-4">
         <img src="{{ randomMotivation.image }}" alt="{{ randomMotivation.author }}">
         <p>{{ randomMotivation.author }}</p>
       </div>
-      <div class="motivation-text">
+      <div class="motivation-text col-12 col-md-7">
         <h2>{{ randomMotivation.text }}</h2>
         <p>Begin je avontuur met een simpele klik!</p>
         <button class="btn" type="submit">Zoeken</button>

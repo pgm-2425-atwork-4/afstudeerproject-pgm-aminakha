@@ -15,6 +15,8 @@ import { InfoCardComponent } from '../../components/info-card/info-card.componen
 })
 export class ExercisesComponent implements OnInit {
   randomMotivation: any;
+  isMobile: boolean = window.innerWidth < 576;
+  showFilters: boolean = false;
   motivations = [
     {
       text: "“Success is doing what you have to do, even when you don’t feel like it.”",
@@ -49,8 +51,9 @@ export class ExercisesComponent implements OnInit {
     private exerciseService: ExerciseService,
     private metaDataService: MetaDataService
   ) {}
-
+  resizeHandler = () => this.isMobile = window.innerWidth < 576;
   ngOnInit() {
+    window.addEventListener('resize', () => this.isMobile = window.innerWidth < 576);
     this.randomMotivation = this.motivations[Math.floor(Math.random() * this.motivations.length)];
     this.metaDataService.getPressureTypes().subscribe((data: any) => {
       this.difficulties = data;
@@ -74,14 +77,24 @@ export class ExercisesComponent implements OnInit {
       this.applyFilters();
     });
   }
+  ngOnDestroy() {
+  window.removeEventListener('resize', this.resizeHandler);
+}
 
+  ngOnChanges() {
+    this.applyFilters();
+  }
   onSearchSubmit() {
     this.applyFilters();
   }
-
+  
   resetFilters() {
     this.form.reset();
     this.filteredExercises = [...this.exercises];
+  }
+
+  toggleFilters() {
+    this.showFilters = !this.showFilters;
   }
 
   applyFilters() {

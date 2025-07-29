@@ -52,7 +52,12 @@
 
 @media (max-width: 992px) {
     .list-container {
+        flex-wrap: wrap;
+        margin: 0 auto;
+        align-items: start;
+        justify-content: center;
         .item-card {
+            width: 17rem;
             img {
                 width: 100%;
             }
