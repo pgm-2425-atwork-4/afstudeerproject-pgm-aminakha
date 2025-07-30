@@ -76,6 +76,7 @@
                     font-size: 1rem;
                 }
                 .d-flex {
+                    flex-direction: column;
                     &.custom-btn__exercise {
                         display: flex;
                         flex-direction: column;
@@ -87,6 +88,7 @@
                     }
                     .btn {
                         margin-top: 0.5rem;
+                        margin-left: 0;
                     }
                 }
             }
