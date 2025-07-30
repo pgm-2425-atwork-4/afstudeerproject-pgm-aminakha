@@ -14,12 +14,6 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterComponent {
   backgroundImg: string = 'https://res.cloudinary.com/dwkf8avz2/image/upload/v1742656539/user_uploads/qgz1edlvt97zzbmtkqxt.png'; 
-  username: string = '';
-  password: string = '';
-  firstname: string = '';
-  lastname: string = '';
-  email: string = '';
-  birthday: string = '';
   profileImage: File | null = null; 
   message: string = ''; 
 
@@ -35,12 +29,34 @@ export class RegisterComponent {
   }); 
 
   constructor(private authService: AuthService) {}
-
+  get username() {
+    return this.form.get('username');
+  }
+  get firstname() {
+    return this.form.get('firstname');
+  }
+  get lastname() {
+    return this.form.get('lastname');
+  }
+  get email() {
+    return this.form.get('email');
+  }
+  get password() {
+    return this.form.get('password');
+  }
+  get birthday() {
+    return this.form.get('birthday');
+  }
   onFileSelected(event: any) {
     this.profileImage = event.target.files[0]; 
   }
 
   registerUser() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.form.setErrors({ invalidLogin: true });
+      return;
+    }
     const formData = new FormData();
     const values = this.form.value;
 

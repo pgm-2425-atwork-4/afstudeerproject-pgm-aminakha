@@ -22,7 +22,18 @@ export class LoginComponent {
   profile_image: string = '';
   constructor(private router: Router, private authService: AuthService) {}
 
+  get email() {
+    return this.form.get('email');
+  }
+  get password() {
+    return this.form.get('password');
+  }
   login() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.form.setErrors({ invalidLogin: true });
+      return;
+    }
     this.authService.loginUser(this.form.value.email ?? '', this.form.value.password ?? '').subscribe(
       (res: any) => {
         console.log("✅ Login successful:", res);

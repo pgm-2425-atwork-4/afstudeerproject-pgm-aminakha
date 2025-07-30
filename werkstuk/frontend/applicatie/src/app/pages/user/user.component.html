@@ -37,27 +37,44 @@
       </button>
 
       <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="updateUserProfile()" class="edit-form mt-3">
-        <div>
+        <div class="form-group">
           <label for="username">Gebruikersnaam</label>
           <input type="text" id="username" formControlName="username" placeholder="{{ user.username }}" required />
+          <div *ngIf="username?.touched && username?.invalid" class="form-text text-danger">
+            <div *ngIf="username?.errors?.['required']">Gebruikersnaam is verplicht.</div>
+          </div>
+          
         </div>
-        <div>
+        <div class="form-group">
           <label for="firstname">Voornaam</label>
           <input type="text" id="firstname" formControlName="firstname" placeholder="{{ user.firstname }}" required />
+          <div *ngIf="firstname?.touched && firstname?.invalid" class="form-text text-danger">
+            <div *ngIf="firstname?.errors?.['required']">Voornaam is verplicht.</div>
+          </div>
         </div>
-        <div>
+        <div class="form-group">
           <label for="lastname">Achternaam</label>
           <input type="text" id="lastname" formControlName="lastname" placeholder="{{ user.lastname }}" required />
+          <div *ngIf="lastname?.touched && lastname?.invalid" class="form-text text-danger">
+            <div *ngIf="lastname?.errors?.['required']">Achternaam is verplicht.</div>
+          </div>
         </div>
-        <div>
+        <div class="form-group">
           <label for="email">E-mail</label>
           <input type="email" id="email" formControlName="email" placeholder="{{ user.email }}" required />
+          <div *ngIf="email?.touched && email?.invalid" class="form-text text-danger">
+            <div *ngIf="email?.errors?.['required']">E-mail is verplicht.</div>
+            <div *ngIf="email?.errors?.['email']">Ongeldig e-mailadres.</div>
+          </div>
         </div>
-        <div>
+        <div class="form-group">
           <label for="birthday">Geboortedatum</label>
           <input type="date" id="birthday" formControlName="birthday" placeholder="{{ user.birthday | date:'yyyy-MM-dd' }}" required />
+          <div *ngIf="birthday?.touched && birthday?.invalid" class="form-text text-danger">
+            <div *ngIf="birthday?.errors?.['required']">Geboortedatum is verplicht.</div>
+          </div>
         </div>
-        <div>
+        <div class="form-group">
           <label for="profileImage">Profielfoto</label>
           <input type="file" id="profileImage" (change)="onImageSelected($event)" />
         </div>

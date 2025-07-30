@@ -40,7 +40,9 @@ export class ExercisesComponent implements OnInit {
     targetMuscleGroup: new FormControl(''),
     difficulty: new FormControl('')
   });
-
+  get query() {
+    return this.form.get('query');
+  }
   difficulties: any[] = [];
   targetMuscleGroups: any[] = [];
   exercises: any[] = [];
@@ -98,6 +100,10 @@ export class ExercisesComponent implements OnInit {
   }
 
   applyFilters() {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
   const values = this.form.value;
 
   this.filteredExercises = this.exercises.filter(ex => {

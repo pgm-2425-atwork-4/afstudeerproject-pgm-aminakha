@@ -66,12 +66,15 @@
         </p>
 
         <div class="comment-content">
-          <div class="title-container">
+          <div class="title-container form-group">
             <label for="commentTitle">Titel</label>
             <input id="commentTitle" formControlName="title" placeholder="Titel van je reactie" />
+            <div *ngIf="title?.touched && title?.invalid" class="form-text text-danger">
+              <div *ngIf="title?.errors?.['required']">Titel is verplicht</div>
+            </div>
           </div>
 
-          <div class="comment-container">
+          <div class="comment-container form-group">
             <label for="commentText">Comment</label>
             <textarea
               id="commentText"
@@ -79,6 +82,10 @@
               placeholder="Typ je reactie hier..."
               rows="4"
             ></textarea>
+            <div *ngIf="description?.touched && description?.invalid" class="form-text text-danger">
+              <div *ngIf="description?.errors?.['required']">Reactie is verplicht</div>
+              <div *ngIf="description?.errors?.['minlength']">Reactie moet minimaal 5 tekens bevatten</div>
+            </div>
           </div>
         </div>
 

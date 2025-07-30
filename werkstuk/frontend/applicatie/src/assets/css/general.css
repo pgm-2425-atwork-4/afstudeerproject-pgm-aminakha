@@ -11,6 +11,12 @@
     
 }
 
+.text-danger {
+    div {
+        font-family: 'Work Sans', sans-serif;
+        font-weight: 600;
+    }
+}
 .container {
     width: var(--width);
     max-width: var(--max-width);

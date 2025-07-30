@@ -26,6 +26,12 @@ export class ExerciseDetailComponent {
     title: new FormControl('', Validators.required),
     description: new FormControl('', [Validators.required])
   });
+  get title() {
+    return this.form.get('title');
+  }
+  get description() {
+    return this.form.get('description');
+  }
   comments: any[] = [];
   noCommentsMessage: string = 'Er zijn nog geen reacties op deze oefening. Wees de eerste om een reactie achter te laten!';
   ngOnInit() {
@@ -79,6 +85,10 @@ export class ExerciseDetailComponent {
     });
   }
   submitComment(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     console.log(this.form.value);
     
     if (!this.userId) {

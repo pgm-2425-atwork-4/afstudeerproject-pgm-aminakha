@@ -18,6 +18,12 @@ export class GymDetailComponent implements OnInit {
     title: new FormControl('', Validators.required),
     description: new FormControl('', [Validators.required, Validators.minLength(5)])
   });
+  get title() {
+    return this.form.get('title');
+  }
+  get description() {
+    return this.form.get('description');
+  }
 
   gym: any;
   userId: string | null = null;
@@ -92,10 +98,6 @@ export class GymDetailComponent implements OnInit {
 }
 
   submitComment(): void {
-    if (!this.userId) {
-      alert('You must be logged in to submit a comment!');
-      return;
-    }
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();

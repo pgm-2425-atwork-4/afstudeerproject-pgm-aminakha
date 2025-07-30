@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { GymService } from '../../services/gym.service';
@@ -22,11 +22,11 @@ export class UserProfileComponent implements OnInit {
   savedExercises: any[] = [];
 
   form = new FormGroup({
-    username: new FormControl(''),
-    firstname: new FormControl(''),
-    lastname: new FormControl(''),
-    email: new FormControl(''),
-    birthday: new FormControl('')
+    username: new FormControl('', Validators.required),
+    firstname: new FormControl('', Validators.required),
+    lastname: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    birthday: new FormControl('', Validators.required)
   });
 
   constructor(
@@ -35,6 +35,21 @@ export class UserProfileComponent implements OnInit {
     private exerciseService: ExerciseService
   ) {}
 
+  get username() {
+    return this.form.get('username');
+  }
+  get firstname() {
+    return this.form.get('firstname');
+  }
+  get lastname() {
+    return this.form.get('lastname');
+  }
+  get email() {
+    return this.form.get('email');
+  }
+  get birthday() {
+    return this.form.get('birthday');
+  }
   ngOnInit() {
     const token = localStorage.getItem("auth_token"); 
     console.log("🔍 Stored Token:", token);
@@ -97,6 +112,10 @@ export class UserProfileComponent implements OnInit {
   }
 
   updateUserProfile() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     const formData = new FormData();
     formData.append('username', this.user.username);
     formData.append('firstname', this.user.firstname);

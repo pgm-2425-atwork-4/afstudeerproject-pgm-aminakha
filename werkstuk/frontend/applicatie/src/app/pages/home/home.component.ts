@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GymService } from '../../services/gym.service';
@@ -15,7 +15,9 @@ import { InfoCardComponent } from '../../components/info-card/info-card.componen
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule, CardListComponent],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  encapsulation: ViewEncapsulation.None
+  
 })
 export class HomeComponent implements OnInit {
   gyms: any[] = [];
@@ -25,6 +27,9 @@ export class HomeComponent implements OnInit {
   form = new FormGroup({
     query: new FormControl('', Validators.required)
   });
+  get query() {
+    return this.form.get('query');
+  }
   randomMotivation: any;
   motivations = [
     {
@@ -75,6 +80,10 @@ export class HomeComponent implements OnInit {
     });    
   }
   onSearchSubmit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
       const searchValue = this.form.get('query')?.value?.trim();
       if (searchValue) {
         this.router.navigate(['/gyms'], { queryParams: { search: searchValue } });

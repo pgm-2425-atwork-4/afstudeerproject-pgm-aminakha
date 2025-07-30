@@ -34,12 +34,16 @@
                 </p>
 
                 <div class="comment-content">
-                    <div class="title-container">
+                    <div class="title-container form-group">
                         <label for="title">Titel</label>
                         <input id="title" formControlName="title" placeholder="Titel van je reactie" />
+                        <div *ngIf="title?.touched && title?.invalid" class="form-text text-danger">
+                            <div *ngIf="title?.errors?.['required']">Titel is verplicht</div>
+                            <div *ngIf="title?.errors?.['minlength']">Titel moet minimaal 3 tekens bevatten</div>
+                        </div>
                     </div>
 
-                    <div class="comment-container">
+                    <div class="comment-container form-group">
                         <label for="description">Comment</label>
                         <textarea
                         id="description"
@@ -47,6 +51,10 @@
                         placeholder="Typ je reactie hier..."
                         rows="4"
                         ></textarea>
+                        <div *ngIf="description?.touched && description?.invalid" class="form-text text-danger">
+                            <div *ngIf="description?.errors?.['required']">Reactie is verplicht</div>
+                            <div *ngIf="description?.errors?.['minlength']">Reactie moet minimaal 5 tekens bevatten</div>
+                        </div>
                     </div>
                 </div>
 

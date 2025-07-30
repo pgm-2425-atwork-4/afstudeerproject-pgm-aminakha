@@ -29,7 +29,9 @@ export class GymsComponent implements OnInit {
     type: new FormControl(''),
     personalTrainer: new FormControl('')
   });
-
+  get search() {
+    return this.form.get('search');
+  }
   constructor(private gymService: GymService, private metaDataService: MetaDataService, private route: ActivatedRoute) {}
   resizeHandler = () => this.isMobile = window.innerWidth < 576;
 
@@ -117,6 +119,10 @@ export class GymsComponent implements OnInit {
   }
 
   searchGyms() {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
   const values = this.form.value;
 
   this.filteredGyms = this.gyms.filter(gym => {
