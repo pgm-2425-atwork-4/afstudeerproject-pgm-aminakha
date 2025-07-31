@@ -32,8 +32,8 @@
 
       <div class="col-12 col-sm-7">
         <info-card *ngIf="filteredExercises.length > 0" [items]="filteredExercises" type="exercise"></info-card>
-        <div *ngIf="filteredExercises.length === 0">
-          <h2 class="no-results">No exercises found...</h2>
+        <div class="m-auto" *ngIf="filteredExercises.length === 0">
+          <h2 class="no-results">Oefening niet gevonden...</h2>
         </div>
       </div>
     </div>

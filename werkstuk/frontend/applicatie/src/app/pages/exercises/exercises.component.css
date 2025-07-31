@@ -88,11 +88,13 @@
             width: 100%;
             justify-content: center;
             .no-results {
-                background: none;
-                color: var(--primary-color);
-                text-transform: uppercase;
-                margin: 0 auto;
-                text-align: center;
+                    width: 100%;
+                    text-align: center;
+                    display: flex;
+                    justify-content: center;
+                    background: none;
+                    color: var(--primary-color);
+                    text-transform: uppercase;
             }
         }
     }
