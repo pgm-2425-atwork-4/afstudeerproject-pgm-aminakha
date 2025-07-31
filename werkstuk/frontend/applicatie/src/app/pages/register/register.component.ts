@@ -68,7 +68,7 @@ export class RegisterComponent {
     formData.append('birthday', values.birthday ?? '');
 
     if (this.profileImage) {
-      formData.append('profileImage', this.profileImage); // ✅ juist
+      formData.append('profileImage', this.profileImage); 
     }
 
     this.authService.registerUser(formData).subscribe({

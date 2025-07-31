@@ -96,7 +96,10 @@
 
   @media (max-width: 480px) {
     .login_register-container {
-      
+      padding-bottom: 2rem;
+      .backgroundimg {
+        display: none;
+      }
       margin: 0 auto;
       .form-container {
         form {
