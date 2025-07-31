@@ -116,8 +116,17 @@
 @media (max-width: 576px) {
   .gyms-container {
     .container {
-      .gyms-content__items {
+      .gyms-content {
         gap: 1rem;
+        .gyms-content__items {
+          gap: 1rem;
+        }
+        .d-flex {
+          .search-bar {
+            width: 100%;
+            margin-bottom: 1rem;
+          }
+        }
         .toggle-filters-btn {
           border-radius: var(--standard-border-radius);
         }
