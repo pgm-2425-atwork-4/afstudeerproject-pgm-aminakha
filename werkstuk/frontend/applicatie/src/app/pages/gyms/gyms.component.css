@@ -119,6 +119,7 @@
       .gyms-content {
         gap: 1rem;
         .gyms-content__items {
+          margin-top: 1rem;
           gap: 1rem;
         }
         .d-flex {
