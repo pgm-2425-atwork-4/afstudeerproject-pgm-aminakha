@@ -91,6 +91,8 @@
                 background: none;
                 color: var(--primary-color);
                 text-transform: uppercase;
+                margin: 0 auto;
+                text-align: center;
             }
         }
     }
