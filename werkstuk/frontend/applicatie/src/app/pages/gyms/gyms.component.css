@@ -37,12 +37,11 @@
       .no-results {
         width: 100%;
         text-align: center;
-        position: absolute;
-        left: 0;
         display: flex;
         justify-content: center;
         background: none;
         color: var(--primary-color);
+        text-transform: uppercase;
       }
     }
 
@@ -89,6 +88,9 @@
         }
       }
     }
+    .no-results {
+      background: none;
+    } 
   }
 }
 @media (max-width: 992px) {

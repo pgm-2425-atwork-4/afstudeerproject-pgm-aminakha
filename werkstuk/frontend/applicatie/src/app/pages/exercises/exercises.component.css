@@ -87,6 +87,11 @@
             margin-top: 2rem;
             width: 100%;
             justify-content: center;
+            .no-results {
+                background: none;
+                color: var(--primary-color);
+                text-transform: uppercase;
+            }
         }
     }
     .motivation-container {
