@@ -1,55 +1,53 @@
-  <section class="exercises-container container ">
-    <h1>Vind een oefening die bij je past!</h1>
-    <form [formGroup]="form" (ngSubmit)="onSearchSubmit()">
-      <div class="search-bar d-flex align-items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 20 20" fill="none">
-          <path fill="white" fill-rule="evenodd" d="M4 9a5 5 0 1110 0A5 5 0 014 9zm5-7a7 7 0 104.2 12.6.999.999 0 00.093.107l3 3a1 1 0 001.414-1.414l-3-3a.999.999 0 00-.107-.093A7 7 0 009 2z"/>
-        </svg>
-        <div class="form-group">
-          <input type="text" formControlName="query" placeholder="Zoek een gym" class="form-control" required />
-          <div *ngIf="query?.touched && query?.invalid" class="form-text text-danger">
-            <div *ngIf="query?.errors?.['required']">Zoekopdracht is verplicht.</div>
-          </div>
-        </div>
-        <button class="btn" type="submit">Zoeken</button>
-      </div>          
-      
-      <h2 *ngIf="isMobile" (click)="toggleFilters()" class="toggle-filters-btn grand-title">Filters tonen</h2>
-      <div class="search-items d-flex flex-row row">
-        <div [ngClass]="{ 'mobile-filter': isMobile, 'open': isMobile && showFilters }" class="filter-sidebar col-12 col-sm-5">
-          <h3>Filters</h3>
+<section class="exercises-container container">
+  <h1>Vind een oefening die bij je past!</h1>
+  <form [formGroup]="form" (ngSubmit)="onSearchSubmit()">
+    <div class="search-bar d-flex align-items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 20 20" fill="none">
+        <path fill="white" fill-rule="evenodd" d="M4 9a5 5 0 1110 0A5 5 0 014 9zm5-7a7 7 0 104.2 12.6.999.999 0 00.093.107l3 3a1 1 0 001.414-1.414l-3-3a.999.999 0 00-.107-.093A7 7 0 009 2z"/>
+      </svg>
+      <div class="form-group">
+        <input type="text" formControlName="query" placeholder="Zoek een gym" class="form-control" />
+      </div>
+      <button class="btn" type="submit">Zoeken</button>
+    </div>          
 
-          <label for="difficulty">Kies een moeilijkheid</label>
-          <select id="difficulty" formControlName="difficulty">
-            <option *ngFor="let difficulty of difficulties" [value]="difficulty.id">{{ difficulty.name }}</option>
-          </select>
+    <h2 *ngIf="isMobile" (click)="toggleFilters()" class="toggle-filters-btn grand-title">Filters tonen</h2>
+    
+    <div class="search-items d-flex flex-row row">
+      <div [ngClass]="{ 'mobile-filter': isMobile, 'open': isMobile && showFilters }" class="filter-sidebar col-12 col-sm-5">
+        <h3>Filters</h3>
 
-          <label for="targetMuscleGroup">Kies een doelgroep</label>
-          <select id="targetMuscleGroup" formControlName="targetMuscleGroup">
-            <option *ngFor="let group of targetMuscleGroups" [value]="group.id">{{ group.name }}</option>
-          </select>
-          <button type="button" class="reset-btn btn" (click)="resetFilters()">Reset filters</button>
+        <label for="difficulty">Kies een moeilijkheid</label>
+        <select id="difficulty" formControlName="difficulty">
+          <option *ngFor="let difficulty of difficulties" [ngValue]="difficulty.id">{{ difficulty.name }}</option>
+        </select>
+
+        <label for="targetMuscleGroup">Kies een doelgroep</label>
+        <select id="targetMuscleGroup" formControlName="targetMuscleGroup">
+          <option *ngFor="let group of targetMuscleGroups" [ngValue]="group.id">{{ group.name }}</option>
+        </select>
+
+        <button type="button" class="reset-btn btn" (click)="resetFilters()">Reset filters</button>
+      </div>
+
+      <div class="col-12 col-sm-7">
+        <info-card [items]="filteredExercises" type="exercise"></info-card>
+        <div *ngIf="filteredExercises.length === 0">
+          <h2 class="no-results">No exercises found...</h2>
         </div>
-        <div class="col-12 col-sm-7">
-          <info-card [items]="filteredExercises" type="exercise"></info-card>
-          <div *ngIf="filteredExercises.length === 0">
-            <h2 class="no-results">No exercises found...</h2>
-          </div>
-        </div>
-        
       </div>
-      
-    </form>
-    <div class="motivation-container row">
-      <div class="author d-flex flex-column col-12 col-md-4">
-        <img src="{{ randomMotivation.image }}" alt="{{ randomMotivation.author }}">
-        <p>{{ randomMotivation.author }}</p>
-      </div>
-      <div class="motivation-text col-12 col-md-7">
-        <h2>{{ randomMotivation.text }}</h2>
-        <p>Begin je avontuur met een simpele klik!</p>
-        <button class="btn" type="submit">Zoeken</button>
-      </div>
-      
     </div>
-  </section>
+  </form>
+
+  <div class="motivation-container row">
+    <div class="author d-flex flex-column col-12 col-md-4">
+      <img [src]="randomMotivation.image" [alt]="randomMotivation.author">
+      <p>{{ randomMotivation.author }}</p>
+    </div>
+    <div class="motivation-text col-12 col-md-7">
+      <h2>{{ randomMotivation.text }}</h2>
+      <p>Begin je avontuur met een simpele klik!</p>
+      <button class="btn" type="submit">Zoeken</button>
+    </div>
+  </div>
+</section>

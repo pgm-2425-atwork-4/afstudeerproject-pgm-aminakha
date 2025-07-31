@@ -23,16 +23,11 @@
                     width: 30rem;
                     max-width: 100%;
                     box-sizing: border-box;
-                }
-                .form-text {
-                    position: absolute;
-                    left: 0.5rem;
-                    bottom: -1.5rem;
-                    color: red;
-                    font-size: 0.8rem;
+                    &::placeholder {
+                        color: #ccc;
+                    }
                 }
             }
-            
             button {
                 position: absolute;
                 right: 0.5rem;
@@ -135,7 +130,6 @@
                         width: 20rem;
                     } 
                 }
-                
                 .btn {
                     position: relative;
                     width: 100%;
@@ -146,7 +140,6 @@
             
         }
         .motivation-container {
-            
             .author  {
                 border-right: none;
                 margin: 0;

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MetaDataService } from '../../services/meta-data.service';
 import { ExerciseService } from '../../services/exercise.service';
@@ -13,16 +13,17 @@ import { InfoCardComponent } from '../../components/info-card/info-card.componen
   templateUrl: './exercises.component.html',
   styleUrl: './exercises.component.css'
 })
-export class ExercisesComponent implements OnInit {
+export class ExercisesComponent implements OnInit, OnDestroy {
   randomMotivation: any;
   isMobile: boolean = window.innerWidth < 576;
   showFilters: boolean = false;
+
   motivations = [
     {
       text: "“Success is doing what you have to do, even when you don’t feel like it.”",
       author: '@Daniël Storm',
       image: 'images/daniel.png'
-    }, 
+    },
     {
       text: "“Discipline is choosing between what you want now and what you want most.”",
       author: '@Sven Richter',
@@ -36,13 +37,15 @@ export class ExercisesComponent implements OnInit {
   ];
 
   form = new FormGroup({
-    query: new FormControl('', Validators.required),
+    query: new FormControl(''),
     targetMuscleGroup: new FormControl(''),
     difficulty: new FormControl('')
   });
+
   get query() {
     return this.form.get('query');
   }
+
   difficulties: any[] = [];
   targetMuscleGroups: any[] = [];
   exercises: any[] = [];
@@ -53,24 +56,27 @@ export class ExercisesComponent implements OnInit {
     private exerciseService: ExerciseService,
     private metaDataService: MetaDataService
   ) {}
+
   resizeHandler = () => this.isMobile = window.innerWidth < 576;
+
   ngOnInit() {
-    window.addEventListener('resize', () => this.isMobile = window.innerWidth < 576);
+    window.addEventListener('resize', this.resizeHandler);
     this.randomMotivation = this.motivations[Math.floor(Math.random() * this.motivations.length)];
-    this.metaDataService.getPressureTypes().subscribe((data: any) => {
-      this.difficulties = data;
+
+    this.metaDataService.getPressureTypes().subscribe({
+      next: (data: any) => this.difficulties = data,
+      error: (err) => console.error('Failed to load pressure types', err)
     });
 
-    this.exerciseService.getExerciseCategories().subscribe((data: any) => {
-      this.targetMuscleGroups = data;
+    this.exerciseService.getExerciseCategories().subscribe({
+      next: (data: any) => this.targetMuscleGroups = data,
+      error: (err) => console.error('Failed to load exercise categories', err)
     });
 
     this.exerciseService.getExercises().subscribe({
       next: (data: any) => {
         this.exercises = data;
-        console.log(this.exercises[0]);
-
-        this.filteredExercises = data;
+        this.filteredExercises = [...data];
       },
       error: (error) => console.error('Error fetching exercises:', error)
     });
@@ -79,19 +85,21 @@ export class ExercisesComponent implements OnInit {
       this.applyFilters();
     });
   }
-  ngOnDestroy() {
-  window.removeEventListener('resize', this.resizeHandler);
-}
 
-  ngOnChanges() {
-    this.applyFilters();
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.resizeHandler);
   }
+
   onSearchSubmit() {
     this.applyFilters();
   }
-  
+
   resetFilters() {
-    this.form.reset();
+    this.form.reset({
+      query: '',
+      targetMuscleGroup: '',
+      difficulty: ''
+    });
     this.filteredExercises = [...this.exercises];
   }
 
@@ -100,18 +108,19 @@ export class ExercisesComponent implements OnInit {
   }
 
   applyFilters() {
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
-  }
-  const values = this.form.value;
+    const values = this.form.value;
 
-  this.filteredExercises = this.exercises.filter(ex => {
-    return (
-      (!values.query || ex.name?.toLowerCase().includes(values.query.toLowerCase())) &&
-      (!values.difficulty || ex.pressure_id === Number(values.difficulty)) &&
-      (!values.targetMuscleGroup || ex.exercise_category_id === Number(values.targetMuscleGroup))
-    );
-  });
-}
+    this.filteredExercises = this.exercises.filter(ex => {
+      const matchesQuery =
+        !values.query || ex.name?.toLowerCase().includes(values.query.toLowerCase());
+
+      const matchesDifficulty =
+        !values.difficulty || ex.pressure_id === Number(values.difficulty);
+
+      const matchesTargetGroup =
+        !values.targetMuscleGroup || ex.exercise_category_id === Number(values.targetMuscleGroup);
+
+      return matchesQuery && matchesDifficulty && matchesTargetGroup;
+    });
+  }
 }
