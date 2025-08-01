@@ -30,6 +30,12 @@ export class ExerciseService {
   getExerciseCategories() {
     return this.http.get(`${this.apiUrl}/exercises/categories`);
   }
+  addExerciseCategory(category: any) {
+    return this.http.post(`${this.apiUrl}/exercises/admin/add-category`, category, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  
   addExercise(exercise: any){
     return this.http.post(`${this.apiUrl}/exercises/admin/add-exercise`, exercise, {
       headers: this.getAuthHeaders()

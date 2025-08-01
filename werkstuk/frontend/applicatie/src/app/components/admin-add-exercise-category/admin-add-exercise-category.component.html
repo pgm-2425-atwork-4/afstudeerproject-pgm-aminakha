@@ -1,10 +1,23 @@
+<div class="container my-4">
+  <h2 class="mb-3">Voeg een categorie toe</h2>
+  <form [formGroup]="form" (ngSubmit)="addCategory()" enctype="multipart/form-data">
+    <div class="form-group mb-3">
+      <label for="name">Categorie voor oefening:</label>
+      <input type="text" id="name" formControlName="name" class="form-control" required />
+    </div>
 
-<h2>Add Exercise Category</h2>
-<form [formGroup]="form" (ngSubmit)="addCategory()">
-  <div>
-    <label for="name">Categorie for exercise:</label>
-    <input type="text" id="name" formControlName="name" required />
+    <div class="form-group mb-3">
+      <label for="image">Afbeelding uploaden:</label>
+      <input type="file" class="form-control" (change)="onImageSelected($event)" accept="image/*" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Categorie toevoegen</button>
+  </form>
+
+  <div *ngIf="successMessage" class="alert alert-success mt-3">
+    {{ successMessage }}
   </div>
-
-  <button type="submit">Add Category</button>
-</form>
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
+</div>

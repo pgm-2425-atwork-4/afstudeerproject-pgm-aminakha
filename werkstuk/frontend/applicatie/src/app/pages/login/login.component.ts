@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import {  passwordValidator } from './password-check.validator';
+import {  passwordValidator } from './password-validator';
 import { emailNotFoundValidator } from './email-not-found.validator';
 
 @Component({
@@ -22,14 +22,14 @@ export class LoginComponent {
   profile_image: string = '';
   constructor(private router: Router, private authService: AuthService) {
     this.form = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email], [emailNotFoundValidator(this.authService)]),
-      password: new FormControl('', [Validators.required], [passwordValidator(this.authService, () => this.form?.value?.email ?? '')]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', {
+      validators: [Validators.required],
+      asyncValidators: [passwordValidator(this.authService, () => this.form?.value?.email ?? '')],
+      updateOn: 'submit'
+    })
     });
   }
-  ngOnInit() {
-  this.email?.statusChanges.subscribe(status => console.log('Email status:', status));
-  this.email?.valueChanges.subscribe(value => console.log('Email value:', value));
-}
 
   get email() {
     return this.form.get('email');
@@ -38,32 +38,35 @@ export class LoginComponent {
     return this.form.get('password');
   }
   async login() {
-  this.submitted = true;     
 
-  if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    this.password?.markAsTouched();
+    this.password?.updateValueAndValidity();
 
-    return;
-  }
-
-  this.authService.loginUser(this.form.value.email ?? '', this.form.value.password ?? '').subscribe(
-    (res: any) => {
-      if (res.token && res.user) {
-        localStorage.setItem('auth_token', res.token);
-      }
-      this.authService.fetchUser();
-      this.router.navigate(['/']);
-    },
-    (error) => {
-      if (error.status === 401) {
-        this.password?.setErrors({ invalidPassword: true });
-        this.password?.markAsTouched();
-      } else {
-        this.message = 'Er is iets misgegaan. Probeer het later opnieuw.';
-      }
+    while (this.form.status === 'PENDING') {
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
-  );
-}
 
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
+    this.authService.loginUser(this.form.value.email ?? '', this.form.value.password ?? '').subscribe(
+      (res: any) => {
+        if (res.token && res.user) {
+          localStorage.setItem('auth_token', res.token);
+        }
+        this.authService.fetchUser();
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        if (error.status === 401) {
+          this.password?.setErrors({ invalidPassword: true });
+          this.password?.markAsTouched();
+        } else {
+          this.message = 'Er is iets misgegaan. Probeer het later opnieuw.';
+        }
+      }
+    );
+  }
 }

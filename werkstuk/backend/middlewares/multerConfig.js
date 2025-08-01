@@ -2,7 +2,6 @@ const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../config/cloudinary");
 
-// 👤 User uploads
 const uploadStorage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -13,7 +12,6 @@ const uploadStorage = new CloudinaryStorage({
   }
 });
 
-// 🖼️ Gym images
 const gymStorage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -24,7 +22,6 @@ const gymStorage = new CloudinaryStorage({
   }
 });
 
-// 🏷️ Gym logos
 const logoStorage = new CloudinaryStorage({
   cloudinary,
   params: {
@@ -35,15 +32,13 @@ const logoStorage = new CloudinaryStorage({
   }
 });
 
-// ✅ Losse uploaders
-const upload = multer({ storage: uploadStorage });               // user profiel
+const upload = multer({ storage: uploadStorage });              
 const gymUpload = multer({ storage: gymStorage });
 const uploadLogo = multer({ storage: logoStorage }).single("logo");
 const uploadImage = multer({ storage: gymStorage }).single("image");
 const uploadImages = multer({ storage: gymStorage }).array("images", 5);
 const exerciseImages = multer({ storage: gymStorage }).array("images", 2);
 
-// ✅ COMBINATIE: logo + images (via .fields)
 const uploadGymFields = multer({
   storage: gymStorage,
 }).fields([
@@ -52,11 +47,11 @@ const uploadGymFields = multer({
 ]);
 
 module.exports = {
-  upload,           // voor users
-  gymUpload,        // voor algemene gym uploads
-  uploadLogo,       // enkele logo upload
-  uploadImage,      // 1 image
-  uploadImages,     // max 5 images
-  uploadGymFields,   // ✅ combinatie logo + images,
-  exerciseImages    // voor oefeningen (max 2 images)
+  upload,           
+  gymUpload,        
+  uploadLogo,       
+  uploadImage,     
+  uploadImages,     
+  uploadGymFields,   
+  exerciseImages    
 };

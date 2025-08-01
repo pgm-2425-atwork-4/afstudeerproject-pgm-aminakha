@@ -24,7 +24,10 @@ export class GymDetailComponent implements OnInit {
   get description() {
     return this.form.get('description');
   }
-
+  succesMessage: string = '';
+  errorMessage: string = '';
+  succesMessageComment: string = '';
+  errorMessageComment: string = '';
   gym: any;
   userId: string | null = null;
   user: any;
@@ -92,7 +95,7 @@ export class GymDetailComponent implements OnInit {
     },
     error: (err) => {
       console.error('❌ Error fetching comments:', err);
-      this.gym.noCommentsMessage = 'Kon de reacties niet ophalen. Probeer het later opnieuw.';
+      this.errorMessageComment = 'Er is een fout opgetreden bij het ophalen van de reacties.';
     }
   });
 }
@@ -112,12 +115,13 @@ export class GymDetailComponent implements OnInit {
 
     this.commentService.addComment(newCommentData).subscribe({
       next: (data) => {
-        alert('Comment submitted successfully!');
+        this.succesMessageComment = 'Comment submitted successfully!';
         this.gym.comments.push(data);
         this.form.reset();
       },
       error: (err) => {
         console.error('❌ Error adding comment:', err);
+        this.errorMessageComment = 'Er is een fout opgetreden bij het toevoegen van de reactie.';
         alert('Failed to submit comment!');
       }
     });
@@ -140,7 +144,7 @@ export class GymDetailComponent implements OnInit {
     }
 
     this.gymService.saveGym(this.userId, this.gym.id).subscribe({
-      next: () => alert('Gym saved successfully!'),
+      next: () => this.succesMessage = 'Gym saved successfully!',
       error: (err) => console.error('❌ Error saving gym:', err)
     });
   }

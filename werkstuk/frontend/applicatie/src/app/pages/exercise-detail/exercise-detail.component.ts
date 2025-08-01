@@ -16,6 +16,10 @@ import { CommentService } from '../../services/comment.service';
 })
 export class ExerciseDetailComponent {
   constructor(private exerciseService: ExerciseService, private route: ActivatedRoute, private commentService: CommentService) { }
+  succesMessage: string = '';
+  errorMessage: string = '';
+  succesMessageComment: string = '';
+  errorMessageComment: string = '';
   id : any;
   exercise: any;
   exerciseImages: any[] = [];
@@ -24,7 +28,7 @@ export class ExerciseDetailComponent {
   profile_image: any;
   form = new FormGroup({
     title: new FormControl('', Validators.required),
-    description: new FormControl('', [Validators.required])
+    description: new FormControl('', [Validators.required, Validators.minLength(5)])
   });
   get title() {
     return this.form.get('title');
@@ -75,13 +79,15 @@ export class ExerciseDetailComponent {
 
   saveExercise(): void {
     if (!this.userId) {
-      alert('You must be logged in to save an exercise!');
       return;
     }
 
     this.exerciseService.saveExercise(this.userId, this.exercise.id).subscribe({
-      next: () => alert('Gym saved successfully!'),
-      error: (err) => console.error('❌ Error saving gym:', err)
+      next: () => this.succesMessage = 'Oefening succesvol opgeslagen!',
+      error: (err) =>  {
+        console.error('❌ Error saving gym:', err)
+        this.errorMessage = 'Er is een fout opgetreden bij het opslaan van de oefening.';
+      }
     });
   }
   submitComment(): void {
@@ -105,16 +111,15 @@ export class ExerciseDetailComponent {
       title: this.form.value.title,
       description: this.form.value.description
     };
-    console.log('Submitting comment:', newCommentData);
     
     this.commentService.addExerciseComment(this.exercise.id, newCommentData).subscribe({
       next: (data) => {
-        alert('Comment submitted successfully!');
+        this.succesMessageComment = 'Comment succesvol toegevoegd!';
         this.form.reset();
       },
       error: (err) => {
         console.error('❌ Error adding comment:', err);
-        alert('Failed to submit comment!');
+        this.errorMessageComment = 'Failed to submit comment!';
       }
     });
   }

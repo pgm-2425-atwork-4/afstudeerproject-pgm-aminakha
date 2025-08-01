@@ -24,6 +24,14 @@
         </div>
     </section>
     <button *ngIf="userId" class="save-btn btn container" (click)="saveExercise()"> Save exercise</button>
+    <div *ngIf="succesMessage" class="alert alert-success container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free v6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
+        <p>{{ succesMessage }}</p>
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"/><path d="M352.3 160.3c-12.5-12.5-32.8-12.5-45.3 0L224 238.7l-82.9-82.9c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0l128-128c12.4-12.4 12.4-32.7-.1-45z"/></svg>
+        <p>{{ errorMessage }}</p>
+    </div>
     <div *ngIf="!userId" class="login-message container  pb-0 mb-4">
         <p>Je moet ingelogd zijn om deze oefening op te slaan!</p>
     </div>
@@ -62,6 +70,15 @@
                 </div>
 
                 <button type="submit" class="btn-submit">Reactie plaatsen</button>
+                <div *ngIf="succesMessageComment" class="alert alert-success container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free v6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
+                    <p>{{ succesMessageComment }}</p>
+                </div>
+                <div *ngIf="errorMessageComment" class="alert alert-danger container">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200z"/><path d="M352.3 160.3c-12.5-12.5-32.8-12.5-45.3 0L224 238.7l-82.9-82.9c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0l128-128c12.4-12.4 12.4-32.7-.1-45z"/></svg>
+                    <p>{{ errorMessageComment }}</p>
+
+                </div>
             </form>
              <div *ngIf="!userId" class="login-message pb-0">
                 <p>Je moet ingelogd zijn om een reactie achter te laten!</p>

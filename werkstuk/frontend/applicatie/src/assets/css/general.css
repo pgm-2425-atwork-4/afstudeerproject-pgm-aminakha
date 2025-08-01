@@ -22,7 +22,9 @@
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 0 var(--standard-padding_margin);
+    
 }
+
 .btn {
     background-color: var(--tertiary-color);
     padding: 0.5rem;
@@ -130,7 +132,7 @@ ul {
 
   @media (max-width: 576px) {
     h1,h2 {
-        font-size: 2rem;
+        font-size: 2µrem;
         letter-spacing: -2px;
     }
     h1 {

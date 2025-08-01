@@ -59,6 +59,26 @@
                     border:solid 1px var(--primary-color);
                     border-radius: var(--standard-border-radius);
                     padding: 1rem;
+                    .alert {
+                        &.alert-success {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            opacity: 1;
+                            padding: 1rem;
+                            margin-top: 1rem;
+                            animation: fadeOut 4s ease-in-out forwards;
+                            svg {
+                                width: 1.5rem;
+                                height: 1.5rem;
+                                fill: var(--bs-success-text-emphasis);
+                                
+                            }
+                            p {
+                                margin-bottom: 0;
+                            }
+                        }
+                    }
                     & .btn-submit {
                         font-size: 1.5rem;
                         font-family: "Archivo", sans-serif;
@@ -139,6 +159,22 @@
             justify-content: center;
             flex-direction: column;
             gap: 1rem;
+            .alert {
+                &.alert-success {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    opacity: 1;
+                    animation: fadeOut 4s ease-in-out forwards;
+                    svg {
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        fill: var(--bs-success-text-emphasis);
+                        
+                    }
+
+                }
+            }
             h2 {
                 background-color: var(--white);
                 color: var(--primary-color);
@@ -496,3 +532,17 @@
 }
 
 
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    90% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}

@@ -10,19 +10,34 @@ import { ExerciseService } from '../../services/exercise.service';
   styleUrl: './admin-add-exercise-category.component.css'
 })
 export class AdminAddExerciseCategoryComponent {
+  successMessage: string = '';
+  errorMessage: string = '';
     form = new FormGroup({
       name: new FormControl('', Validators.required),
+      image: new FormControl<File | null>(null)
     });
+    selectedImage: File | null = null;
 
   constructor(private exerciseService: ExerciseService) {}
+  onImageSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+  }
+
   addCategory() {
-    this.exerciseService.getExerciseCategories().subscribe({
+    const formData = new FormData();
+    formData.append('name', this.form.value.name ?? '');
+
+    if (this.selectedImage) {
+      formData.append('image', this.selectedImage);
+    }
+
+    this.exerciseService.addExerciseCategory(formData).subscribe({
       next: (response) => {
-        alert('Category added successfully');
+        this.successMessage = 'Categorie succesvol toegevoegd';
       },
       error: (err) => {
-        console.error("🔥 Error adding category:", err);
-        alert('Failed to add category');
+        console.error("🔥 Fout bij het toevoegen van categorie:", err);
+        this.errorMessage = 'Toevoegen van categorie mislukt';
       }
     });
   }

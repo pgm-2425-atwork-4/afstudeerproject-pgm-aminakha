@@ -107,4 +107,32 @@ router.get('/:id', (req, res) => {
 });
 
 
+router.post("/admin/add-category", upload.single("image"), (req, res) => {
+  const { name } = req.body;
+  const imageUrl = req.file?.path || null;
+
+  if (!name || !imageUrl) {
+    return res.status(400).json({ error: "❌ Naam en afbeelding zijn vereist" });
+  }
+
+  const sql = `
+    INSERT INTO exercise_categories (name, symbol)
+    VALUES (?, ?)
+  `;
+  const values = [name, imageUrl];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("❌ Fout bij invoegen categorie:", err);
+      return res.status(500).json({ error: "Database fout bij categorie toevoegen" });
+    }
+
+    res.status(201).json({
+      message: "✅ Categorie toegevoegd",
+      id: result.insertId,
+      image_url: imageUrl
+    });
+  });
+});
+
 module.exports = router;
