@@ -24,6 +24,9 @@
         </div>
     </section>
     <button *ngIf="userId" class="save-btn btn container" (click)="saveExercise()"> Save exercise</button>
+    <div *ngIf="!userId" class="login-message container  pb-0 mb-4">
+        <p>Je moet ingelogd zijn om deze oefening op te slaan!</p>
+    </div>
     <div class="comments-section-container container">
         <div class="comments-content">
             <h2>Comments</h2>
