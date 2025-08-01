@@ -174,6 +174,120 @@ router.post("/add-gym", uploadGymFields, (req, res) => {
     insertPrices(insertImages);
     });
 });
+router.put("/:id", verifyToken, uploadGymFields, (req, res) => {
+  const gymId = req.params.id;
+  const {
+    name,
+    city,
+    rating,
+    opening_hours,
+    address,
+    email,
+    phone,
+    website,
+    personal_trainer,
+    pressure_id,
+    category_id,
+    province_id,
+    priceOne,
+    descriptionOne,
+    planTypeOne,
+    priceTwo,
+    descriptionTwo,
+    planTypeTwo,
+    priceThree,
+    descriptionThree,
+    planTypeThree
+  } = req.body;
+
+  const logoUrl = req.files["logo"]?.[0]?.path || null;
+  const imageUrls = req.files["images"]?.map(file => file.path) || [];
+
+  if (!name || !city || !rating || !opening_hours || !address || !category_id || !province_id) {
+    return res.status(400).json({ error: "❌ Missing required fields" });
+  }
+
+  const sql = `
+    UPDATE gyms SET
+      name = ?, city = ?, rating = ?, opening_hours = ?, address = ?,
+      email = ?, phone = ?, website = ?, personal_trainer = ?, pressure_id = ?, 
+      category_id = ?, province_id = ?
+      ${logoUrl ? ", logo = ?" : ""}
+    WHERE id = ?
+  `;
+
+  const values = [
+    name,
+    city,
+    rating,
+    opening_hours,
+    address,
+    email,
+    phone,
+    website,
+    personal_trainer,
+    pressure_id,
+    category_id,
+    province_id,
+  ];
+
+  if (logoUrl) values.push(logoUrl);
+  values.push(gymId);
+
+  db.query(sql, values, (err) => {
+    if (err) {
+      console.error("❌ Update gym error:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    db.query("DELETE FROM prices WHERE gym_id = ?", [gymId], (priceDelErr) => {
+      if (priceDelErr) {
+        console.error("❌ Failed to delete old prices:", priceDelErr);
+        return res.status(500).json({ error: "Failed to update prices" });
+      }
+
+      const pricePlans = [
+        [priceOne, descriptionOne, planTypeOne],
+        [priceTwo, descriptionTwo, planTypeTwo],
+        [priceThree, descriptionThree, planTypeThree]
+      ].filter(([price, desc, plan]) => price && desc && plan);
+
+      if (pricePlans.length === 0) return insertImages();
+
+      const enriched = pricePlans.map(([price, desc, plan]) => [price, desc, plan, gymId]);
+      const priceSql = "INSERT INTO prices (price, description, plan_type, gym_id) VALUES ?";
+
+      db.query(priceSql, [enriched], (priceErr) => {
+        if (priceErr) {
+          console.error("❌ Insert price error:", priceErr);
+          return res.status(500).json({ error: "Price insert error" });
+        }
+
+        insertImages();
+      });
+    });
+
+    function insertImages() {
+      if (imageUrls.length === 0) {
+        return res.json({ message: "✅ Gym updated successfully!" });
+      }
+
+      const imgSql = "INSERT INTO images (gym_id, image_url) VALUES ?";
+      const imgValues = imageUrls.map((url) => [gymId, url]);
+
+      db.query(imgSql, [imgValues], (imgErr) => {
+        if (imgErr) {
+          console.error("❌ Image insert error:", imgErr);
+          return res.status(500).json({ error: "Image insert error" });
+        }
+        res.json({
+          message: "✅ Gym fully updated!",
+          images: imageUrls
+        });
+      });
+    }
+  });
+});
 
 router.put("/:id", verifyToken, uploadLogo, (req, res) => {
     const { name, city, rating, opening_hours, address, email, phone, website } = req.body;

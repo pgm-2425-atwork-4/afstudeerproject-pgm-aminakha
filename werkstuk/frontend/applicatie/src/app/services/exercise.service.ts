@@ -47,6 +47,11 @@ export class ExerciseService {
       headers: this.getAuthHeaders()
     });
   }
+  updateExercise(id: number, exercise: any) {
+    return this.http.put(`${this.apiUrl}/exercises/admin/update-exercise/${id}`, exercise, {
+      headers: this.getAuthHeaders()
+    });
+  }
   getPressures() {
     return this.http.get(`${this.apiUrl}/exercises/pressures`, { headers: this.getAuthHeaders() });
   }
