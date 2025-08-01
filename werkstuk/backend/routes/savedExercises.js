@@ -52,3 +52,4 @@ router.post('/', verifyToken, (req, res) => {
         res.json({ message: "✅ Exercise saved successfully!" });
     });
 });
+module.exports = router;
