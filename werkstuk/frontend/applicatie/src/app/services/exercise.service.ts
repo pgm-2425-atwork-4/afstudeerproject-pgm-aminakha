@@ -52,6 +52,11 @@ export class ExerciseService {
       headers: this.getAuthHeaders()
     });
   }
+  deleteExercise(id: number) {
+    return this.http.delete(`${this.apiUrl}/exercises/admin/delete-exercise/${id}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
   getPressures() {
     return this.http.get(`${this.apiUrl}/exercises/pressures`, { headers: this.getAuthHeaders() });
   }

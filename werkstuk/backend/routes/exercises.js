@@ -52,7 +52,7 @@ router.post("/admin/add-exercise", exerciseImages, (req, res) => {
     });
   });
 });
-router.put("/admin/categories/:id", upload.single("image"), (req, res) => {
+router.put("/admin/update-category/:id", upload.single("image"), (req, res) => {
   const categoryId = req.params.id;
   const { name } = req.body;
   const imageUrl = req.file?.path || null;
@@ -83,7 +83,7 @@ router.put("/admin/categories/:id", upload.single("image"), (req, res) => {
 });
 
 
-router.delete("/admin/categories/:id", (req, res) => {
+router.delete("/admin/delete-category/:id", (req, res) => {
   const categoryId = req.params.id;
 
   const sql = `DELETE FROM exercise_categories WHERE id = ?`;
@@ -182,5 +182,45 @@ router.post("/admin/add-category", upload.single("image"), (req, res) => {
     });
   });
 });
+router.put("/admin/exercise/:id", exerciseImages, (req, res) => {
+  const exerciseId = req.params.id;
+  const { name, exercise_category_id, pressure_id, big_description, duration } = req.body;
+  const newImages = req.files?.map(file => file.path) || [];
+
+  const sql = `
+    UPDATE exercises SET 
+      name = ?, 
+      exercise_category_id = ?, 
+      pressure_id = ?, 
+      big_description = ?, 
+      duration = ?, 
+      images = COALESCE(?, images)
+    WHERE id = ?
+  `;
+  const values = [name, exercise_category_id, pressure_id, big_description, duration, newImages.length ? JSON.stringify(newImages) : null, exerciseId];
+
+  db.query(sql, values, (err) => {
+    if (err) {
+      console.error("❌ Fout bij bijwerken oefening:", err);
+      return res.status(500).json({ error: "Database fout bij bijwerken oefening" });
+    }
+
+    res.json({ message: "✅ Oefening bijgewerkt" });
+  });
+});
+router.delete("/admin/exercise/:id", (req, res) => {
+  const id = req.params.id;
+
+  const sql = "DELETE FROM exercises WHERE id = ?";
+  db.query(sql, [id], (err) => {
+    if (err) {
+      console.error("❌ Fout bij verwijderen oefening:", err);
+      return res.status(500).json({ error: "Database fout bij verwijderen" });
+    }
+
+    res.json({ message: "✅ Oefening verwijderd" });
+  });
+});
+
 
 module.exports = router;
