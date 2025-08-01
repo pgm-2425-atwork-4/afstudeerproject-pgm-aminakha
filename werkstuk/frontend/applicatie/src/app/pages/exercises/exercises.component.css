@@ -181,6 +181,11 @@
 
 @media (max-width: 576px) {
     .exercises-container {
+        h1 {
+            font-size: 2.1rem;
+            text-align: center;
+            padding-top: 1rem;
+        }
         max-width: 100%;
         form {
             .search-bar {
@@ -191,9 +196,6 @@
                     top: 21%;
                     transform: translateY(-50%);
                 }
-                input {
-                    width: 20rem;
-                }
                 .btn {
                     position: relative;
                     width: 100%;
@@ -201,6 +203,9 @@
                     padding: 0.5rem;
                 }
             }
+            .form-group {
+                    width: 20rem;
+                }
             
         }
         .toggle-filters-btn {
