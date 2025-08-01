@@ -99,22 +99,23 @@ router.get("/user", verifyToken, (req, res) => {
 });
 
 router.get('/email-exists', async (req, res) => {
-  const { email } = req.query;
+  const email = req.query.email;
 
   if (!email) {
-    return res.status(400).json({ error: 'Email is verplicht' });
+    return res.status(400).json({ error: "Email is verplicht" });
   }
 
-  try {
-    const result = await db.execute('SELECT 1 FROM users WHERE email = ?', [email]);
-    const rows = result[0];
+  const sql = "SELECT id FROM users WHERE email = ?";
 
-    const exists = rows.length > 0;
+  db.query(sql, [email], (err, results) => {
+    if (err) {
+      console.error("❌ DB fout:", err);
+      return res.status(500).json({ error: "Databasefout" });
+    }
+
+    const exists = results.length > 0;
     res.json({ exists });
-  } catch (err) {
-    console.error('❌ DB fout:', err);
-    res.status(500).json({ error: 'Serverfout' });
-  }
+  });
 });
 
 module.exports = router;
