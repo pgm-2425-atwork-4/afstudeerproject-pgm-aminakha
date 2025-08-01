@@ -221,6 +221,29 @@ router.delete("/admin/exercise/:id", (req, res) => {
     res.json({ message: "✅ Oefening verwijderd" });
   });
 });
+router.put("/admin/update-exercise/:id", exerciseImages, (req, res) => {
+  const { id } = req.params;
+  const { name, exercise_category_id, pressure_id, big_description, duration } = req.body;
+  const imageUrls = req.files?.map(file => file.path) || [];
 
+  const updateQuery = `
+    UPDATE exercises
+    SET name = ?, exercise_category_id = ?, pressure_id = ?, big_description = ?, duration = ?
+    WHERE id = ?
+  `;
+
+  db.query(updateQuery, [name, exercise_category_id, pressure_id, big_description, duration, id], (err, result) => {
+    if (err) {
+      console.error("Error updating exercise:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Exercise not found" });
+    }
+
+    res.json({ message: "Exercise updated successfully" });
+  });
+});
 
 module.exports = router;
