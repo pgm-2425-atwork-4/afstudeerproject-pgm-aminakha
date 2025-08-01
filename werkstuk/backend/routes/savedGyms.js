@@ -26,23 +26,29 @@ router.delete("/:userId/:gymId", verifyToken, (req, res) => {
   });
 });
 
-router.get("/:userId", verifyToken, (req, res) => {
-  const { userId } = req.params;
-
+router.get("/saved-gyms/:userId", verifyToken, (req, res) => {
   const sql = `
-    SELECT gyms.*
-    FROM saved_gyms
-    JOIN gyms ON saved_gyms.gym_id = gyms.id
-    WHERE saved_gyms.user_id = ?
+    SELECT  g.*, p.name AS province, c.name AS category, pr.bundle_name AS pricing_bundle, pr.price,
+            pres.name AS pressure, GROUP_CONCAT(i.image_url) AS images
+            FROM saved_gyms sg
+            JOIN gyms g ON sg.gym_id = g.id
+            LEFT JOIN provinces p ON g.province_id = p.id
+            LEFT JOIN categories c ON g.category_id = c.id
+            LEFT JOIN prices pr ON g.pricing_id = pr.id
+            LEFT JOIN images i ON g.id = i.gym_id
+            LEFT JOIN pressures pres ON g.pressure_id = pres.id
+    WHERE sg.user_id = ?
+    GROUP BY g.id;
   `;
 
-  db.query(sql, [userId], (err, result) => {
-    if (err) {
-      console.error("🔥 Error fetching saved gyms:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
-
-    res.json(result);
-  });
+    db.query(sql, [req.params.userId], (err, results) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        
+        results.forEach(gym => {
+            gym.images = gym.images ? gym.images.split(",") : [];
+        });
+    
+    res.status(200).json(results);
+    });
 });
 module.exports = router;
