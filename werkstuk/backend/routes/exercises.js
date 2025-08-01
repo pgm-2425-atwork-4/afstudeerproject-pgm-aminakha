@@ -52,7 +52,55 @@ router.post("/admin/add-exercise", exerciseImages, (req, res) => {
     });
   });
 });
+router.put("/admin/categories/:id", upload.single("image"), (req, res) => {
+  const categoryId = req.params.id;
+  const { name } = req.body;
+  const imageUrl = req.file?.path || null;
 
+  if (!name) {
+    return res.status(400).json({ error: "❌ Naam is vereist" });
+  }
+
+  let sql = `UPDATE exercise_categories SET name = ?`;
+  const values = [name];
+
+  if (imageUrl) {
+    sql += `, symbol = ?`;
+    values.push(imageUrl);
+  }
+
+  sql += ` WHERE id = ?`;
+  values.push(categoryId);
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("❌ Fout bij updaten categorie:", err);
+      return res.status(500).json({ error: "Fout bij bijwerken categorie" });
+    }
+
+    res.json({ message: "✅ Categorie bijgewerkt", image_url: imageUrl });
+  });
+});
+
+
+router.delete("/admin/categories/:id", (req, res) => {
+  const categoryId = req.params.id;
+
+  const sql = `DELETE FROM exercise_categories WHERE id = ?`;
+
+  db.query(sql, [categoryId], (err, result) => {
+    if (err) {
+      console.error("❌ Fout bij verwijderen categorie:", err);
+      return res.status(500).json({ error: "Fout bij verwijderen categorie" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Categorie niet gevonden" });
+    }
+
+    res.json({ message: "✅ Categorie verwijderd" });
+  });
+});
 
 router.get("/", (req, res) => {
   db.query(`SELECT * FROM exercises`, (err, results) => {

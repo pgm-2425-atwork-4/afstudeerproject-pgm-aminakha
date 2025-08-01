@@ -35,7 +35,13 @@ export class ExerciseService {
       headers: this.getAuthHeaders()
     });
   }
-  
+  updateExerciseCategory(id: number, formData: FormData) {
+    return this.http.put(`${this.apiUrl}/exercises/admin/categories/${id}`, formData);
+  }
+  deleteExerciseCategory(id: number) {
+    return this.http.delete(`${this.apiUrl}/exercises/admin/categories/${id}`);
+  }
+
   addExercise(exercise: any){
     return this.http.post(`${this.apiUrl}/exercises/admin/add-exercise`, exercise, {
       headers: this.getAuthHeaders()
