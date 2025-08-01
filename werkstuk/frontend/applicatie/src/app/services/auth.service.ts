@@ -25,6 +25,7 @@ export class AuthService {
   }
 
   ngOnInit() {
+    //mogelijk verdwijnen deze twee regels
     this.loadUserFromStorage(); 
   }
   loginUser(email: string, password: string): Observable<any> {
@@ -76,18 +77,6 @@ export class AuthService {
       }
     });
   }
-  //mogelijk te verwijderen omdat het niet gebruikt wordt
-  getAuthUser(): Observable<any> {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${localStorage.getItem('auth_token')}`
-    );
-  
-    return this.http.get(`${this.apiUrl}/auth/user`, {
-      headers,
-      withCredentials: true,
-    });
-  }
   updateUserProfile(userId: string, formData: FormData): Observable<any> {
     const token = localStorage.getItem('auth_token');
     
@@ -108,7 +97,9 @@ export class AuthService {
   getUsers(): Observable<any> {
     return this.http.get(`${this.apiUrl}/users`, { headers: this.getAuthHeaders() });
   }
-
+  checkEmailExists(email: string) {
+    return this.http.get<boolean>(`/auth/email-exists?email=${encodeURIComponent(email)}`);
+  }
   private loadUserFromStorage() {
     const token = localStorage.getItem('auth_token');
     const user = localStorage.getItem('user');

@@ -38,6 +38,7 @@
           <div *ngIf="email?.touched && email?.invalid" class="form-text text-danger">
             <div *ngIf="email?.errors?.['required']">Email is verplicht.</div>
             <div *ngIf="email?.errors?.['email']">Ongeldig emailadres.</div>
+            <div *ngIf="email?.hasError('emailTaken') && email?.touched">Dit e-mailadres is al in gebruik.</div>
           </div>
         </div>
         <div class="form-group">
@@ -56,7 +57,7 @@
           <input type="file" formControlName="profileImage" (change)="onFileSelected($event)" accept="image/*">
         </div>
 
-        <button type="submit"><p>Register</p></button>
+        <button type="submit"><p>Registreer</p></button>
       </form>
   
       <p>{{ message }}</p> 

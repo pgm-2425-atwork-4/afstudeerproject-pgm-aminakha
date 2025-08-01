@@ -98,4 +98,22 @@ router.get("/user", verifyToken, (req, res) => {
   });
 });
 
+router.get('/email-exists', async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email is verplicht' });
+  }
+
+  try {
+    const [rows] = await db.execute('SELECT 1 FROM users WHERE email = ? LIMIT 1', [email]);
+
+    const exists = rows.length > 0;
+    res.json({ exists });
+  } catch (err) {
+    console.error('❌ DB fout:', err);
+    res.status(500).json({ error: 'Serverfout' });
+  }
+});
+
 module.exports = router;

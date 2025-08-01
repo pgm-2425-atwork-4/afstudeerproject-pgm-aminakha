@@ -25,7 +25,7 @@
         <input type="password" id="password" formControlName="password" required placeholder="Wachtwoord">
         <div *ngIf="password?.touched && password?.invalid" class="form-text text-danger">
             <div *ngIf="password?.errors?.['required']">Wachtwoord is verplicht.</div>
-            <div *ngIf="password?.errors?.['minlength']">Wachtwoord moet minimaal 6 tekens lang zijn.</div>
+            <div *ngIf="password?.errors?.['invalidPassword']">Wachtwoord is onjuist.</div>
           </div>
       </div>
       <button type="submit"><p>Login</p></button>

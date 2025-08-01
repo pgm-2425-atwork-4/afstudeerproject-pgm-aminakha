@@ -4,6 +4,7 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { emailExistsValidator } from './email-exists.validator';
 
 @Component({
   selector: 'app-register',
@@ -17,18 +18,20 @@ export class RegisterComponent {
   profileImage: File | null = null; 
   message: string = ''; 
 
-  form = new FormGroup({
+  form : any;
+
+  constructor(private authService: AuthService) {
+    this.form = new FormGroup({
     username: new FormControl('', Validators.required),
     firstname: new FormControl('', Validators.required),
     lastname: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    email: new FormControl('', [Validators.required, Validators.email],[emailExistsValidator(this.authService)]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     birthday: new FormControl('', Validators.required),
     profileImage: new FormControl<File | null>(null)
 
   }); 
-
-  constructor(private authService: AuthService) {}
+  }
   get username() {
     return this.form.get('username');
   }

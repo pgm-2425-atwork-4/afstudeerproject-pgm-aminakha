@@ -16,7 +16,7 @@ export class LoginComponent {
 
   form = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    password: new FormControl('', [Validators.required]),
   })
   message: string = ''; 
   profile_image: string = '';
@@ -31,7 +31,6 @@ export class LoginComponent {
   login() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.form.setErrors({ invalidLogin: true });
       return;
     }
     this.authService.loginUser(this.form.value.email ?? '', this.form.value.password ?? '').subscribe(
@@ -46,9 +45,12 @@ export class LoginComponent {
         this.router.navigate(['/']); 
       },
       (error) => {
-        console.error("🔥 Login Error:", error);
-        this.message = '❌ Login Failed! Invalid email or password.';
+
+      if (error.status === 401) {
+        this.form.setErrors({ invalidLogin: true });
+      } else {
+        this.message = 'Er is iets misgegaan. Probeer het later opnieuw.';
       }
-    );
+    });
   }
 }
