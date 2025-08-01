@@ -3,7 +3,7 @@ const { db } = require("../config/db");
 const router = express.Router();
 const { verifyToken } = require("../middlewares/auth");
 
-router.delete("/:exerciseId", verifyToken, (req, res) => {
+router.delete("/:userId/:exerciseId", verifyToken, (req, res) => {
     const { userId, exerciseId } = req.params;
     const sql = "DELETE FROM saved_exercises WHERE user_id = ? AND exercise_id = ?";
     db.query(sql, [userId, exerciseId], (err, result) => {
