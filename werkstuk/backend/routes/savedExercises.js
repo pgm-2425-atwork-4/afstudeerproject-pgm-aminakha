@@ -11,7 +11,25 @@ router.delete("/:exerciseId", verifyToken, (req, res) => {
         res.json({ message: "Saved exercise deleted successfully!" });
     });
 });
+router.get("/:userId", verifyToken, (req, res) => {
+  const { userId } = req.params;
 
+  const sql = `
+    SELECT exercises.*
+    FROM saved_exercises
+    JOIN exercises ON saved_exercises.exercise_id = exercises.id
+    WHERE saved_exercises.user_id = ?
+  `;
+
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error("🔥 Error fetching saved exercises:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    res.json(result);
+  });
+});
 router.post('/', verifyToken, (req, res) => {
     const { userId, exerciseId } = req.body;
 
