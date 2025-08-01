@@ -44,34 +44,66 @@ router.post("/register", upload.single("profileImage"), async (req, res) => {
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  const sql = "SELECT id, username, firstname, lastname, email, password, profile_image, role FROM users WHERE email = ?";
+  const sql = `
+    SELECT id, username, firstname, lastname, email, password, profile_image, role 
+    FROM users 
+    WHERE email = ?
+  `;
+
   db.query(sql, [email], async (err, results) => {
     if (err) {
-      console.error("🔥 Error fetching user:", err);
-      return res.status(500).json({ error: err });
+      console.error("🔥 Database error:", err);
+      return res.status(500).json({ error: "❌ Interne serverfout" });
     }
 
     if (results.length === 0) {
-      return res.status(401).json({ error: "❌ User not found" });
+      return res.status(401).json({ error: "❌ Gebruiker niet gevonden" });
     }
 
     const user = results[0];
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "❌ Incorrect password" });
+    try {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ error: "❌ Ongeldig wachtwoord" });
+      }
+
+      const token = jwt.sign(
+        {
+          id: user.id,
+          username: user.username,
+          role: user.role,
+          profile_image: user.profile_image,
+        },
+        process.env.JWT_SECRET || "secret",
+        { expiresIn: "4h" }
+      );
+
+      res.cookie("auth_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // alleen secure in productie
+      });
+
+      res.json({
+        message: "✅ Login succesvol",
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          role: user.role,
+          profile_image: user.profile_image,
+        },
+      });
+    } catch (compareError) {
+      console.error("❌ Fout bij wachtwoordvergelijking:", compareError);
+      res.status(500).json({ error: "❌ Interne fout bij wachtwoordcontrole" });
     }
-
-    const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role, profile_image: user.profile_image },
-      SECRET_KEY,
-      { expiresIn: "4h" }
-    );
-
-    res.cookie("auth_token", token, { httpOnly: true, secure: false });
-    res.json({ message: "✅ Login successful!", token });
   });
 });
+
 
 router.post("/logout", (req, res) => {
   res.clearCookie("auth_token", {
