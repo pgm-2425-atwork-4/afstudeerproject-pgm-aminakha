@@ -1,7 +1,7 @@
 const express = require("express");
 const { db } = require("../config/db");
 const router = express.Router();
-import { verifyToken } from "../middlewares/auth";
+const { verifyToken } = require("../middlewares/auth");
 
 router.delete("/:exerciseId", verifyToken, (req, res) => {
     const { userId, exerciseId } = req.params;
