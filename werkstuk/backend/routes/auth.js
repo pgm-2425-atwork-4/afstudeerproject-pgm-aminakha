@@ -106,7 +106,8 @@ router.get('/email-exists', async (req, res) => {
   }
 
   try {
-    const [rows] = await db.execute('SELECT 1 FROM users WHERE email = ? LIMIT 1', [email]);
+    const result = await db.execute('SELECT 1 FROM users WHERE email = ?', [email]);
+    const rows = result[0];
 
     const exists = rows.length > 0;
     res.json({ exists });

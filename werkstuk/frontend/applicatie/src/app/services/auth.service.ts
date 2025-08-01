@@ -98,7 +98,7 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/users`, { headers: this.getAuthHeaders() });
   }
   checkEmailExists(email: string) {
-    return this.http.get<boolean>(`/auth/email-exists?email=${encodeURIComponent(email)}`);
+    return this.http.get<boolean>(`${this.apiUrl}/auth/email-exists?email=${encodeURIComponent(email)}`);
   }
   private loadUserFromStorage() {
     const token = localStorage.getItem('auth_token');
