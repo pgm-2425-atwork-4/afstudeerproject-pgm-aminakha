@@ -10,4 +10,24 @@
     .btn {
         margin-left: 0rem;
     }
+    .alert {
+        &.alert-success, &.alert-danger {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 1;
+            padding: 1rem;
+            margin-top: 1rem;
+            animation: fadeOut 4s ease-in-out forwards;
+            svg {
+                width: 1.5rem;
+                height: 1.5rem;
+                fill: var(--bs-success-text-emphasis);
+                
+            }
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
 }
