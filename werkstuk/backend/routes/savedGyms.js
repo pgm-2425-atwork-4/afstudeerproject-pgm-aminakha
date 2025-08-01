@@ -42,8 +42,10 @@ router.get("/:userId", verifyToken, (req, res) => {
   `;
 
     db.query(sql, [req.params.userId], (err, results) => {
-        if (err) return res.status(500).json({ error: "Database error" });
-        
+      if (err) {
+        console.error("🔥 Database error in /saved-gyms/:userId:", err.sqlMessage || err.message || err);
+        return res.status(500).json({ error: "Database error", details: err.sqlMessage || err.message });
+      }        
         results.forEach(gym => {
             gym.images = gym.images ? gym.images.split(",") : [];
         });
