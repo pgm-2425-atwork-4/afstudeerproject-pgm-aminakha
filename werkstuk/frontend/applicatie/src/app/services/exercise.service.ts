@@ -39,13 +39,13 @@ export class ExerciseService {
     return this.http.get(`${this.apiUrl}/exercises/pressures`, { headers: this.getAuthHeaders() });
   }
   saveExercise(userId: string, exerciseId: string) {
-    return this.http.post(`${this.apiUrl}/users/save-exercise`, { userId, exerciseId }, { headers: this.getAuthHeaders() });
+    return this.http.post(`${this.apiUrl}/saved-exercises`, { userId, exerciseId }, { headers: this.getAuthHeaders() });
   }
   savedExercises(userId: string) {
-    return this.http.get(`${this.apiUrl}/users/saved-exercises/${userId}`, { headers: this.getAuthHeaders() });
+    return this.http.get(`${this.apiUrl}/saved-exercises/${userId}`, { headers: this.getAuthHeaders() });
   }
   deleteSavedExercise(userId: string, exerciseId: string) {
-    return this.http.delete(`${this.apiUrl}/users/saved-exercises/${userId}/${exerciseId}`, { headers: this.getAuthHeaders() });
+    return this.http.delete(`${this.apiUrl}/saved-exercises/${userId}/${exerciseId}`, { headers: this.getAuthHeaders() });
   }
   
 }
