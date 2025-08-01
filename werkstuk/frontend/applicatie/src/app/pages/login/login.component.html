@@ -19,6 +19,10 @@
         <div *ngIf="email?.touched && email?.invalid" class="form-text text-danger">
             <div *ngIf="email?.errors?.['required']">Email is verplicht.</div>
             <div *ngIf="email?.errors?.['email']">Ongeldig emailadres.</div>
+            <div *ngIf="email?.touched && email?.hasError('emailNotFound') && email?.status !== 'PENDING'" class="form-text text-danger">
+  Email bestaat niet.
+</div>
+            
           </div>
       </div>
       <div class="form-group">

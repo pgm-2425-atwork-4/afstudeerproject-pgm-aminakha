@@ -54,7 +54,7 @@ export class RegisterComponent {
     this.profileImage = event.target.files[0]; 
   }
 
-  registerUser() {
+  async registerUser() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.form.setErrors({ invalidLogin: true });

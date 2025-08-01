@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink, RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import {  passwordValidator } from './password-check.validator';
+import { emailNotFoundValidator } from './email-not-found.validator';
 
 @Component({
   selector: 'app-login',
@@ -13,16 +15,21 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
   backgroundImg: string = 'https://res.cloudinary.com/dwkf8avz2/image/upload/v1742656539/user_uploads/qgz1edlvt97zzbmtkqxt.png'; 
+  submitted = false;
 
-  form :any;
+  form : FormGroup;
   message: string = ''; 
   profile_image: string = '';
   constructor(private router: Router, private authService: AuthService) {
     this.form = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email], [emailNotFoundValidator(this.authService)]),
+      password: new FormControl('', [Validators.required], [passwordValidator(this.authService, () => this.form?.value?.email ?? '')]),
     });
   }
+  ngOnInit() {
+  this.email?.statusChanges.subscribe(status => console.log('Email status:', status));
+  this.email?.valueChanges.subscribe(value => console.log('Email value:', value));
+}
 
   get email() {
     return this.form.get('email');
@@ -30,29 +37,33 @@ export class LoginComponent {
   get password() {
     return this.form.get('password');
   }
-  login() {
-    if (this.form.invalid) {
+  async login() {
+  this.submitted = true;     
+
+  if (this.form.invalid) {
       this.form.markAllAsTouched();
-      return;
-    }
-    this.authService.loginUser(this.form.value.email ?? '', this.form.value.password ?? '').subscribe(
-      (res: any) => {
-        console.log("✅ Login successful:", res);
-        if (res.token && res.user) {
-          localStorage.setItem('auth_token', res.token); 
-          console.log('Stored User in LocalStorage:', res.user);
-        }
-        this.authService.fetchUser();
 
-        this.router.navigate(['/']); 
-      },
-      (error) => {
+    return;
+  }
 
+  this.authService.loginUser(this.form.value.email ?? '', this.form.value.password ?? '').subscribe(
+    (res: any) => {
+      if (res.token && res.user) {
+        localStorage.setItem('auth_token', res.token);
+      }
+      this.authService.fetchUser();
+      this.router.navigate(['/']);
+    },
+    (error) => {
       if (error.status === 401) {
-        this.form.setErrors({ invalidLogin: true });
+        this.password?.setErrors({ invalidPassword: true });
+        this.password?.markAsTouched();
       } else {
         this.message = 'Er is iets misgegaan. Probeer het later opnieuw.';
       }
-    });
-  }
+    }
+  );
+}
+
+
 }
