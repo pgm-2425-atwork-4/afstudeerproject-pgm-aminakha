@@ -17,6 +17,7 @@ const pressureRoutes = require("./routes/pressures");
 const provinceRoutes = require("./routes/provinces");
 const exerciseCategories = require("./routes/exercises");
 const adminRoutes = require("./routes/admin");  
+const savedExercisesRoutes = require("./routes/savedExercises");
 
 
 // Middleware
@@ -48,6 +49,7 @@ app.use("/comments", commentRoutes);
 app.use("/prices", priceRoutes);
 app.use("/pressures", pressureRoutes);
 app.use("/saved-gyms", savedGymsRoutes);
+app.use("/saved-exercises", savedExercisesRoutes);
 
 app.use('/provinces', provinceRoutes);
 app.use('/exercises', exerciseCategories)
