@@ -245,5 +245,27 @@ router.put("/admin/update-exercise/:id", exerciseImages, (req, res) => {
     res.json({ message: "Exercise updated successfully" });
   });
 });
+router.put("/admin/categories/:id", (req, res) => {
+  const categoryId = req.params.id;
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ error: "Naam is verplicht" });
+  }
+
+  const sql = "UPDATE exercise_categories SET name = ? WHERE id = ?";
+  db.query(sql, [name, categoryId], (err, result) => {
+    if (err) {
+      console.error("Fout bij bijwerken categorie:", err);
+      return res.status(500).json({ error: "Interne serverfout" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Categorie niet gevonden" });
+    }
+
+    res.json({ message: "✅ Categorie succesvol bijgewerkt" });
+  });
+});
 
 module.exports = router;
