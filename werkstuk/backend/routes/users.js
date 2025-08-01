@@ -47,46 +47,6 @@ router.put("/:id", verifyToken, upload.single("profileImage"), async (req, res) 
         res.json({ message: "✅ Profile updated successfully!" });
     });
 });
-
-
-router.delete("/saved-gyms/:userId/:gymId", verifyToken, (req, res) => {
-    const { userId, gymId } = req.params;
-    const sql = "DELETE FROM saved_gyms WHERE user_id = ? AND gym_id = ?";
-    db.query(sql, [userId, gymId], (err, result) => {
-        if (err) return res.status(500).json({ error: "Database error" });
-        if (result.affectedRows === 0) return res.status(404).json({ error: "Saved gym not found" });
-        res.json({ message: "✅ Saved gym deleted successfully!" });
-    });
-});
-router.get('/saved-exercises/:userId', (req, res) => {
-    const userId = req.params.userId;
-
-    const sql = `
-        SELECT 
-            e.*, 
-            c.name AS category_name, 
-            GROUP_CONCAT(i.image_url) AS images 
-        FROM saved_exercises se
-        JOIN exercises e ON se.exercise_id = e.id
-        LEFT JOIN exercise_categories c ON e.exercise_category_id = c.id
-        LEFT JOIN exercise_images i ON e.id = i.exercise_id
-        WHERE se.user_id = ?
-        GROUP BY e.id;
-    `;
-
-    db.query(sql, [userId], (err, results) => {
-        if (err) {
-            console.error("Error fetching saved exercises:", err);
-            return res.status(500).json({ error: "Internal server error!" });
-        }
-
-        results.forEach(exercise => {
-            exercise.images = exercise.images ? exercise.images.split(",") : [];
-        });
-
-        res.json(results);
-    });
-});
 router.delete("/saved-exercises/:userId/:exerciseId", verifyToken, (req, res) => {
     const { userId, exerciseId } = req.params;
     const sql = "DELETE FROM saved_exercises WHERE user_id = ? AND exercise_id = ?";
@@ -96,27 +56,7 @@ router.delete("/saved-exercises/:userId/:exerciseId", verifyToken, (req, res) =>
         res.json({ message: "Saved exercise deleted successfully!" });
     });
 });
-router.post("/save-gym", verifyToken, (req, res) => {
-    const { userId, gymId } = req.body;
 
-    if (!userId || !gymId) {
-        return res.status(400).json({ error: "Missing userId or gymId" });
-    }
-
-    const sql = `
-        INSERT INTO saved_gyms (user_id, gym_id)
-        VALUES (?, ?)
-        ON DUPLICATE KEY UPDATE gym_id = gym_id
-    `;
-
-    db.query(sql, [userId, gymId], (err) => {
-        if (err) {
-            console.error("❌ MySQL error:", err); // 👈 log detail
-            return res.status(500).json({ error: "Database error", details: err });
-        }
-        res.json({ message: "✅ Gym saved successfully!" });
-    });
-});
 router.post('/save-exercise', verifyToken, (req, res) => {
     const { userId, exerciseId } = req.body;
 

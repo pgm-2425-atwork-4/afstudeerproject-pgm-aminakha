@@ -45,4 +45,25 @@ router.get("/:userId", verifyToken, (req, res) => {
     res.json(result);
   });
 });
+router.post("/", verifyToken, (req, res) => {
+    const { userId, gymId } = req.body;
+
+    if (!userId || !gymId) {
+        return res.status(400).json({ error: "Missing userId or gymId" });
+    }
+
+    const sql = `
+        INSERT INTO saved_gyms (user_id, gym_id)
+        VALUES (?, ?)
+        ON DUPLICATE KEY UPDATE gym_id = gym_id
+    `;
+
+    db.query(sql, [userId, gymId], (err) => {
+        if (err) {
+            console.error("❌ MySQL error:", err); // 👈 log detail
+            return res.status(500).json({ error: "Database error", details: err });
+        }
+        res.json({ message: "✅ Gym saved successfully!" });
+    });
+});
 module.exports = router;

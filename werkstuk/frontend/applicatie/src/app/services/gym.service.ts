@@ -52,7 +52,7 @@ export class GymService {
     });
   }
   saveGym(userId: string, gymId: string) {
-    return this.http.post(`${this.apiUrl}/users/save-gym`, { userId, gymId }, { headers: this.getAuthHeaders() });
+    return this.http.post(`${this.apiUrl}/saved-gyms`, { userId, gymId }, { headers: this.getAuthHeaders() });
   }
   deleteSavedGym(userId: string, gymId: string) {
     const token = localStorage.getItem('auth_token');
