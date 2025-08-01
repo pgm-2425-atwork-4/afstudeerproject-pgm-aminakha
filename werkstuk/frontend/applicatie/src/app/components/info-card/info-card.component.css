@@ -63,6 +63,7 @@
         margin: 0 auto;
         align-items: start;
         justify-content: center;
+        gap: 1rem;
         .item-card {
             width: 17rem;
             img {

@@ -1,16 +1,9 @@
 <section class="list-container">
   <div *ngFor="let item of popularGyms" class="item-card">
-
-    <!-- Gym image -->
     <img *ngIf="type === 'gym'" [src]="item.logo" alt="{{ item.name }} logo" />
-
-    <!-- Exercise image -->
     <img *ngIf="type === 'exercise'" [src]="item.image" alt="{{ item.name }} image" />
-
     <div class="item-details">
       <h2>{{ item.name }}</h2>
-
-      <!-- Exercise details -->
       <ng-container *ngIf="type === 'exercise'">
         <p [innerHTML]="getTruncatedHtml(item.big_description)"></p>
         <p>{{ item.duration }} minuten</p>
@@ -19,8 +12,6 @@
           <button class="btn" *ngIf="deleteSavedExercise" (click)="deleteExercise(item.id)">Verwijder</button>
         </div>
       </ng-container>
-
-      <!-- Gym details -->
       <ng-container *ngIf="type === 'gym'">
         <p>{{ item.city }}</p>
         <p>
