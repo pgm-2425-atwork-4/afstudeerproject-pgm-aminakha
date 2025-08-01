@@ -26,7 +26,7 @@ router.delete("/:userId/:gymId", verifyToken, (req, res) => {
   });
 });
 
-router.get("/saved-gyms/:userId", verifyToken, (req, res) => {
+router.get("/:userId", verifyToken, (req, res) => {
   const sql = `
     SELECT  g.*, p.name AS province, c.name AS category, pr.bundle_name AS pricing_bundle, pr.price,
             pres.name AS pressure, GROUP_CONCAT(i.image_url) AS images
