@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { environment } from '../environments/environment';
@@ -100,6 +100,10 @@ export class AuthService {
   checkEmailExists(email: string) {
     return this.http.get<boolean>(`${this.apiUrl}/auth/email-exists?email=${encodeURIComponent(email)}`);
   }
+  checkPasswordValid(email: string, password: string) {
+  return this.http.post<{ valid: boolean }>(`${this.apiUrl}/auth/validate-password`, { email, password })
+    .pipe(map(res => res.valid));
+}
   private loadUserFromStorage() {
     const token = localStorage.getItem('auth_token');
     const user = localStorage.getItem('user');
