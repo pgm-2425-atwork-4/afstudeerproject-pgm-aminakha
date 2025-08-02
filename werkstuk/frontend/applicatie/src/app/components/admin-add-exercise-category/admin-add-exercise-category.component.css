@@ -10,6 +10,9 @@
     .btn {
         margin-left: 0rem;
     }
+    img {
+        width: 2rem;
+    }
     .alert {
         &.alert-success, &.alert-danger {
             display: flex;

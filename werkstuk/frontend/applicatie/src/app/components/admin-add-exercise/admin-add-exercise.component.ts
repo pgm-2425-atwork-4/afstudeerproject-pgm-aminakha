@@ -137,16 +137,31 @@ exercises: any[] = [];
     // Reset eventuele geselecteerde nieuwe afbeeldingen
     this.selectedImages = [];
   }
-  updateExercise() {
-  if (!this.editingExercise) return;
+ updateExercise() {
+  if (!this.editingExercise || !this.form.value) return;
 
+  const { name, exercise_category_id, pressure_id, big_description, duration } = this.form.value;
   const formData = new FormData();
 
-  formData.append('name', this.form.value.name ?? '');
-  formData.append('exercise_category_id', (this.form.value.exercise_category_id ?? '').toString());
-  formData.append('pressure_id', (this.form.value.pressure_id ?? '').toString());
-  formData.append('big_description', this.form.value.big_description ?? '');
-  formData.append('duration', (this.form.value.duration ?? '').toString());
+  if (name && name.trim() !== '') {
+    formData.append('name', name);
+  }
+
+  if (exercise_category_id !== null && exercise_category_id !== undefined) {
+    formData.append('exercise_category_id', exercise_category_id.toString());
+  }
+
+  if (pressure_id !== null && pressure_id !== undefined) {
+    formData.append('pressure_id', pressure_id.toString());
+  }
+
+  if (big_description && big_description.trim() !== '') {
+    formData.append('big_description', big_description);
+  }
+
+  if (duration !== null && duration !== undefined) {
+    formData.append('duration', duration.toString());
+  }
 
   this.selectedImages.forEach(image => {
     formData.append('images', image);
@@ -156,7 +171,7 @@ exercises: any[] = [];
     next: () => {
       alert('✅ Oefening succesvol bijgewerkt!');
       this.resetForm();
-      this.loadExercises(); 
+      this.loadExercises();
     },
     error: (err) => {
       console.error("🔥 Fout bij bijwerken oefening:", err);
@@ -164,6 +179,8 @@ exercises: any[] = [];
     }
   });
 }
+
+
   resetForm() {
   this.form.reset();
   this.selectedImages = [];

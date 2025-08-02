@@ -247,5 +247,4 @@ router.put("/admin/update-exercise/:id", exerciseImages, (req, res) => {
 });
 
 
-
 module.exports = router;

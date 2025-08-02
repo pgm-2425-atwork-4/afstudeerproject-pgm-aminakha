@@ -12,18 +12,18 @@
       <input type="file" class="form-control" (change)="onImageSelected($event)" accept="image/*" [required]="!editingCategory" />
     </div>
 
-    <button type="submit" class="btn btn-primary me-2">
+    <button type="submit" class="btn btn-primary me-2 mb-2 ms-0">
       {{ editingCategory ? 'Update Categorie' : 'Categorie toevoegen' }}
     </button>
-    <button *ngIf="editingCategory" type="button" class="btn btn-secondary" (click)="resetForm()">Annuleren</button>
+    <button *ngIf="editingCategory" type="button" class="btn ms-0" (click)="resetForm()">Annuleren</button>
   </form>
 
   <h2 class="mt-4">Bestaande categorieën</h2>
   <div *ngFor="let cat of exerciseCategories" class="card p-3 mt-2">
     <div class="d-flex justify-content-between align-items-center">
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center gap-2">
         <strong>{{ cat.name }}</strong>
-        <img *ngIf="cat.symbol" [src]="cat.symbol" alt="Image" style="height: 40px; margin-left: 10px;" />
+        <img *ngIf="cat.symbol" [src]="cat.symbol" alt="Image" />
       </div>
       <div class="d-flex">
         <button class="btn btn-sm me-2" (click)="editCategory(cat)">Edit</button>

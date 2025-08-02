@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,8 @@ export class MetaDataService {
   getPressureTypes() {
     return this.http.get<any[]>(`${this.apiUrl}/pressures`, { headers: this.getAuthHeaders() });
   }
-  getPricingPlans() {
-    return this.http.get(`${this.apiUrl}/prices`, { headers: this.getAuthHeaders() });
+  getPricingPlans(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/prices`, { headers: this.getAuthHeaders() });
   }
   getProvinces(){
     return this.http.get<any[]>(`${this.apiUrl}/provinces`, { headers: this.getAuthHeaders() });

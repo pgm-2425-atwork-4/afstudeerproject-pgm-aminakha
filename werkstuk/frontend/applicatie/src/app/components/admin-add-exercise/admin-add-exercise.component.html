@@ -38,10 +38,10 @@
       <input type="file" class="form-control" (change)="onImagesSelected($event)" accept="image/*" multiple [required]="!editingExercise" />
     </div>
 
-    <button type="submit" class="btn btn-primary me-2">
+    <button type="submit" class="btn btn-primary me-2 mb-2 ms-0">
       {{ editingExercise ? 'Update oefening' : 'Oefening toevoegen' }}
     </button>
-    <button *ngIf="editingExercise" type="button" class="btn btn-secondary" (click)="resetForm()">Annuleren</button>
+    <button *ngIf="editingExercise" type="button" class="btn ms-0" (click)="resetForm()">Annuleren</button>
   </form>
 
   <h2 class="mt-4">Bestaande oefeningen</h2>

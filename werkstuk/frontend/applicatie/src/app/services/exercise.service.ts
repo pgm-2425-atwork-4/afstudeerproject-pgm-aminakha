@@ -36,7 +36,7 @@ export class ExerciseService {
     });
   }
   updateExerciseCategory(id: number, formData: FormData) {
-    return this.http.put(`${this.apiUrl}/exercises/admin/update-exercise/${id}`, formData, {
+    return this.http.put(`${this.apiUrl}/exercises/admin/update-category/${id}`, formData, {
       headers: this.getAuthHeaders()
     });
   }

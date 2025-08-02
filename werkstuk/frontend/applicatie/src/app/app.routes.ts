@@ -13,7 +13,6 @@ import { ExerciseDetailComponent } from './pages/exercise-detail/exercise-detail
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
 import { AdminCategoryComponent } from './components/admin-category/admin-category.component';
 import { AdminAddGymComponent } from './components/admin-add-gym/admin-add-gym.component';
-import { AdminGymsComponent } from './components/admin-gyms/admin-gyms.component';
 import { AdminAddExerciseCategoryComponent } from './components/admin-add-exercise-category/admin-add-exercise-category.component';
 import { AdminAddExerciseComponent } from './components/admin-add-exercise/admin-add-exercise.component';
 
@@ -35,7 +34,6 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'categories', pathMatch: 'full' },
       { path: 'categories', component: AdminCategoryComponent },
-      { path: 'gyms', component: AdminGymsComponent },
       { path: 'add-gym', component: AdminAddGymComponent },
       { path: 'add-exercise-category', component: AdminAddExerciseCategoryComponent },
       { path: 'add-exercise', component: AdminAddExerciseComponent }
