@@ -78,18 +78,8 @@ export class AuthService {
     });
   }
   updateUserProfile(userId: string, formData: FormData): Observable<any> {
-    const token = localStorage.getItem('auth_token');
-    
-    if (!token) {
-      console.error("No token found in localStorage.");
-      return new Observable(observer => observer.error('No token found'));
-    }
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}` // Attach Authorization header
-    });
-
-    return this.http.put(`${this.apiUrl}/users/${userId}`, formData, { headers });
+    return this.http.put(`${this.apiUrl}/users/${userId}`, formData, { headers: this.getAuthHeaders() });
   }
   getUserById(userId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/${userId}`, { headers: this.getAuthHeaders() });

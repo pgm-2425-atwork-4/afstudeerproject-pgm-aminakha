@@ -17,9 +17,11 @@ import { InfoCardComponent } from '../../components/info-card/info-card.componen
 export class UserProfileComponent implements OnInit {
   user: any = null;
   profileImage: File | null = null;
-  showForm: boolean = false;  
+  showForm: boolean = false;
   savedGyms: any[] = [];
   savedExercises: any[] = [];
+  successMessage: string = '';
+  errorMessage: string = '';
 
   form = new FormGroup({
     username: new FormControl('', Validators.required),
@@ -35,60 +37,58 @@ export class UserProfileComponent implements OnInit {
     private exerciseService: ExerciseService
   ) {}
 
-  get username() {
-    return this.form.get('username');
-  }
-  get firstname() {
-    return this.form.get('firstname');
-  }
-  get lastname() {
-    return this.form.get('lastname');
-  }
-  get email() {
-    return this.form.get('email');
-  }
-  get birthday() {
-    return this.form.get('birthday');
-  }
-  ngOnInit() {
-    const token = localStorage.getItem("auth_token"); 
-    console.log("🔍 Stored Token:", token);
+  get username() { return this.form.get('username'); }
+  get firstname() { return this.form.get('firstname'); }
+  get lastname() { return this.form.get('lastname'); }
+  get email() { return this.form.get('email'); }
+  get birthday() { return this.form.get('birthday'); }
 
+  handleExerciseDeleted(deletedId: string) {
+    this.savedExercises = this.savedExercises.filter(ex => ex.id !== deletedId);
+  }
+
+  handleGymDeleted(deletedId: string) {
+    this.savedGyms = this.savedGyms.filter(gym => gym.id !== deletedId);
+  }
+
+  ngOnInit() {
+    const token = localStorage.getItem("auth_token");
     if (token) {
       const decodedToken = this.decodeJWT(token);
-      console.log("🔑 Decoded Token:", decodedToken);
-
-      if (decodedToken && decodedToken.id) {
+      if (decodedToken?.id) {
         const userId = decodedToken.id.toString();
-        console.log("🆔 User ID from Token:", userId);
 
         this.authService.getUserById(userId).subscribe({
           next: (user) => {
-            console.log("✅ User Data:", user);
             this.user = user;
+            this.form.patchValue({
+              username: user.username,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              email: user.email,
+              birthday: user.birthday?.split('T')[0] || ''
+            });
 
             this.gymService.getSavedGyms(userId).subscribe({
               next: (res: any) => {
-                console.log("✅ Saved Gyms Loaded:", res);
-                this.savedGyms = res;
+                this.savedGyms = res || [];
               },
               error: (err) => {
-                  console.error("🔥 Error fetching saved gyms:", err);    
+                console.error("Error fetching saved gyms:", err);
               }
             });
 
             this.exerciseService.savedExercises(userId).subscribe({
               next: (res: any) => {
-                console.log("✅ Saved Exercises Loaded:", res);
-                this.savedExercises = res; 
+                this.savedExercises = res || [];
               },
               error: (err) => {
-                console.error("🔥 Error fetching saved exercises:", err);
+                console.error("Error fetching saved exercises:", err);
               }
             });
           },
-          error: (error) => {
-            console.error("🔥 Error fetching user:", error);
+          error: (err) => {
+            console.error("Error fetching user:", err);
           }
         });
       }
@@ -96,15 +96,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   decodeJWT(token: string): any {
-    const parts = token.split('.');
-    if (parts.length !== 3) {
-      console.error("❌ Invalid token structure");
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+      const payload = atob(parts[1]);
+      return JSON.parse(payload);
+    } catch (e) {
+      console.error('Invalid JWT token', e);
       return null;
     }
-
-    const payload = parts[1]; 
-    const decoded = atob(payload);
-    return JSON.parse(decoded); 
   }
 
   onImageSelected(event: any) {
@@ -112,35 +112,33 @@ export class UserProfileComponent implements OnInit {
   }
 
   updateUserProfile() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+    if (this.form.invalid || !this.user) return;
+
+    const formValue = this.form.value;
     const formData = new FormData();
-    formData.append('username', this.user.username);
-    formData.append('firstname', this.user.firstname);
-    formData.append('lastname', this.user.lastname);
-    formData.append('email', this.user.email);
-    const formattedBirthday = new Date(this.user.birthday).toISOString().split('T')[0]; 
-    formData.append('birthday', formattedBirthday);
-   
+    formData.append('username', formValue.username!);
+    formData.append('firstname', formValue.firstname!);
+    formData.append('lastname', formValue.lastname!);
+    formData.append('email', formValue.email!);
+    formData.append('birthday', new Date(formValue.birthday!).toISOString().split('T')[0]);
+
     if (this.profileImage) {
       formData.append('profileImage', this.profileImage);
     }
 
     this.authService.updateUserProfile(this.user.id, formData).subscribe({
-      next: (res) => {
-        console.log("✅ Profile Updated:", res);
-        alert("Profile updated successfully!");
+      next: () => {
+        this.successMessage = "Profiel succesvol bijgewerkt!";
+        this.errorMessage = '';
       },
-      error: (err) => {
-        console.error("🔥 Error updating profile:", err);
-        alert("Failed to update profile.");
+      error: () => {
+        this.errorMessage = "Fout bij het bijwerken van het profiel.";
+        this.successMessage = '';
       }
     });
   }
 
   toggleFormVisibility() {
-    this.showForm = !this.showForm; 
+    this.showForm = !this.showForm;
   }
 }

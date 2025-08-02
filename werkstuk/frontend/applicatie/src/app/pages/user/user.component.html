@@ -3,7 +3,6 @@
     <h1>Profiel</h1>
   </div>
 
-  <!-- Persoonlijke Informatie -->
   <section class="personal-info-container py-4">
     <div class="user-description text-center">
       <div class="d-flex">
@@ -15,23 +14,20 @@
           <p>{{ user?.firstname }} {{ user?.lastname }}</p>
           <p>
             <svg xmlns="http://www.w3.org/2000/svg" fill="white" width="24" height="24" viewBox="0 0 24 24">
-              <path d="M19,4H17V3a1,1,0,0,0-2,0V4H9V3A1,1,0,0,0,7,3V4H5A3,3,0,0,0,2,7V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V7A3,3,0,0,0,19,4Zm1,15a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V12H20Zm0-9H4V7A1,1,0,0,1,5,6H7V7A1,1,0,0,0,9,7V6h6V7a1,1,0,0,0,2,0V6h2a1,1,0,0,1,1,1Z" />
+              <path d="M19,4H17V3a1,1,0,0,0-2,0V4H9V3A1,1,0,0,0,7,3V4H5A3,3,0,0,0,2,7V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V7A3,3,0,0,0,19,4Zm1,15a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V12H20Zm0-9H4V7A1,1,0,0,1,5,6H7V7A1,1,0,0,0,9,7V6h6V7a1,1,0,0,0,2,0V6h2a1,1,0,0,1,1,1Z"/>
             </svg>
             {{ user?.birthday | date:'yyyy-MM-dd' }}
           </p>
         </div>
       </div>
-      
-      <div class="saved-container d-flex ">
-        <p class="saved-gyms-count">
-          <span class="count">{{ savedGyms.length }}</span> gyms opgeslagen
-        </p>
-        <p class="saved-exercises-count">
-          <span class="count">{{ savedExercises.length }}</span> oefeningen opgeslagen
-        </p>
+
+      <div class="saved-container d-flex">
+        <p class="saved-gyms-count"><span class="count">{{ savedGyms.length || 0 }}</span> gyms opgeslagen</p>
+        <p class="saved-exercises-count"><span class="count">{{ savedExercises.length || 0 }}</span> oefeningen opgeslagen</p>
       </div>
     </div>
-<div class="edit-container text-center">
+
+    <div class="edit-container text-center">
       <button (click)="toggleFormVisibility()">
         {{ showForm ? 'Verberg' : 'Verander gegevens' }}
       </button>
@@ -39,94 +35,74 @@
       <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="updateUserProfile()" class="edit-form mt-3">
         <div class="form-group">
           <label for="username">Gebruikersnaam</label>
-          <input type="text" id="username" formControlName="username" placeholder="{{ user.username }}" required />
-          <div *ngIf="username?.touched && username?.invalid" class="form-text text-danger">
-            <div *ngIf="username?.errors?.['required']">Gebruikersnaam is verplicht.</div>
-          </div>
-          
+          <input type="text" id="username" formControlName="username" required />
         </div>
         <div class="form-group">
           <label for="firstname">Voornaam</label>
-          <input type="text" id="firstname" formControlName="firstname" placeholder="{{ user.firstname }}" required />
-          <div *ngIf="firstname?.touched && firstname?.invalid" class="form-text text-danger">
-            <div *ngIf="firstname?.errors?.['required']">Voornaam is verplicht.</div>
-          </div>
+          <input type="text" id="firstname" formControlName="firstname" required />
         </div>
         <div class="form-group">
           <label for="lastname">Achternaam</label>
-          <input type="text" id="lastname" formControlName="lastname" placeholder="{{ user.lastname }}" required />
-          <div *ngIf="lastname?.touched && lastname?.invalid" class="form-text text-danger">
-            <div *ngIf="lastname?.errors?.['required']">Achternaam is verplicht.</div>
-          </div>
+          <input type="text" id="lastname" formControlName="lastname" required />
         </div>
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input type="email" id="email" formControlName="email" placeholder="{{ user.email }}" required />
+          <input type="email" id="email" formControlName="email" required />
           <div *ngIf="email?.touched && email?.invalid" class="form-text text-danger">
-            <div *ngIf="email?.errors?.['required']">E-mail is verplicht.</div>
             <div *ngIf="email?.errors?.['email']">Ongeldig e-mailadres.</div>
           </div>
         </div>
         <div class="form-group">
           <label for="birthday">Geboortedatum</label>
-          <input type="date" id="birthday" formControlName="birthday" placeholder="{{ user.birthday | date:'yyyy-MM-dd' }}" required />
-          <div *ngIf="birthday?.touched && birthday?.invalid" class="form-text text-danger">
-            <div *ngIf="birthday?.errors?.['required']">Geboortedatum is verplicht.</div>
-          </div>
+          <input type="date" id="birthday" formControlName="birthday" required />
         </div>
         <div class="form-group">
           <label for="profileImage">Profielfoto</label>
           <input type="file" id="profileImage" (change)="onImageSelected($event)" />
         </div>
-        <button type="submit" class="btn mt-3 pb-2 pt-2">Sla op</button>
+        <button type="submit" class="btn mt-3">Sla op</button>
       </form>
+
+      <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
     </div>
-    
   </section>
 
-  <!-- Saved Gyms -->
   <section class="saved-gyms-container mt-5">
-  <h2 class="saved-gyms-title text-center">Jouw gyms</h2>
+    <h2 class="text-center">Jouw gyms</h2>
 
-  <div *ngIf="savedGyms.length === 0" class="no-gyms-container text-center">
-    <p>
-      Je hebt nog niks – zoek een gym op: 
-      <a routerLink="/gyms" routerActive="active">Gyms</a>
-    </p>
-  </div>
-
-  <!-- FLEX CONTAINER for info-card -->
-  <div class="saved-gyms-list d-flex flex-row row">
-    <div class="col-12 col-sm-7">
-      <info-card
-        [items]="savedGyms"
-        type="gym"
-        [deleteGym]="true"
-        [userId]="user?.id"
-      ></info-card>
+    <div *ngIf="!savedGyms?.length" class="no-gyms-container text-center">
+      <p>Je hebt nog niks – zoek een gym op: <a routerLink="/gyms">Gyms</a></p>
     </div>
-  </div>
-</section>
 
-  <!-- Saved Exercises -->
+    <div *ngIf="savedGyms?.length" class="saved-gyms-list d-flex flex-row row">
+      <div class="col-12 col-sm-7">
+        <info-card
+          [items]="savedGyms"
+          type="gym"
+          [deleteGym]="true"
+          [userId]="user?.id"
+          (onGymDeleted)="handleGymDeleted($event)">
+        </info-card>
+      </div>
+    </div>
+  </section>
+
   <section class="saved-exercises-container mt-5 row d-flex">
-  <h2 class="text-center col-12">Jouw oefeningen</h2>
+    <h2 class="text-center col-12">Jouw oefeningen</h2>
 
-  <div *ngIf="savedExercises.length === 0" class="no-exercises-container text-center col-12">
-    <p class="empty-message">
-      Je hebt nog niks – zoek een oefening op:
-      <a routerLink="/exercises" routerActive="active">Oefeningen</a>
-    </p>
-  </div>
+    <div *ngIf="!savedExercises?.length" class="no-exercises-container text-center col-12">
+      <p>Je hebt nog niks – zoek een oefening op: <a routerLink="/exercises">Oefeningen</a></p>
+    </div>
 
-  <!-- De lijst zelf -->
-  <div class="saved-exercises-list col-12 col-sm-7">
-    <info-card
-      [items]="savedExercises"
-      type="exercise"
-      [deleteSavedExercise]="true"
-      [userId]="user?.id">
-    </info-card>
-  </div>
-</section>
+    <div *ngIf="savedExercises?.length" class="saved-exercises-list col-12 col-sm-7">
+      <info-card
+        [items]="savedExercises"
+        type="exercise"
+        [deleteSavedExercise]="true"
+        [userId]="user?.id"
+        (onExerciseDeleted)="handleExerciseDeleted($event)">
+      </info-card>
+    </div>
+  </section>
 </section>

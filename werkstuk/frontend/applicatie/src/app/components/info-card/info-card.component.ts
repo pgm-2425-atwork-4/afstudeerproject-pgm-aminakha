@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ExerciseService } from '../../services/exercise.service';
 import { GymService } from '../../services/gym.service';
@@ -17,6 +17,9 @@ export class InfoCardComponent implements OnInit, OnChanges {
   @Input() deleteSavedExercise: boolean = false;
   @Input() deleteGym: boolean = false;
   @Input() userId: any;
+
+  @Output() onExerciseDeleted = new EventEmitter<string>();
+  @Output() onGymDeleted = new EventEmitter<string>();
 
   popularGyms: any[] = [];
 
@@ -80,7 +83,9 @@ export class InfoCardComponent implements OnInit, OnChanges {
       next: () => {
         console.log(`✅ Successfully deleted exercise with ID: ${id}`);
         this.items = this.items.filter(item => item.id !== id);
-        this.processItems(); // Refresh lijst
+        this.items = [...this.items]; // force change detection
+        this.onExerciseDeleted.emit(id); // 🔔 notify parent
+        this.processItems();
       },
       error: (error) => {
         console.error(`❌ Error deleting exercise with ID: ${id}`, error);
@@ -98,7 +103,9 @@ export class InfoCardComponent implements OnInit, OnChanges {
       next: (res) => {
         console.log("✅ Saved Gym deleted:", res);
         this.items = this.items.filter(gym => gym.id !== gymId);
-        this.processItems(); // Refresh lijst
+        this.items = [...this.items]; 
+        this.onGymDeleted.emit(gymId); 
+        this.processItems();
         alert("Gym deleted successfully!");
       },
       error: (err) => {
