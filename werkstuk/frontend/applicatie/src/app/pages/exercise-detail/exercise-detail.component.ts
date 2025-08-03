@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewEncapsulation } from '@angular/core';
-import { MetaDataService } from '../../services/meta-data.service';
 import { ExerciseService } from '../../services/exercise.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommentService } from '../../services/comment.service';

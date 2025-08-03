@@ -10,8 +10,8 @@ describe('GymCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, HttpClientModule, GymCategoryComponent], // ✅ Import necessary modules
-      providers: [CategoryService] // ✅ Provide the service if needed
+      imports: [CommonModule, HttpClientModule, GymCategoryComponent], 
+      providers: [CategoryService] 
     })
     .compileComponents();
 

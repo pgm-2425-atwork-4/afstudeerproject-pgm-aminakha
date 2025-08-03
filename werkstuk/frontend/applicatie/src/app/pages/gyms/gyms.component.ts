@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GymService } from '../../services/gym.service';
 import { MetaDataService } from '../../services/meta-data.service';
@@ -77,7 +77,6 @@ export class GymsComponent implements OnInit {
       this.fetchGyms();
     });
 
-    // Alleen automatisch zoeken als formulier geldig is
     this.form.valueChanges.subscribe(() => {
       if (this.form.valid) {
         this.searchGyms();

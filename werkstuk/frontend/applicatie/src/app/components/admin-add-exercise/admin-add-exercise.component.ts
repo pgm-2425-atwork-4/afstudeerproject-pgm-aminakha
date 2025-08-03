@@ -13,14 +13,14 @@ import { MetaDataService } from '../../services/meta-data.service';
 })
 export class AdminAddExerciseComponent implements OnInit {
   editingExercise: any = null;
-exercises: any[] = [];
+  exercises: any[] = [];
 
   form = new FormGroup({
-     name: new FormControl<string>('', Validators.required),
-  exercise_category_id: new FormControl<number | null>(null, Validators.required),
-  pressure_id: new FormControl<number | null>(null, Validators.required),
-  big_description: new FormControl<string>('', Validators.required),
-  duration: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
+      name: new FormControl<string>('', Validators.required),
+      exercise_category_id: new FormControl<number | null>(null, Validators.required),
+      pressure_id: new FormControl<number | null>(null, Validators.required),
+      big_description: new FormControl<string>('', Validators.required),
+      duration: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
   });
 
   selectedImages: File[] = [];

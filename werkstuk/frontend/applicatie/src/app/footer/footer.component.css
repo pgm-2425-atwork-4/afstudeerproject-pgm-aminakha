@@ -3,28 +3,28 @@
     color: var(--secondary-color);
     padding: 2rem 0;
 
-    & .footer-container {
+    .footer-container {
         width: 100%;
         max-width: var(--max-width);
         margin: 0 auto;
 
-        & .information-container {
+        .information-container {
             display: flex;
             gap: 2rem;
 
-            & .footer-quote {
-                & p {
+            .footer-quote {
+                p {
                     font-style: italic;
                     font-family: "Archivo", sans-serif;
                     font-size: 3rem;
                 }
             }
 
-            & .footer-social {
-                width: 26rem;
+            .footer-social {
+                width: 35rem;
 
-                & .footer-social-title {
-                    & h2 {
+                .footer-social-title {
+                    h2 {
                         font-size: 2rem;
                         font-family: "Archivo", sans-serif;
                         border-bottom: 1px solid var(--secondary-color);
@@ -32,38 +32,50 @@
                         margin-bottom: 1rem;
                     }
                 }
-
-                & p {
-                    & a {
-                        & svg {
+                .socials {
+                    display: flex;
+                    gap: 1rem;
+                    p {
+                        a {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
                             width: 4.5rem;
                             height: 4.5rem;
                             border-radius: 50%;
-                            border: 3px solid var(--secondary-color);
-                            padding: 0.2rem;
-                        }
+                            border: 0.2rem solid var(--secondary-color);
+                            padding: 0.5rem;
+                            transition: all 0.3s ease-in-out;
+                            svg {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: contain;
+                                fill: var(--secondary-color);
+                            }
                     }
+                }
+                    
                 }
             }
         }
 
-        & .footer-logo {
-            & h2 {
+        .footer-logo {
+            h2 {
                 font-size: 15rem;
                 text-align: center;
                 line-height: 1;
                 font-family: "Archivo", sans-serif;
             }
 
-            & p {
+            p {
                 font-size: 4rem;
                 text-align: center;
                 font-family: "Archivo", sans-serif;
             }
         }
 
-        & .footer-links {
-            & h2 {
+        .footer-links {
+            h2 {
                 font-size: 2rem;
                 font-family: "Archivo", sans-serif;
                 border-bottom: 1px solid var(--secondary-color);
@@ -71,7 +83,7 @@
                 margin-bottom: 1rem;
             }
 
-            & a {
+            a {
                 font-size: 1.6rem;
                 font-family: "Archivo", sans-serif;
             }
@@ -79,81 +91,87 @@
     }
 }
 
-/* Media Queries */
-
-/* For tablets */
 
 @media (max-width: 1059px) {
-   .footer {
-    & .footer-container {
-        & .information-container {
-            & .footer-quote {
-                & p {
-                    font-size: 2rem;
-                    width:28rem
+    .footer {
+        .footer-container {
+            .information-container {
+                .footer-quote {
+                    p {
+                        font-size: 2rem;
+                        width: 28rem;
+                    }
                 }
-            } 
-        }
-        & .footer-logo {
-            & h2 {
-                font-size: 10rem;
             }
-            & p {
-                font-size: 3rem;    
+
+            .footer-logo {
+                h2 {
+                    font-size: 10rem;
+                }
+
+                p {
+                    font-size: 3rem;
+                }
             }
         }
-    }
-   }
-  }
-@media (max-width: 980px) {
-    .footer .footer-container .information-container {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .footer .footer-container .footer-logo h2 {
-        font-size: 3rem;
-    }
-
-    .footer .footer-container .footer-logo p {
-        font-size: 2.5rem;
-    }
-
-    .footer .footer-container .footer-links h2 {
-        font-size: 1.8rem;
-    }
-
-    .footer .footer-container .footer-links a {
-        font-size: 1.4rem;
     }
 }
 
-/* For phones */
+@media (max-width: 980px) {
+    .footer {
+        .footer-container {
+            .information-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .footer-logo {
+                h2 {
+                    font-size: 3rem;
+                }
+
+                p {
+                    font-size: 2.5rem;
+                }
+            }
+
+            .footer-links {
+                h2 {
+                    font-size: 1.8rem;
+                }
+
+                a {
+                    font-size: 1.4rem;
+                }
+            }
+        }
+    }
+}
+
 @media (max-width: 480px) {
     .footer {
         padding: 1.5rem 0;
-        & .footer-container {
-            & .information-container {
-                & .footer-social {
+
+        .footer-container {
+            .information-container {
+                .footer-social {
                     width: 100%;
                 }
-                 & .footer-quote {
-                & p{
-                    font-size: 1.5rem;
-                    width: 20rem;
-                    padding-bottom: 1rem;
+
+                .footer-quote {
+                    p {
+                        font-size: 1.5rem;
+                        width: 20rem;
+                        padding-bottom: 1rem;
+                    }
                 }
             }
-            }
-            & .footer-logo {
-                & p{
+
+            .footer-logo {
+                p {
                     font-size: 1rem;
                 }
             }
-           
-
         }
     }
-
-   
 }

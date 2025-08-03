@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { MetaDataService } from '../../services/meta-data.service';
 
 @Component({
   selector: 'app-gym-category',
   standalone: true, 
-  imports: [CommonModule, HttpClientModule], 
+  imports: [CommonModule], 
   templateUrl: './gym-category.component.html',
   styleUrls: ['./gym-category.component.css'],
   providers: [MetaDataService]

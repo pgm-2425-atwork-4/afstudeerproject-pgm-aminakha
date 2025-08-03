@@ -29,7 +29,6 @@ export class HeaderComponent implements OnInit {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
-      // Fetch user on initialization
       this.authService.fetchUser();
     }
   }

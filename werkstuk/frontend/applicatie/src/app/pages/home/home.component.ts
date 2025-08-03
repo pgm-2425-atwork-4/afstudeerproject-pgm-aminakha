@@ -6,10 +6,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MetaDataService } from '../../services/meta-data.service';
-import {CategoriesComponent} from '../../components/categories/categories.component';
-import { PopularComponent } from '../../components/popular/popular.component';
 import { CardListComponent } from '../../components/card-list/card-list.component';
-import { InfoCardComponent } from '../../components/info-card/info-card.component';
 @Component({
   selector: 'app-home',
   standalone: true,

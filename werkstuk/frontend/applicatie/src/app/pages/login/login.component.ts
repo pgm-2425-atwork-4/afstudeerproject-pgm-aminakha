@@ -4,7 +4,6 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { RouterLink, RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import {  passwordValidator } from './password-validator';
-import { emailNotFoundValidator } from './email-not-found.validator';
 
 @Component({
   selector: 'app-login',

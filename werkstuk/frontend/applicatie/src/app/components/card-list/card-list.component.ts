@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import KeenSlider from "keen-slider";
-import { ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 @Component({
   selector: 'card-list',
   imports: [CommonModule, RouterLink],

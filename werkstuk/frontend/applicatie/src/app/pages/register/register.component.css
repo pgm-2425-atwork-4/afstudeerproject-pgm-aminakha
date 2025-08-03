@@ -103,6 +103,10 @@
       margin: 0 auto;
       .form-container {
         form {
+          .form-group {
+            margin: 0 auto;
+            width: 95%;
+          }
           button {
             p {
               font-size: 2rem;
