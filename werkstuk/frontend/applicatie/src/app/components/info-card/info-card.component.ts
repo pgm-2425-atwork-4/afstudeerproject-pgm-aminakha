@@ -17,6 +17,10 @@ export class InfoCardComponent implements OnInit, OnChanges {
   @Input() deleteSavedExercise: boolean = false;
   @Input() deleteGym: boolean = false;
   @Input() userId: any;
+  successMessage: string = '';
+  errorMessage: string = '';
+  successMessageExercise: string = '';
+  errorMessageExercise: string = '';
 
   @Output() onExerciseDeleted = new EventEmitter<string>();
   @Output() onGymDeleted = new EventEmitter<string>();
@@ -83,8 +87,8 @@ export class InfoCardComponent implements OnInit, OnChanges {
       next: () => {
         console.log(`✅ Successfully deleted exercise with ID: ${id}`);
         this.items = this.items.filter(item => item.id !== id);
-        this.items = [...this.items]; // force change detection
-        this.onExerciseDeleted.emit(id); // 🔔 notify parent
+        this.items = [...this.items];
+        this.onExerciseDeleted.emit(id); 
         this.processItems();
       },
       error: (error) => {
@@ -106,11 +110,9 @@ export class InfoCardComponent implements OnInit, OnChanges {
         this.items = [...this.items]; 
         this.onGymDeleted.emit(gymId); 
         this.processItems();
-        alert("Gym deleted successfully!");
       },
       error: (err) => {
         console.error("🔥 Error deleting gym:", err);
-        alert("Failed to delete gym.");
       }
     });
   }
