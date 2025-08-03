@@ -1,0 +1,78 @@
+.motivation-container {
+    max-width: 75rem;
+    margin: 0 auto;
+    margin-top: 1.5rem;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 1rem;
+    border-radius: var(--standard-border-radius);
+    .author {
+        position: relative;
+        img {
+            width: 30rem;
+        }
+        margin-right: 1rem;
+        p {
+            position: absolute;
+            background-color: var(--tertiary-color);
+            bottom: 6%;
+            left: 6%;
+            padding: 0.5rem;
+            border-radius: var(--standard-border-radius);
+            font-weight: bold;
+        }
+        border-right: 1px solid var(--secondary-color);
+        padding-right: 2rem;
+    }
+    .motivation-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
+        h2 {
+            display: block;
+            text-align: center;
+            font-family: 'Archivo', sans-serif;
+            font-size: 2rem;
+            width: auto;
+            font-weight: 600;
+            margin: 0 auto;
+            margin-bottom: 1.5rem;
+        }
+        p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Work Sans', sans-serif;
+        }
+        button {
+            &:hover {
+                color: var(--primary-color);
+            }
+            font-size: 1.2rem;
+        }
+    }
+}
+
+
+
+@media (max-width: 576px) {
+    .motivation-container {
+        .author  {
+            border-right: none;
+            margin: 0;
+            padding: 0;
+            img {
+                width: 100%
+            }
+        }
+        .motivation-text {
+            h2 {
+                font-size: 1.2rem;
+                margin-top: 1rem;
+                padding: 0;
+            }
+        }
+    }
+}

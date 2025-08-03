@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { MetaDataService } from '../../services/meta-data.service';
 import { ExerciseService } from '../../services/exercise.service';
 import { InfoCardComponent } from '../../components/info-card/info-card.component';
+import { MotivationComponent } from '../../components/motivation/motivation.component';
 
 @Component({
   selector: 'app-exercises',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InfoCardComponent],
+  imports: [CommonModule, ReactiveFormsModule, InfoCardComponent, MotivationComponent],
   templateUrl: './exercises.component.html',
   styleUrl: './exercises.component.css'
 })
