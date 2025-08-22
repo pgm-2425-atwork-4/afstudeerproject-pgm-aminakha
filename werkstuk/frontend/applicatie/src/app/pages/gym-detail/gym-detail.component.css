@@ -435,6 +435,16 @@
         }
     }
 
+@media (max-width: 768px) {
+    .gym-detail-container {
+        .gym-detail__hero {
+            .gym-gallery {
+                grid-template-columns: 15rem 12rem;
+                grid-template-rows: 15rem 15rem 12rem;
+            }
+        }
+    }
+}
 
    @media (max-width: 576px) {
     .gym-detail-container {
