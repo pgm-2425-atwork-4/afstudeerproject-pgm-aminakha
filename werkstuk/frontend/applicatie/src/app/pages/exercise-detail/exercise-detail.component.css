@@ -149,6 +149,7 @@
                             align-items: center;
                             gap: 1rem;
                             font-family: "Archivo", sans-serif;
+                            flex-wrap: wrap;
                             & strong {
                                 background-color: var(--primary-color);
                                 color: var(--secondary-color);
