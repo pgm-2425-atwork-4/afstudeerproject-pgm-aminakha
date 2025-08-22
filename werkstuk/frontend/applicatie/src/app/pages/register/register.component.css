@@ -109,7 +109,6 @@
             input[type="date"] {
               width: 100%;
               -webkit-appearance: none;
-              appearance: none;
             }
           }
           button {
