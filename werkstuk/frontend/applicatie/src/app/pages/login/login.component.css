@@ -7,7 +7,7 @@
     margin-left :0;
      & img {
       width: 60rem;
-      height: 60rem;
+      aspect-ratio: 1 / 1;
       object-fit: cover;  
      }
      & p {
