@@ -208,7 +208,7 @@ router.put("/admin/exercise/:id", exerciseImages, (req, res) => {
     res.json({ message: "✅ Oefening bijgewerkt" });
   });
 });
-router.delete("/admin/deleteexercise/:id", (req, res) => {
+router.delete("/admin/delete-exercise/:id", (req, res) => {
   const id = req.params.id;
 
   const sql = "DELETE FROM exercises WHERE id = ?";
