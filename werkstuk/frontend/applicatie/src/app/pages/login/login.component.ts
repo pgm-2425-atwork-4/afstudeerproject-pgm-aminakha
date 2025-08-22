@@ -45,7 +45,7 @@ export class LoginComponent {
       await new Promise(resolve => setTimeout(resolve, 50));
     }
 
-    if (this.form.invalid) {
+    if (this.form.invalid) {      
       this.form.markAllAsTouched();
       return;
     }

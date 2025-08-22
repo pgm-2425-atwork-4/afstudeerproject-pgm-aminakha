@@ -11,7 +11,7 @@
     <form [formGroup]="form" (ngSubmit)="login()">
       <div *ngIf="form.errors" class="alert alert-danger">   
             <div *ngIf="form.errors?.['invalidLogin']">
-                Verkeerde email of wachtwoord
+                Vul alle velden correct in.
             </div>
         </div>
       <div class="form-group">

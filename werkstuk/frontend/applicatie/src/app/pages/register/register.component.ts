@@ -76,11 +76,9 @@ export class RegisterComponent {
     this.authService.registerUser(formData).subscribe({
       next: (res) => {
         this.message = 'Succesvol geregistreerd!';
-        console.log('🚀 Response:', res);
       },
       error: (error) => {
         this.message = 'Er is iets misgegaan bij het registreren.';
-        console.error('🔥 Error:', error);
       }
     });
   }
