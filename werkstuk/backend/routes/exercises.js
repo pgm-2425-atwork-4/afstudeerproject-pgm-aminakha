@@ -221,29 +221,43 @@ router.delete("/admin/exercise/:id", (req, res) => {
     res.json({ message: "✅ Oefening verwijderd" });
   });
 });
-router.put("/admin/update-exercise/:id", exerciseImages, (req, res) => {
+router.put('/admin/update-exercise/:id', exerciseImages, (req, res) => {
   const { id } = req.params;
   const { name, exercise_category_id, pressure_id, big_description, duration } = req.body;
-  const imageUrls = req.files?.map(file => file.path) || [];
 
-  const updateQuery = `
+  const files = req.files || [];
+  const imageUrls = files.map(f => f.path); // of maak hier je publieke URL van
+
+  const updateSql = `
     UPDATE exercises
     SET name = ?, exercise_category_id = ?, pressure_id = ?, big_description = ?, duration = ?
     WHERE id = ?
   `;
 
-  db.query(updateQuery, [name, exercise_category_id, pressure_id, big_description, duration, id], (err, result) => {
-    if (err) {
-      console.error("Error updating exercise:", err);
-      return res.status(500).json({ error: "Internal server error" });
-    }
+  db.query(
+    updateSql,
+    [name, exercise_category_id, pressure_id, big_description, duration, id],
+    (err) => {
+      if (err) return res.status(500).json({ error: 'Internal server error' });
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Exercise not found" });
-    }
+      // Geen nieuwe afbeeldingen? Klaar.
+      if (imageUrls.length === 0) {
+        return res.json({ message: 'Exercise updated (no image change)' });
+      }
 
-    res.json({ message: "Exercise updated successfully" });
-  });
+      // Nieuwe afbeeldingen: oude verwijderen en nieuwe koppelen
+      db.query('DELETE FROM exercise_images WHERE exercise_id = ?', [id], (errDel) => {
+        if (errDel) return res.status(500).json({ error: 'Internal server error (delete images)' });
+
+        const values = imageUrls.map(url => [id, url]);
+        db.query('INSERT INTO exercise_images (exercise_id, image_url) VALUES ?', [values], (errIns) => {
+          if (errIns) return res.status(500).json({ error: 'Internal server error (insert images)' });
+
+          return res.json({ message: 'Exercise updated (images replaced)', images: imageUrls });
+        });
+      });
+    }
+  );
 });
 
 

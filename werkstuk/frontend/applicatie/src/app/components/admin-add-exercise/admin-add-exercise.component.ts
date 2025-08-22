@@ -137,44 +137,27 @@ export class AdminAddExerciseComponent implements OnInit {
     // Reset eventuele geselecteerde nieuwe afbeeldingen
     this.selectedImages = [];
   }
- updateExercise() {
-  if (!this.editingExercise || !this.form.value) return;
+updateExercise() {
+  if (!this.editingExercise || this.form.invalid) return;
 
-  const { name, exercise_category_id, pressure_id, big_description, duration } = this.form.value;
-  const formData = new FormData();
+  const fd = new FormData();
+  fd.append('name', this.form.value.name ?? '');
+  fd.append('exercise_category_id', String(this.form.value.exercise_category_id ?? ''));
+  fd.append('pressure_id', String(this.form.value.pressure_id ?? ''));
+  fd.append('big_description', this.form.value.big_description ?? '');
+  fd.append('duration', String(this.form.value.duration ?? ''));
 
-  if (name && name.trim() !== '') {
-    formData.append('name', name);
-  }
+  // optioneel: nieuwe afbeeldingen meesturen
+  this.selectedImages.forEach(img => fd.append('images', img));
 
-  if (exercise_category_id !== null && exercise_category_id !== undefined) {
-    formData.append('exercise_category_id', exercise_category_id.toString());
-  }
-
-  if (pressure_id !== null && pressure_id !== undefined) {
-    formData.append('pressure_id', pressure_id.toString());
-  }
-
-  if (big_description && big_description.trim() !== '') {
-    formData.append('big_description', big_description);
-  }
-
-  if (duration !== null && duration !== undefined) {
-    formData.append('duration', duration.toString());
-  }
-
-  this.selectedImages.forEach(image => {
-    formData.append('images', image);
-  });
-
-  this.exerciseService.updateExercise(this.editingExercise.id, formData).subscribe({
+  this.exerciseService.updateExercise(this.editingExercise.id, fd).subscribe({
     next: () => {
       alert('✅ Oefening succesvol bijgewerkt!');
       this.resetForm();
       this.loadExercises();
     },
     error: (err) => {
-      console.error("🔥 Fout bij bijwerken oefening:", err);
+      console.error('🔥 Fout bij bijwerken oefening:', err);
       alert('❌ Bijwerken mislukt');
     }
   });
