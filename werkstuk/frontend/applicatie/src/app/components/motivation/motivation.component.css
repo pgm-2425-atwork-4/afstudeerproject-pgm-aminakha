@@ -55,7 +55,18 @@
     }
 }
 
-
+@media (max-width: 768px) {
+    .motivation-container {
+        .author  {
+            border-right: none;
+            margin: 0;
+            padding: 0;
+            img {
+                width: 100%
+            }
+        }
+    }
+}
 
 @media (max-width: 576px) {
     .motivation-container {
