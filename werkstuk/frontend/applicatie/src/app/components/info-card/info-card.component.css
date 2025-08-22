@@ -3,6 +3,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
+    justify-content: center;
     .item-card {
         background-color: var(--white);
         display: flex;

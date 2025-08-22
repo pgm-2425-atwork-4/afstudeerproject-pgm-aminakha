@@ -15,7 +15,7 @@
 
       <div class="gyms-content__items d-flex row">
         <h2 *ngIf="isMobile" (click)="toggleFilters()" class="toggle-filters-btn grand-title">Filters tonen</h2>
-        <div [ngClass]="{ 'mobile-filter': isMobile, 'open': isMobile && showFilters }" class="filter-sidebar col-12 col-sm-5">
+        <div [ngClass]="{ 'mobile-filter': isMobile, 'open': isMobile && showFilters }" class="filter-sidebar col-12 col-sm-3">
           <h3>Filters</h3>
 
           <label for="province">Kies een provincie</label>
@@ -53,7 +53,7 @@
           </div>
           <button type="button" class="reset-btn btn" (click)="resetFilters()">Reset filters</button>
         </div>
-        <div class="col-12 col-sm-7">
+        <div class="col-12 col-sm-9">
           <info-card *ngIf="filteredGyms.length > 0" [items]="[filteredGyms]" type="gym"></info-card>
           <div *ngIf="filteredGyms.length === 0">
             <h2 class="no-results">Gym niet gevonden...</h2>
