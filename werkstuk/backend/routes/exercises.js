@@ -208,7 +208,7 @@ router.put("/admin/exercise/:id", exerciseImages, (req, res) => {
     res.json({ message: "✅ Oefening bijgewerkt" });
   });
 });
-router.delete("/admin/exercise/:id", (req, res) => {
+router.delete("/admin/deleteexercise/:id", (req, res) => {
   const id = req.params.id;
 
   const sql = "DELETE FROM exercises WHERE id = ?";
@@ -226,7 +226,7 @@ router.put('/admin/update-exercise/:id', exerciseImages, (req, res) => {
   const { name, exercise_category_id, pressure_id, big_description, duration } = req.body;
 
   const files = req.files || [];
-  const imageUrls = files.map(f => f.path); // of maak hier je publieke URL van
+  const imageUrls = files.map(f => f.path);
 
   const updateSql = `
     UPDATE exercises
@@ -240,12 +240,10 @@ router.put('/admin/update-exercise/:id', exerciseImages, (req, res) => {
     (err) => {
       if (err) return res.status(500).json({ error: 'Internal server error' });
 
-      // Geen nieuwe afbeeldingen? Klaar.
       if (imageUrls.length === 0) {
         return res.json({ message: 'Exercise updated (no image change)' });
       }
 
-      // Nieuwe afbeeldingen: oude verwijderen en nieuwe koppelen
       db.query('DELETE FROM exercise_images WHERE exercise_id = ?', [id], (errDel) => {
         if (errDel) return res.status(500).json({ error: 'Internal server error (delete images)' });
 
