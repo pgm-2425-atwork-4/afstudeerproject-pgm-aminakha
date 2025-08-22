@@ -88,8 +88,12 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/users`, { headers: this.getAuthHeaders() });
   }
   checkEmailExists(email: string) {
-    return this.http.get<boolean>(`${this.apiUrl}/auth/email-exists?email=${encodeURIComponent(email)}`);
-  }
+  return this.http
+    .get<{ exists: boolean }>(`${this.apiUrl}/auth/email-exists`, {
+      params: { email },
+    })
+    .pipe(map(res => res.exists));
+}
   checkPasswordValid(email: string, password: string) {
   return this.http.post<{ valid: boolean }>(`${this.apiUrl}/auth/validate-password`, { email, password })
     .pipe(map(res => res.valid));

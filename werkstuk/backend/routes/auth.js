@@ -106,8 +106,10 @@ router.get('/email-exists', async (req, res) => {
   }
 
   const sql = "SELECT id FROM users WHERE email = ?";
+;
+  
 
-  db.query(sql, [email], (err, results) => {
+  db.query(sql, [email], (err, results) => {    
     if (err) {
       console.error("❌ DB fout:", err);
       return res.status(500).json({ error: "Databasefout" });
