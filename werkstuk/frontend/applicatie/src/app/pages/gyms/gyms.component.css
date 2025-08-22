@@ -113,6 +113,7 @@
         .gyms-content {
           .filter-sidebar {
             width: 100%;
+            position: static;
           }
           .gyms-content__items {
             justify-content: start;
